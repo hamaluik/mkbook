@@ -1,0 +1,17 @@
+[package]
+name = "mkbook"
+version = "0.1.0"
+authors = ["Kenton Hamaluik <kenton@hamaluik.ca>"]
+edition = "2018"
+build = "build.rs"
+
+[dependencies]
+syntect = "3.3"
+comrak = "0.6"
+clap = "2.33"
+handlebars = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.5"
+
+[build-dependencies]
+sass-rs = "0.2"

@@ -1,0 +1,58 @@
+body {
+  margin: 2em auto;
+  max-width: 36em;
+  line-height: 1.6;
+  font-size: 14pt;
+  color: #222222;
+  background: #eeeeee;
+  padding: 0 0.5em;
+  font-family: "Georgia", Georgia, "Times New Roman", Times, serif;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+a {
+  color: #222222;
+  text-decoration: underline;
+
+  &:hover {
+    color: #8a2888;
+    text-decoration: none;
+  }
+}
+
+figure {
+  display: block;
+  text-align: center;
+  overflow-x: auto;
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  figcaption {
+    display: block;
+    font-size: 0.75em;
+    text-align: center;
+  }
+}
+
+code {
+  margin: 0 2px;
+  padding: 0 5px;
+  border: 1px solid #4c566a;
+  border-radius: 3px;
+  word-break: break-all;
+}
+
+pre {
+  overflow-x: auto;
+  font-family: "Courier New", Courier, monospace;
+  padding: 0.25em 0.5em;
+}

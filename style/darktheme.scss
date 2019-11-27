@@ -1,0 +1,18 @@
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #222222;
+    color: #eeeeee;
+  }
+
+  a {
+    color: #eeeeee;
+
+    &:hover {
+      color: #5babd1;
+    }
+  }
+
+  img {
+    filter: grayscale(30%);
+  }
+}
