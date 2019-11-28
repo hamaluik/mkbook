@@ -4,4 +4,4 @@
 
 This tool aims to work somewhat similarly to _mkbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
 
-Still very WIP, but it can convert `.md` files into fancy-looking `.html` files, demo it by running: `cargo run -- build demo` and then serving the `demo/book` directory.
+Still very WIP, but it can convert `.md` files into fancy-looking `.html` files, demo it by building the `mkbook` book by running: `cargo run -- build -i docs-src -o docs` and then serving the `docs` directory. Alternatively, view these generated docs [here](https://hamaluik.github.io/mkbook/01-introduction.html).

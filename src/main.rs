@@ -177,15 +177,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         unimplemented!()
     }
     else if let Some(submatches) = matches.subcommand_matches("build") {
-        let prefix = if let Some(directory) = submatches.value_of("directory") {
-            PathBuf::from(directory)
-        }
-        else {
-            PathBuf::from(".")
-        };
+        let src = submatches.value_of("in").expect("in value");
+        let dest = submatches.value_of("out").expect("out value");
 
-        let src = prefix.join("src");
-        let dest = prefix.join("book");
+        let src = PathBuf::from(src);
+        let dest = PathBuf::from(dest);
         std::fs::create_dir_all(&dest)?;
 
         // load all our chapters
@@ -202,7 +198,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let (front, _) = extract_frontmatter(&contents)?;
                 let front = front.unwrap_or_default().into_front(name);
                 chapters.push(models::chapter::Chapter {
-                    url: format!("/{}.html", name),
+                    url: format!("{}.html", name),
                     title: front.title,
                 });
             }
@@ -226,7 +222,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let (front, contents) = extract_frontmatter(&contents)?;
                 let front = front.unwrap_or_default().into_front(name);
                 let contents = format_markdown(&contents)?;
-                format_page(front, &chapters, &format!("/{}.html", name), &contents, outfile)?;
+                format_page(front, &chapters, &format!("{}.html", name), &contents, outfile)?;
 
                 println!("Rendered `{}` into `{}`", path.display(), out.display());
             }
