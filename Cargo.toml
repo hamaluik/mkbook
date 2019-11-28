@@ -4,6 +4,20 @@ version = "0.1.0"
 authors = ["Kenton Hamaluik <kenton@hamaluik.ca>"]
 edition = "2018"
 build = "build.rs"
+description = "A simpler alternative to mdbook, meant for building book websites from Markdown files"
+homepage = "https://hamaluik.github.io/mkbook/"
+repository = "https://github.com/hamaluik/mkbook"
+readme = "README.md"
+keywords = ["book", "markdown", "static"]
+categories = ["command-line-utilities", "text-processing", "web-programming"]
+license = "Apache-2.0"
+exclude = [
+    "docs/*",
+    "docs-src/*",
+]
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 syntect = "3.3"
