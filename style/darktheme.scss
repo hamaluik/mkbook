@@ -19,4 +19,10 @@
   img {
     filter: grayscale(30%);
   }
+
+  dl {
+    dt {
+      border-right: 1px solid #333333;
+    }
+  }
 }

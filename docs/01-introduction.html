@@ -36,6 +36,48 @@
                 </a>
             
         </nav>
-        <article></article>
+        <article><p><em>mkbook</em> is my simpler alternative to <a href="https://crates.io/crates/mdbook"><em>mdbook</em></a> which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.</p>
+<p>This tool aims to work somewhat similarly to <em>mdbook</em>, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.</p>
+<p><em>mkbook</em> may be installed using <em>Cargo</em> (<code>cargo install --force --path .</code> in the <em>mkbook</em> repo directory), and after that it presents a command-line interface:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">$ mkbook
+</span><span style="color:#d3d0c8;">mkbook 0.1.0
+</span><span style="color:#d3d0c8;">Kenton Hamaluik &lt;kenton@hamaluik.ca&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">USAGE:
+</span><span style="color:#d3d0c8;">    mkbook [SUBCOMMAND]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">FLAGS:
+</span><span style="color:#d3d0c8;">    -h, --help       
+</span><span style="color:#d3d0c8;">            Prints help information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">    -V, --version    
+</span><span style="color:#d3d0c8;">            Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">SUBCOMMANDS:
+</span><span style="color:#d3d0c8;">    build    build the book
+</span><span style="color:#d3d0c8;">    help     Prints this message or the help of the given subcommand(s)
+</span><span style="color:#d3d0c8;">    init     initialize a mkbook directory tree
+</span></pre>
+<p>Currently, only the <code>build</code> subcommand does anything (it builds your book!), but this functionality is still WIP:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">$ mkbook build --help
+</span><span style="color:#d3d0c8;">mkbook-build 
+</span><span style="color:#d3d0c8;">build the book
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">USAGE:
+</span><span style="color:#d3d0c8;">    mkbook build [OPTIONS]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">FLAGS:
+</span><span style="color:#d3d0c8;">    -h, --help       Prints help information
+</span><span style="color:#d3d0c8;">    -V, --version    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">OPTIONS:
+</span><span style="color:#d3d0c8;">    -i, --in &lt;in&gt;      an optional directory to take the book sources from [default: src]
+</span><span style="color:#d3d0c8;">    -o, --out &lt;out&gt;    an optional directory to render the contents into [default: book]
+</span></pre>
+</article>
     </body>
 </html>

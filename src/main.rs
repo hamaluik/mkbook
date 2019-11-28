@@ -73,7 +73,7 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
     let options: ComrakOptions = ComrakOptions {
         hardbreaks: false,
         smart: true,
-        github_pre_lang: true,
+        github_pre_lang: false,
         default_info_string: None,
         unsafe_: true,
         ext_strikethrough: true,

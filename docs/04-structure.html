@@ -36,6 +36,21 @@
                 <span class="placeholder"></span>
             
         </nav>
-        <article></article>
+        <article><p><em>mkbook</em> currently only supports two types of assets to use in rendering: assets (images, etc), and documents (markdown files).</p>
+<h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">unimplemented!()
+</span></pre>
+<h2><a href="#documents" aria-hidden="true" class="anchor" id="headerdocuments"></a>Documents</h2>
+<p>For now, <em>mkbook</em> only works on a flat list of markdown files, with the intent of each markdown file being its own chapter. Subdirectories and files that don’t end in a <code>.md</code> extension are completely ignored. The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">src/
+</span><span style="color:#d3d0c8;">├── 00-foreword.md
+</span><span style="color:#d3d0c8;">├── 01-introduction.md
+</span><span style="color:#d3d0c8;">├── 02-my-first-chapter.md
+</span><span style="color:#d3d0c8;">└── etc...
+</span></pre>
+<p>An index and navigation will be automatically generated from these files, taking the information for each file from it’s front-matter.</p>
+</article>
     </body>
 </html>
