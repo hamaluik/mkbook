@@ -14,7 +14,7 @@
 &lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
 " />
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-28T18:22:59.188707583+00:00" />
+        <meta property="book:release_date" content="2019-11-28T19:18:47.381384897+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -31,6 +31,10 @@
                 <li><a href="03-frontmatter.html">Front Matter</a></li>
                 
                 <li><a href="04-structure.html">Structure</a></li>
+                
+                <li><a href="05-customization.html">Customization</a></li>
+                
+                <li><a href="06-how-it-works.html">How it Works</a></li>
                 
             </ol>
         </nav>
@@ -100,6 +104,339 @@
 </span></pre>
 </li>
 </ul>
+<h2><a href="#syntax-highlight" aria-hidden="true" class="anchor" id="headersyntax-highlight"></a>Syntax Highlight</h2>
+<p>GFM syntax highlighting is also available by using fenced code tags with a label denoting the language, as such:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">```</span><span style="color:#f99157;">c</span><span style="color:#d3d0c8;">++
+</span><span style="color:#d3d0c8;">#include &lt;stdio&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">int main() {
+</span><span style="color:#d3d0c8;">    std::cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; std::endl;
+</span><span style="color:#d3d0c8;">    return 0;
+</span><span style="color:#d3d0c8;">}
+</span><span style="color:#d3d0c8;">```
+</span></pre>
+<p>which results in:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#cc99cc;">#include </span><span style="color:#d3d0c8;">&lt;</span><span style="color:#99cc99;">stdio</span><span style="color:#d3d0c8;">&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#cc99cc;">int </span><span style="color:#6699cc;">main</span><span style="color:#d3d0c8;">() {
+</span><span style="color:#d3d0c8;">    std::cout &lt;&lt; &quot;</span><span style="color:#99cc99;">Hello, world!</span><span style="color:#d3d0c8;">&quot; &lt;&lt; std::endl;
+</span><span style="color:#d3d0c8;">    </span><span style="color:#cc99cc;">return </span><span style="color:#f99157;">0</span><span style="color:#d3d0c8;">;
+</span><span style="color:#d3d0c8;">}
+</span></pre>
+<p>To denote the language you can either use one the language’s extensions as the label, or the full name of the language (which is <strong>not</strong> case-sensitive).</p>
+<p>The list of supported languages is currently as follows:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Language Name</th>
+<th align="left">Supported Tags / Extensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">ASP</td>
+<td align="left"><code>asa</code></td>
+</tr>
+<tr>
+<td align="left">ActionScript</td>
+<td align="left"><code>as</code></td>
+</tr>
+<tr>
+<td align="left">AppleScript</td>
+<td align="left"><code>applescript</code>, <code>script editor</code></td>
+</tr>
+<tr>
+<td align="left">Batch File</td>
+<td align="left"><code>bat</code>, <code>cmd</code></td>
+</tr>
+<tr>
+<td align="left">BibTeX</td>
+<td align="left"><code>bib</code></td>
+</tr>
+<tr>
+<td align="left">Bourne Again Shell (bash)</td>
+<td align="left"><code>sh</code>, <code>bash</code>, <code>zsh</code>, <code>fish</code>, <code>.bash_aliases</code>, <code>.bash_completions</code>, <code>.bash_functions</code>, <code>.bash_login</code>, <code>.bash_logout</code>, <code>.bash_profile</code>, <code>.bash_variables</code>, <code>.bashrc</code>, <code>.profile</code>, <code>.textmate_init</code></td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left"><code>c</code>, <code>h</code></td>
+</tr>
+<tr>
+<td align="left">C#</td>
+<td align="left"><code>cs</code>, <code>csx</code></td>
+</tr>
+<tr>
+<td align="left">C++</td>
+<td align="left"><code>cpp</code>, <code>cc</code>, <code>cp</code>, <code>cxx</code>, <code>c++</code>, <code>C</code>, <code>h</code>, <code>hh</code>, <code>hpp</code>, <code>hxx</code>, <code>h++</code>, <code>inl</code>, <code>ipp</code></td>
+</tr>
+<tr>
+<td align="left">CSS</td>
+<td align="left"><code>css</code>, <code>css.erb</code>, <code>css.liquid</code></td>
+</tr>
+<tr>
+<td align="left">Cargo Build Results</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Clojure</td>
+<td align="left"><code>clj</code></td>
+</tr>
+<tr>
+<td align="left">D</td>
+<td align="left"><code>d</code>, <code>di</code></td>
+</tr>
+<tr>
+<td align="left">Diff</td>
+<td align="left"><code>diff</code>, <code>patch</code></td>
+</tr>
+<tr>
+<td align="left">Erlang</td>
+<td align="left"><code>erl</code>, <code>hrl</code>, <code>Emakefile</code>, <code>emakefile</code></td>
+</tr>
+<tr>
+<td align="left">Go</td>
+<td align="left"><code>go</code></td>
+</tr>
+<tr>
+<td align="left">Graphviz (DOT)</td>
+<td align="left"><code>dot</code>, <code>DOT</code>, <code>gv</code></td>
+</tr>
+<tr>
+<td align="left">Groovy</td>
+<td align="left"><code>groovy</code>, <code>gvy</code>, <code>gradle</code></td>
+</tr>
+<tr>
+<td align="left">HTML (ASP)</td>
+<td align="left"><code>asp</code></td>
+</tr>
+<tr>
+<td align="left">HTML (Erlang)</td>
+<td align="left"><code>yaws</code></td>
+</tr>
+<tr>
+<td align="left">HTML (Rails)</td>
+<td align="left"><code>rails</code>, <code>rhtml</code>, <code>erb</code>, <code>html.erb</code></td>
+</tr>
+<tr>
+<td align="left">HTML (Tcl)</td>
+<td align="left"><code>adp</code></td>
+</tr>
+<tr>
+<td align="left">HTML</td>
+<td align="left"><code>html</code>, <code>htm</code>, <code>shtml</code>, <code>xhtml</code>, <code>inc</code>, <code>tmpl</code>, <code>tpl</code></td>
+</tr>
+<tr>
+<td align="left">Haskell</td>
+<td align="left"><code>hs</code></td>
+</tr>
+<tr>
+<td align="left">JSON</td>
+<td align="left"><code>json</code>, <code>sublime-settings</code>, <code>sublime-menu</code>, <code>sublime-keymap</code>, <code>sublime-mousemap</code>, <code>sublime-theme</code>, <code>sublime-build</code>, <code>sublime-project</code>, <code>sublime-completions</code>, <code>sublime-commands</code>, <code>sublime-macro</code>, <code>sublime-color-scheme</code></td>
+</tr>
+<tr>
+<td align="left">Java Properties</td>
+<td align="left"><code>properties</code></td>
+</tr>
+<tr>
+<td align="left">Java Server Page (JSP)</td>
+<td align="left"><code>jsp</code></td>
+</tr>
+<tr>
+<td align="left">Java</td>
+<td align="left"><code>java</code>, <code>bsh</code></td>
+</tr>
+<tr>
+<td align="left">JavaDoc</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">JavaScript (Rails)</td>
+<td align="left"><code>js.erb</code></td>
+</tr>
+<tr>
+<td align="left">JavaScript</td>
+<td align="left"><code>js</code>, <code>htc</code></td>
+</tr>
+<tr>
+<td align="left">LaTeX Log</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">LaTeX</td>
+<td align="left"><code>tex</code>, <code>ltx</code></td>
+</tr>
+<tr>
+<td align="left">Lisp</td>
+<td align="left"><code>lisp</code>, <code>cl</code>, <code>clisp</code>, <code>l</code>, <code>mud</code>, <code>el</code>, <code>scm</code>, <code>ss</code>, <code>lsp</code>, <code>fasl</code></td>
+</tr>
+<tr>
+<td align="left">Literate Haskell</td>
+<td align="left"><code>lhs</code></td>
+</tr>
+<tr>
+<td align="left">Lua</td>
+<td align="left"><code>lua</code></td>
+</tr>
+<tr>
+<td align="left">MATLAB</td>
+<td align="left"><code>matlab</code></td>
+</tr>
+<tr>
+<td align="left">Make Output</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Makefile</td>
+<td align="left"><code>make</code>, <code>GNUmakefile</code>, <code>makefile</code>, <code>Makefile</code>, <code>OCamlMakefile</code>, <code>mak</code>, <code>mk</code></td>
+</tr>
+<tr>
+<td align="left">Markdown</td>
+<td align="left"><code>md</code>, <code>mdown</code>, <code>markdown</code>, <code>markdn</code></td>
+</tr>
+<tr>
+<td align="left">MultiMarkdown</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">NAnt Build File</td>
+<td align="left"><code>build</code></td>
+</tr>
+<tr>
+<td align="left">OCaml</td>
+<td align="left"><code>ml</code>, <code>mli</code></td>
+</tr>
+<tr>
+<td align="left">OCamllex</td>
+<td align="left"><code>mll</code></td>
+</tr>
+<tr>
+<td align="left">OCamlyacc</td>
+<td align="left"><code>mly</code></td>
+</tr>
+<tr>
+<td align="left">Objective-C</td>
+<td align="left"><code>m</code>, <code>h</code></td>
+</tr>
+<tr>
+<td align="left">Objective-C++</td>
+<td align="left"><code>mm</code>, <code>M</code>, <code>h</code></td>
+</tr>
+<tr>
+<td align="left">PHP Source</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">PHP</td>
+<td align="left"><code>php</code>, <code>php3</code>, <code>php4</code>, <code>php5</code>, <code>php7</code>, <code>phps</code>, <code>phpt</code>, <code>phtml</code></td>
+</tr>
+<tr>
+<td align="left">Pascal</td>
+<td align="left"><code>pas</code>, <code>p</code>, <code>dpr</code></td>
+</tr>
+<tr>
+<td align="left">Perl</td>
+<td align="left"><code>pl</code>, <code>pm</code>, <code>pod</code>, <code>t</code>, <code>PL</code></td>
+</tr>
+<tr>
+<td align="left">Plain Text</td>
+<td align="left"><code>txt</code></td>
+</tr>
+<tr>
+<td align="left">Python</td>
+<td align="left"><code>py</code>, <code>py3</code>, <code>pyw</code>, <code>pyi</code>, <code>pyx</code>, <code>pyx.in</code>, <code>pxd</code>, <code>pxd.in</code>, <code>pxi</code>, <code>pxi.in</code>, <code>rpy</code>, <code>cpy</code>, <code>SConstruct</code>, <code>Sconstruct</code>, <code>sconstruct</code>, <code>SConscript</code>, <code>gyp</code>, <code>gypi</code>, <code>Snakefile</code>, <code>wscript</code></td>
+</tr>
+<tr>
+<td align="left">R Console</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">R</td>
+<td align="left"><code>R</code>, <code>r</code>, <code>s</code>, <code>S</code>, <code>Rprofile</code></td>
+</tr>
+<tr>
+<td align="left">Rd (R Documentation)</td>
+<td align="left"><code>rd</code></td>
+</tr>
+<tr>
+<td align="left">Regular Expression</td>
+<td align="left"><code>re</code></td>
+</tr>
+<tr>
+<td align="left">Regular Expressions (Javascript)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Regular Expressions (Python)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Ruby Haml</td>
+<td align="left"><code>haml</code>, <code>sass</code></td>
+</tr>
+<tr>
+<td align="left">Ruby on Rails</td>
+<td align="left"><code>rxml</code>, <code>builder</code></td>
+</tr>
+<tr>
+<td align="left">Ruby</td>
+<td align="left"><code>rb</code>, <code>Appfile</code>, <code>Appraisals</code>, <code>Berksfile</code>, <code>Brewfile</code>, <code>capfile</code>, <code>cgi</code>, <code>Cheffile</code>, <code>config.ru</code>, <code>Deliverfile</code>, <code>Fastfile</code>, <code>fcgi</code>, <code>Gemfile</code>, <code>gemspec</code>, <code>Guardfile</code>, <code>irbrc</code>, <code>jbuilder</code>, <code>podspec</code>, <code>prawn</code>, <code>rabl</code>, <code>rake</code>, <code>Rakefile</code>, <code>Rantfile</code>, <code>rbx</code>, <code>rjs</code>, <code>ruby.rail</code>, <code>Scanfile</code>, <code>simplecov</code>, <code>Snapfile</code>, <code>thor</code>, <code>Thorfile</code>, <code>Vagrantfile</code></td>
+</tr>
+<tr>
+<td align="left">Rust</td>
+<td align="left"><code>rs</code></td>
+</tr>
+<tr>
+<td align="left">SQL (Rails)</td>
+<td align="left"><code>erbsql</code>, <code>sql.erb</code></td>
+</tr>
+<tr>
+<td align="left">SQL</td>
+<td align="left"><code>sql</code>, <code>ddl</code>, <code>dml</code></td>
+</tr>
+<tr>
+<td align="left">Scala</td>
+<td align="left"><code>scala</code>, <code>sbt</code></td>
+</tr>
+<tr>
+<td align="left">Shell-Unix-Generic</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">Tcl</td>
+<td align="left"><code>tcl</code></td>
+</tr>
+<tr>
+<td align="left">TeX</td>
+<td align="left"><code>sty</code>, <code>cls</code></td>
+</tr>
+<tr>
+<td align="left">Textile</td>
+<td align="left"><code>textile</code></td>
+</tr>
+<tr>
+<td align="left">XML</td>
+<td align="left"><code>xml</code>, <code>xsd</code>, <code>xslt</code>, <code>tld</code>, <code>dtml</code>, <code>rss</code>, <code>opml</code>, <code>svg</code></td>
+</tr>
+<tr>
+<td align="left">YAML</td>
+<td align="left"><code>yaml</code>, <code>yml</code>, <code>sublime-syntax</code></td>
+</tr>
+<tr>
+<td align="left">camlp4</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">commands-builtin-shell-bash</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">reStructuredText</td>
+<td align="left"><code>rst</code>, <code>rest</code></td>
+</tr>
+</tbody>
+</table>
 
             
             

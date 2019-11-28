@@ -14,7 +14,7 @@
 &lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
 " />
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-28T18:22:59.188707583+00:00" />
+        <meta property="book:release_date" content="2019-11-28T19:18:47.381384897+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -32,6 +32,10 @@
                 
                 <li><a href="04-structure.html" class = "current">Structure</a></li>
                 
+                <li><a href="05-customization.html">Customization</a></li>
+                
+                <li><a href="06-how-it-works.html">How it Works</a></li>
+                
             </ol>
         </nav>
         <nav class="small">
@@ -48,11 +52,70 @@
             <span class="title">Structure</span>
             
                 
-                <span class="placeholder"></span>
+                <a href="05-customization.html" alt="Customization">
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
             
         </nav>
         <article>
-            <p><em>mkbook</em> currently only supports two types of assets to use in rendering: assets (images, etc), and documents (markdown files).</p>
+            <p><em>mkbook</em> follows a fairly simple directory structure for now, with a <code>mkbook.toml</code> file declaring the book’s metadata, and <code>.md</code> files defining each chapter of the book.</p>
+<h2><a href="#mkbooktoml" aria-hidden="true" class="anchor" id="headermkbooktoml"></a><code>mkbook.toml</code></h2>
+<p><em>mkbook</em> generally requires a <code>mkbook.toml</code> file to reside in your source directory. This file is responsible for defining the metadata associated with your book:</p>
+<ul>
+<li>The book’s title (<code>title</code>)</li>
+<li>The book’s author (<code>author</code>)</li>
+<li>The publication date (<code>pubdate</code>)</li>
+<li>The canonical URL for the book (<code>url</code>)</li>
+<li>A markdown-formatted description of the book (<code>description</code>)</li>
+</ul>
+<p>If the <code>mkbook.toml</code> file or any of the entries are missing, default values will be used.</p>
+<h3><a href="#sample" aria-hidden="true" class="anchor" id="headersample"></a>Sample</h3>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">title = &quot;The mkbook Book&quot;
+</span><span style="color:#d3d0c8;">author = &quot;Kenton Hamaluik&quot;
+</span><span style="color:#d3d0c8;">url = &quot;https://hamaluik.github.io/mkbook/&quot;
+</span><span style="color:#d3d0c8;">description = &quot;&quot;&quot;
+</span><span style="color:#d3d0c8;">_mkbook_ is my simpler alternative to [mdbook](https://crates.io/crates/mdbook) which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">This tool aims to work somewhat similarly to _mdbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
+</span><span style="color:#d3d0c8;">&quot;&quot;&quot;
+</span></pre>
+<h3><a href="#default-values" aria-hidden="true" class="anchor" id="headerdefault-values"></a>Default Values</h3>
+<dl><dt>
+<p><code>title</code></p>
+</dt>
+<dd>
+<p>“My Cool Book”</p>
+</dd>
+<dt>
+<p><code>author</code></p>
+</dt>
+<dd>
+<p>“Anonymous”</p>
+</dd>
+<dt>
+<p><code>pubdate</code></p>
+</dt>
+<dd>
+<p>The date the book was built from the command line, in UTC time</p>
+</dd>
+<dt>
+<p><code>url</code></p>
+</dt>
+<dd>
+<p>“”</p>
+</dd>
+<dt>
+<p><code>description</code></p>
+</dt>
+<dd>
+<p>“”</p>
+</dd>
+</dl>
 <h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#d3d0c8;">unimplemented!()
@@ -61,6 +124,7 @@
 <p>For now, <em>mkbook</em> only works on a flat list of markdown files, with the intent of each markdown file being its own chapter. Subdirectories and files that don’t end in a <code>.md</code> extension are completely ignored. The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#d3d0c8;">src/
+</span><span style="color:#d3d0c8;">├── mkbook.toml
 </span><span style="color:#d3d0c8;">├── 00-foreword.md
 </span><span style="color:#d3d0c8;">├── 01-introduction.md
 </span><span style="color:#d3d0c8;">├── 02-my-first-chapter.md
@@ -70,6 +134,16 @@
 
             
             
+            <div class="next-chapter">
+                <a href="05-customization.html">
+                    <span>Next chapter: “Customization”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
         
         <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
         </article>

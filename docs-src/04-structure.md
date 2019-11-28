@@ -2,7 +2,54 @@
 title = "Structure"
 ---
 
-_mkbook_ currently only supports two types of assets to use in rendering: assets (images, etc), and documents (markdown files).
+_mkbook_ follows a fairly simple directory structure for now, with a `mkbook.toml` file declaring the book's metadata, and `.md` files defining each chapter of the book.
+
+## `mkbook.toml`
+
+_mkbook_ generally requires a `mkbook.toml` file to reside in your source directory. This file is responsible for defining the metadata associated with your book:
+
+* The book's title (`title`)
+* The book's author (`author`)
+* The publication date (`pubdate`)
+* The canonical URL for the book (`url`)
+* A markdown-formatted description of the book (`description`)
+
+If the `mkbook.toml` file or any of the entries are missing, default values will be used.
+
+### Sample
+
+```toml
+title = "The mkbook Book"
+author = "Kenton Hamaluik"
+url = "https://hamaluik.github.io/mkbook/"
+description = """
+_mkbook_ is my simpler alternative to [mdbook](https://crates.io/crates/mdbook) which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.
+
+This tool aims to work somewhat similarly to _mdbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
+"""
+```
+
+### Default Values
+
+`title`
+
+: "My Cool Book"
+
+`author`
+
+: "Anonymous"
+
+`pubdate`
+
+: The date the book was built from the command line, in UTC time
+
+`url`
+
+: ""
+
+`description`
+
+: ""
 
 ## Assets
 
@@ -16,6 +63,7 @@ For now, _mkbook_ only works on a flat list of markdown files, with the intent o
 
 ```
 src/
+├── mkbook.toml
 ├── 00-foreword.md
 ├── 01-introduction.md
 ├── 02-my-first-chapter.md

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | How it Works</title>
+        <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//06-how-it-works.html" />
+        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
+&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
+" />
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-28T19:18:47.381384897+00:00" />
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li><a href="01-introduction.html">Introduction</a></li>
+                
+                <li><a href="02-markdown.html">Markdown</a></li>
+                
+                <li><a href="03-frontmatter.html">Front Matter</a></li>
+                
+                <li><a href="04-structure.html">Structure</a></li>
+                
+                <li><a href="05-customization.html">Customization</a></li>
+                
+                <li><a href="06-how-it-works.html" class = "current">How it Works</a></li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            
+                
+                <a href="05-customization.html" alt="Customization">
+                    <span class="icon">
+                        <svg class="icon-arrow-left">
+                            <use xlink:href="icons.svg#icon-arrow-left">
+                        </svg>
+                    </span>
+                </a>
+            
+            <span class="title">How it Works</span>
+            
+                
+                <span class="placeholder"></span>
+            
+        </nav>
+        <article>
+            <p><em>mkbook</em> generates a completely static, javascript-free website from a series of Markdown files. All of the layout and styling is controlled purely by hand-crafted CSS specific to this book’s purpose.</p>
+<h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
+<p><em>mkbook</em> currently bundles two assets which get written into the book directory: <code>favicon.ico</code>, and <code>icons.svg</code>. <code>favicon.ico</code> is the <a href="https://fontawesome.com/icons/book?style=solid">Font Awesome 5 book icon</a>, and <code>icons.svg</code> contains 3 <a href="https://fontawesome.com/">Font Awesome 5</a> arrow icons: <a href="https://fontawesome.com/icons/arrow-left?style=solid">arrow-left</a>, <a href="https://fontawesome.com/icons/arrow-right?style=solid">arrow-right</a>, and <a href="https://fontawesome.com/icons/arrow-up?style=solid">arrow-up</a> which are used for navigation. These files are compiled into the <em>mkbook</em> binary using the <a href="https://doc.rust-lang.org/std/macro.include_bytes.html"><code>include_bytes!</code> macro</a>, and written to the output folder on each build.</p>
+<h2><a href="#styling" aria-hidden="true" class="anchor" id="headerstyling"></a>Styling</h2>
+<p><em>mkbook</em> utilizes <a href="https://sass-lang.com/">Sass</a> to define it’s styles; you can view the sources <a href="https://github.com/hamaluik/mkbook/tree/master/style">on github</a>. In <em>mkbook</em>’s build script, the styles are compiled from their native <code>.scss</code> format into a single, compressed <code>.css</code> file using <a href="https://crates.io/crates/sass-rs">sass-rs</a>. The resulting <code>.css</code> file is then bundled into the binary using the <a href="https://doc.rust-lang.org/std/macro.include_str.html"><code>include_str!</code> macro</a>. When a book is generated, this <code>.css</code> is written to the output folder as <code>style.css</code>, where it is included by each generated <code>.html</code> file.</p>
+<h2><a href="#templates" aria-hidden="true" class="anchor" id="headertemplates"></a>Templates</h2>
+<p><em>mkbook</em> contains two template files: one for the index, and one for each page / chapter, and uses <a href="https://crates.io/crates/askama">Askama</a> to render the templates. Since the <em>Askama</em> templates are compiled when <em>mkbook</em> is compiled, it is not currently possible to change the templates at run time. You can view the sources for these templates <a href="https://github.com/hamaluik/mkbook/tree/master/templates">on github</a>.</p>
+<h2><a href="#markdown-formatting" aria-hidden="true" class="anchor" id="headermarkdown-formatting"></a>Markdown Formatting</h2>
+<p>Markdown is formatted usiing <a href="https://crates.io/crates/comrak">comrak</a> with some specific options, see the <a href="02-markdown.html">Markdown chapter</a> for more information.</p>
+<h2><a href="#syntax-highlighting" aria-hidden="true" class="anchor" id="headersyntax-highlighting"></a>Syntax Highlighting</h2>
+<p>Code is syntax-highlighted using <a href="https://crates.io/crates/syntect">syntect</a> with the default langauges and the <code>base16-eighties</code> colour scheme.</p>
+
+            
+            
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+    </body>
+</html>

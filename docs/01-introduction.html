@@ -14,7 +14,7 @@
 &lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
 " />
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-28T18:22:59.188707583+00:00" />
+        <meta property="book:release_date" content="2019-11-28T19:18:47.381384897+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -31,6 +31,10 @@
                 <li><a href="03-frontmatter.html">Front Matter</a></li>
                 
                 <li><a href="04-structure.html">Structure</a></li>
+                
+                <li><a href="05-customization.html">Customization</a></li>
+                
+                <li><a href="06-how-it-works.html">How it Works</a></li>
                 
             </ol>
         </nav>
@@ -60,6 +64,7 @@
         <article>
             <p><em>mkbook</em> is my simpler alternative to <a href="https://crates.io/crates/mdbook"><em>mdbook</em></a> which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.</p>
 <p>This tool aims to work somewhat similarly to <em>mdbook</em>, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.</p>
+<p>If you’re not familiar with <em>mdbook</em>, <em>mkbook</em> is a tool to convert a collection of <a href="https://commonmark.org/">Markdown</a> files into a static website / book which can be published online. It was created to help me write documentation with minimum fuss while presenting it in an easy-to-consume manner.</p>
 <p><em>mkbook</em> may be installed using <em>Cargo</em> (<code>cargo install --force --path .</code> in the <em>mkbook</em> repo directory), and after that it presents a command-line interface:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#d3d0c8;">$ mkbook

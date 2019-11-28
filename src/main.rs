@@ -12,7 +12,19 @@ pub const ASSET_FAVICON: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANI
 pub const ASSET_ICONS: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/icons.svg"));
 
 lazy_static! {
-    static ref HIGHLIGHT_SYNTAX_SETS: SyntaxSet = SyntaxSet::load_defaults_newlines();
+    static ref HIGHLIGHT_SYNTAX_SETS: SyntaxSet = {
+        let ss = SyntaxSet::load_defaults_newlines();
+    
+        //if cfg!(debug_assertions) {
+        //    println!("| Language Name | Supported Tags / Extensions |");
+        //    println!("|:-|:-|");
+        //    for s in ss.syntaxes().iter() {
+        //        println!("| {} | `{}` |", s.name, s.file_extensions.iter().map(|s| &**s).collect::<Vec<&str>>().join("`, `"));
+        //    }
+        //}
+
+        ss
+    };
     static ref HIGHLIGHT_THEME_SETS: ThemeSet = ThemeSet::load_defaults();
     static ref HIGHLIGHT_THEME: &'static Theme = &HIGHLIGHT_THEME_SETS.themes["base16-eighties.dark"];
     static ref COMRAK_OPTIONS: ComrakOptions = ComrakOptions {

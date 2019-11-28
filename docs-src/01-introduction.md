@@ -6,6 +6,8 @@ _mkbook_ is my simpler alternative to [_mdbook_](https://crates.io/crates/mdbook
 
 This tool aims to work somewhat similarly to _mdbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
 
+If you're not familiar with _mdbook_, _mkbook_ is a tool to convert a collection of [Markdown](https://commonmark.org/) files into a static website / book which can be published online. It was created to help me write documentation with minimum fuss while presenting it in an easy-to-consume manner.
+
 _mkbook_ may be installed using _Cargo_ (`cargo install --force --path .` in the _mkbook_ repo directory), and after that it presents a command-line interface:
 
 ```
