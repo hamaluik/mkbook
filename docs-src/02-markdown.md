@@ -87,7 +87,7 @@ The list of supported languages is currently as follows:
 | C# | `cs`, `csx` |
 | C++ | `cpp`, `cc`, `cp`, `cxx`, `c++`, `C`, `h`, `hh`, `hpp`, `hxx`, `h++`, `inl`, `ipp` |
 | CSS | `css`, `css.erb`, `css.liquid` |
-| Cargo Build Results | |
+| Cargo Build Results | `` |
 | Clojure | `clj` |
 | D | `d`, `di` |
 | Diff | `diff`, `patch` |
@@ -101,41 +101,43 @@ The list of supported languages is currently as follows:
 | HTML (Tcl) | `adp` |
 | HTML | `html`, `htm`, `shtml`, `xhtml`, `inc`, `tmpl`, `tpl` |
 | Haskell | `hs` |
+| Haxe | `hx`, `hxsl`, `hscript` |
+| Hxml | `hxml` |
 | JSON | `json`, `sublime-settings`, `sublime-menu`, `sublime-keymap`, `sublime-mousemap`, `sublime-theme`, `sublime-build`, `sublime-project`, `sublime-completions`, `sublime-commands`, `sublime-macro`, `sublime-color-scheme` |
 | Java Properties | `properties` |
 | Java Server Page (JSP) | `jsp` |
 | Java | `java`, `bsh` |
-| JavaDoc | |
+| JavaDoc | `` |
 | JavaScript (Rails) | `js.erb` |
 | JavaScript | `js`, `htc` |
-| LaTeX Log | |
+| LaTeX Log | `` |
 | LaTeX | `tex`, `ltx` |
 | Lisp | `lisp`, `cl`, `clisp`, `l`, `mud`, `el`, `scm`, `ss`, `lsp`, `fasl` |
 | Literate Haskell | `lhs` |
 | Lua | `lua` |
 | MATLAB | `matlab` |
-| Make Output | |
+| Make Output | `` |
 | Makefile | `make`, `GNUmakefile`, `makefile`, `Makefile`, `OCamlMakefile`, `mak`, `mk` |
 | Markdown | `md`, `mdown`, `markdown`, `markdn` |
-| MultiMarkdown | |
+| MultiMarkdown | `` |
 | NAnt Build File | `build` |
 | OCaml | `ml`, `mli` |
 | OCamllex | `mll` |
 | OCamlyacc | `mly` |
 | Objective-C | `m`, `h` |
 | Objective-C++ | `mm`, `M`, `h` |
-| PHP Source | |
+| PHP Source | `` |
 | PHP | `php`, `php3`, `php4`, `php5`, `php7`, `phps`, `phpt`, `phtml` |
 | Pascal | `pas`, `p`, `dpr` |
 | Perl | `pl`, `pm`, `pod`, `t`, `PL` |
 | Plain Text | `txt` |
 | Python | `py`, `py3`, `pyw`, `pyi`, `pyx`, `pyx.in`, `pxd`, `pxd.in`, `pxi`, `pxi.in`, `rpy`, `cpy`, `SConstruct`, `Sconstruct`, `sconstruct`, `SConscript`, `gyp`, `gypi`, `Snakefile`, `wscript` |
-| R Console | |
+| R Console | `` |
 | R | `R`, `r`, `s`, `S`, `Rprofile` |
 | Rd (R Documentation) | `rd` |
 | Regular Expression | `re` |
-| Regular Expressions (Javascript) | |
-| Regular Expressions (Python) | |
+| Regular Expressions (Javascript) | `` |
+| Regular Expressions (Python) | `` |
 | Ruby Haml | `haml`, `sass` |
 | Ruby on Rails | `rxml`, `builder` |
 | Ruby | `rb`, `Appfile`, `Appraisals`, `Berksfile`, `Brewfile`, `capfile`, `cgi`, `Cheffile`, `config.ru`, `Deliverfile`, `Fastfile`, `fcgi`, `Gemfile`, `gemspec`, `Guardfile`, `irbrc`, `jbuilder`, `podspec`, `prawn`, `rabl`, `rake`, `Rakefile`, `Rantfile`, `rbx`, `rjs`, `ruby.rail`, `Scanfile`, `simplecov`, `Snapfile`, `thor`, `Thorfile`, `Vagrantfile` |
@@ -143,12 +145,13 @@ The list of supported languages is currently as follows:
 | SQL (Rails) | `erbsql`, `sql.erb` |
 | SQL | `sql`, `ddl`, `dml` |
 | Scala | `scala`, `sbt` |
-| Shell-Unix-Generic | |
+| Shell-Unix-Generic | `` |
+| TOML | `toml`, `tml`, `Cargo.lock`, `Gopkg.lock`, `Pipfile` |
 | Tcl | `tcl` |
 | TeX | `sty`, `cls` |
 | Textile | `textile` |
 | XML | `xml`, `xsd`, `xslt`, `tld`, `dtml`, `rss`, `opml`, `svg` |
 | YAML | `yaml`, `yml`, `sublime-syntax` |
-| camlp4 | |
-| commands-builtin-shell-bash | |
+| camlp4 | `` |
+| commands-builtin-shell-bash | `` |
 | reStructuredText | `rst`, `rest` |

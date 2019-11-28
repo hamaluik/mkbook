@@ -11,9 +11,20 @@ pub const STYLESHEET: &'static str = include_str!(concat!(env!("OUT_DIR"), "/sty
 pub const ASSET_FAVICON: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/favicon.ico"));
 pub const ASSET_ICONS: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/icons.svg"));
 
+pub const SYNTAX_TOML: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/TOML.sublime-syntax"));
+pub const SYNTAX_HAXE: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/haxe.sublime-syntax"));
+pub const SYNTAX_HXML: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/hxml.sublime-syntax"));
+
 lazy_static! {
     static ref HIGHLIGHT_SYNTAX_SETS: SyntaxSet = {
+        use syntect::parsing::SyntaxDefinition;
+
         let ss = SyntaxSet::load_defaults_newlines();
+        let mut ssb = ss.into_builder();
+        ssb.add(SyntaxDefinition::load_from_str(SYNTAX_TOML, true, None).expect("valid TOML syntax definition"));
+        ssb.add(SyntaxDefinition::load_from_str(SYNTAX_HAXE, true, None).expect("valid haxe syntax definition"));
+        ssb.add(SyntaxDefinition::load_from_str(SYNTAX_HXML, true, None).expect("valid hxml syntax definition"));
+        let ss = ssb.build();
     
         //if cfg!(debug_assertions) {
         //    println!("| Language Name | Supported Tags / Extensions |");
