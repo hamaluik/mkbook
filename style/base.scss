@@ -1,19 +1,19 @@
 body {
-  margin: 2em auto;
-  max-width: 36em;
-  line-height: 1.6;
+  margin: 0;
+  line-height: 1.5;
   font-size: 14pt;
   color: #222222;
   background: #eeeeee;
-  padding: 0 0.5em;
-  font-family: "Georgia", Georgia, "Times New Roman", Times, serif;
+  padding: 0;
+  font-family: $font-serif;
 }
 
 h1,
 h2,
 h3 {
+  margin-top: 0;
   line-height: 1.2;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: $font-sansserif;
 }
 
 a {
@@ -45,14 +45,39 @@ figure {
 
 code {
   margin: 0 2px;
-  padding: 0 5px;
+  padding: 0 2px;
   border: 1px solid #4c566a;
   border-radius: 3px;
   word-break: break-all;
+  font-family: $font-mono;
+  font-size: 0.75em;
 }
 
 pre {
   overflow-x: auto;
-  font-family: "Courier New", Courier, monospace;
-  padding: 0.25em 0.5em;
+  font-family: $font-mono;
+  padding: 0;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  dt {
+    font-weight: 700;
+    margin: 0;
+    padding: 0.5em;
+    border-right: 1px solid #dddddd;
+  }
+
+  dd {
+    margin: 0;
+    padding: 0.5em;
+  }
+
+  dt, dd {
+    p {
+      margin: 0;
+    }
+  }
 }

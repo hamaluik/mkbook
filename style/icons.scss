@@ -1,0 +1,22 @@
+span.icon {
+    display: flex;
+    align-items: center;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+.icon-arrow-left {
+    width: 0.875em;
+}
+
+.icon-arrow-right {
+    width: 0.875em;
+}

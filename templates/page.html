@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+    </head>
+    <body>
+        <nav class="big">
+            {% for chapter in chapters %}
+            <a href="{{ chapter.url|safe }}"{% if url == chapter.url %} class = "current"{% endif %}>{{ chapter.title }}</a>
+            {% endfor %}
+        </nav>
+        <nav class="small">
+            {% match prev_chapter %}
+                {% when Some with (chapter) %}
+                <a href="{{ chapter.url }}">
+                    <span class="icon">
+                        <svg class="icon-arrow-left">
+                            <use xlink:href="icons.svg#icon-arrow-left">
+                        </svg>
+                    </span>
+                </a>
+                {% when None %}
+                <span class="placeholder"></span>
+            {% endmatch %}
+            <span class="title">{{ title }}</span>
+            {% match next_chapter %}
+                {% when Some with (chapter) %}
+                <a href="{{ chapter.url }}">
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+                {% when None %}
+                <span class="placeholder"></span>
+            {% endmatch %}
+        </nav>
+        <article>{{ content|safe }}</article>
+    </body>
+</html>

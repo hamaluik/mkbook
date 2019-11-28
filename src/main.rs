@@ -1,17 +1,12 @@
 use std::path::PathBuf;
 use std::{fs, io};
-use serde::Deserialize;
 
 pub const STYLESHEET: &'static str = include_str!(concat!(env!("OUT_DIR"), "/style.css"));
-pub const TEMPLATE_PAGE: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/page.hbs"));
 pub const ASSET_FAVICON: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/favicon.ico"));
+pub const ASSET_ICONS: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/icons.svg"));
 
 mod cli;
-
-#[derive(Deserialize, Default)]
-struct Metadata {
-    title: Option<String>,
-}
+mod models;
 
 fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Error>> {
     use syntect::parsing::{SyntaxSet, SyntaxReference};
@@ -39,7 +34,7 @@ fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Erro
     Ok(html)
 }
 
-fn extract_metadata(src: &str) -> Result<(Option<Metadata>, String), Box<dyn std::error::Error>> {
+fn extract_frontmatter(src: &str) -> Result<(Option<models::frontmatter::ParsedFrontMatter>, String), Box<dyn std::error::Error>> {
     if src.starts_with("---\n") {
         let slice = &src[4..];
         let end = slice.find("---\n");
@@ -48,10 +43,10 @@ fn extract_metadata(src: &str) -> Result<(Option<Metadata>, String), Box<dyn std
         }
         let end = end.unwrap();
 
-        let metadata = &slice[..end];
+        let front = &slice[..end];
         let contents = &slice[end+4..];
-        let metadata: Metadata = toml::from_str(metadata)?;
-        Ok((Some(metadata), contents.to_owned()))
+        let front: models::frontmatter::ParsedFrontMatter = toml::from_str(front)?;
+        Ok((Some(front), contents.to_owned()))
     }
     else if src.starts_with("---\r\n") {
         let slice = &src[5..];
@@ -61,10 +56,10 @@ fn extract_metadata(src: &str) -> Result<(Option<Metadata>, String), Box<dyn std
         }
         let end = end.unwrap();
 
-        let metadata = &slice[..end];
+        let front = &slice[..end];
         let contents = &slice[end+5..];
-        let metadata: Metadata = toml::from_str(metadata)?;
-        Ok((Some(metadata), contents.to_owned()))
+        let front: models::frontmatter::ParsedFrontMatter = toml::from_str(front)?;
+        Ok((Some(front), contents.to_owned()))
     }
     else {
         Ok((None, src.to_owned()))
@@ -79,7 +74,7 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
         hardbreaks: false,
         smart: true,
         github_pre_lang: true,
-        default_info_string: Some("none".to_owned()),
+        default_info_string: None,
         unsafe_: true,
         ext_strikethrough: true,
         ext_tagfilter: false,
@@ -131,26 +126,46 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
     Ok(output)
 }
 
-fn format_page<W: io::Write>(metadata: Option<Metadata>, content: &str, output: W) -> Result<(), Box<dyn std::error::Error>> {
-    use handlebars::Handlebars;
+fn format_page<W: io::Write>(frontmatter: models::frontmatter::FrontMatter, chapters: &Vec<models::chapter::Chapter>, url: &str, content: &str, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+    use askama::Template;
+    #[derive(Template)]
+    #[template(path = "page.html")]
+    struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'f> {
+        title: &'a str,
+        content: &'b str,
+        url: &'f str,
+        chapters: &'c Vec<models::chapter::Chapter>,
+        prev_chapter: Option<&'d models::chapter::Chapter>,
+        next_chapter: Option<&'e models::chapter::Chapter>,
+    }
 
-    // create the handlebars registry
-    let mut handlebars = Handlebars::new();
+    let this_index = chapters.iter().enumerate().find(|(_, chap)| chap.url == url).map(|(i, _)| i).expect("chapter exists");
+    let prev_chapter = if this_index > 0 {
+        Some(chapters.iter().nth(this_index - 1).expect("chapter n-1 exists"))
+    }
+    else {
+        None
+    };
+    let next_chapter = if this_index < chapters.len() - 1 {
+        Some(chapters.iter().nth(this_index + 1).expect("chapter n+1 exists"))
+    }
+    else {
+        None
+    };
 
-    // register the template. The template string will be verified and compiled.
-    handlebars.register_template_string("page", TEMPLATE_PAGE).expect("page is valid template");
+    // fill out our template
+    let template = PageTemplate {
+        title: &frontmatter.title,
+        content,
+        url,
+        chapters,
+        prev_chapter,
+        next_chapter,
+    };
 
-    // generate our context
-    use std::collections::BTreeMap;
-    let mut data = BTreeMap::new();
-    data.insert("content", content);
-
-    let metadata = metadata.unwrap_or_default();
-    let title = metadata.title.unwrap_or_default();
-    data.insert("title", &title);
-
-    // and render
-    handlebars.render_to_write("page", &data, output)?;
+    // and render!
+    let s = template.render()?;
+    output.write_all(s.as_bytes())?;
 
     Ok(())
 }
@@ -173,6 +188,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let dest = prefix.join("book");
         std::fs::create_dir_all(&dest)?;
 
+        // load all our chapters
+        let mut chapters: Vec<models::chapter::Chapter> = Vec::default();
+        for entry in src.read_dir()? {
+            let entry = entry?;
+            let path = entry.path();
+            if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+                let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+                if name.is_none() { continue; }
+                let name = name.unwrap();
+
+                let contents = fs::read_to_string(&path)?;
+                let (front, _) = extract_frontmatter(&contents)?;
+                let front = front.unwrap_or_default().into_front(name);
+                chapters.push(models::chapter::Chapter {
+                    url: format!("/{}.html", name),
+                    title: front.title,
+                });
+            }
+        }
+        chapters.sort_by(|a, b| a.url.cmp(&b.url));
+
         // compile markdown
         for entry in src.read_dir()? {
             let entry = entry?;
@@ -187,9 +223,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let outfile = io::BufWriter::new(outfile);
 
                 let contents = fs::read_to_string(&path)?;
-                let (meta, contents) = extract_metadata(&contents)?;
+                let (front, contents) = extract_frontmatter(&contents)?;
+                let front = front.unwrap_or_default().into_front(name);
                 let contents = format_markdown(&contents)?;
-                format_page(meta, &contents, outfile)?;
+                format_page(front, &chapters, &format!("/{}.html", name), &contents, outfile)?;
 
                 println!("Rendered `{}` into `{}`", path.display(), out.display());
             }
@@ -200,6 +237,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Wrote {}", dest.join("style.css").display());
         fs::write(dest.join("favicon.ico"), ASSET_FAVICON)?;
         println!("Wrote {}", dest.join("favicon.ico").display());
+        fs::write(dest.join("icons.svg"), ASSET_ICONS)?;
+        println!("Wrote {}", dest.join("icons.svg").display());
 
         println!("Done!");
         Ok(())
