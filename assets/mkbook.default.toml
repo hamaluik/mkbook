@@ -1,0 +1,6 @@
+title = "My Cool Book"
+author = "Anonymous"
+url = ""
+description = """
+A **short** but sweet description of _My Cool Book_.
+"""

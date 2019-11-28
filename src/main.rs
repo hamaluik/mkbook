@@ -10,6 +10,8 @@ use askama::Template;
 pub const STYLESHEET: &'static str = include_str!(concat!(env!("OUT_DIR"), "/style.css"));
 pub const ASSET_FAVICON: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/favicon.ico"));
 pub const ASSET_ICONS: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/icons.svg"));
+pub const ASSET_DEFAULT_MKBOOK: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/mkbook.default.toml"));
+pub const ASSET_DEFAULT_INTRODUCTION: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/01-introduction.default.md"));
 
 pub const SYNTAX_TOML: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/TOML.sublime-syntax"));
 pub const SYNTAX_HAXE: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/haxe.sublime-syntax"));
@@ -228,8 +230,27 @@ fn format_page<W: io::Write>(book: &Book, frontmatter: FrontMatter, chapters: &V
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let matches = cli::build_cli().get_matches();
 
-    if let Some(_submatches) = matches.subcommand_matches("init") {
-        unimplemented!()
+    if let Some(submatches) = matches.subcommand_matches("init") {
+        let dest = submatches.value_of("directory").expect("directory value");
+        let dest = PathBuf::from(dest);
+
+        println!("Initializing a book into {}...", dest.display());
+        fs::create_dir_all(&dest)?;
+        let book_toml_path = dest.join("mkbook.toml");
+        fs::write(&book_toml_path, ASSET_DEFAULT_MKBOOK)?;
+        let intro_path = dest.join("01-introduction.md");
+        fs::write(&intro_path, ASSET_DEFAULT_INTRODUCTION)?;
+        println!("Done!");
+
+        println!("You can now build your book by running:");
+        if dest.display().to_string() != "src" {
+            println!("mkbook build -i {}", dest.display());
+        }
+        else {
+            println!("mkbook build");
+        }
+
+        Ok(())
     }
     else if let Some(submatches) = matches.subcommand_matches("build") {
         let src = submatches.value_of("in").expect("in value");
