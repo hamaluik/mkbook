@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ book.title }}</title>
+        <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="{{ book.title }}" />
+        <meta property="og:site_name" content="{{ book.title }}" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="{{ book.url|safe }}" />
+        <meta property="og:description" content="{{ book.description }}" />
+        <meta property="book:author" content="{{ book.author }}" />
+        <meta property="book:release_date" content="{{ book.pubdate|rfc3339_utc }}" />
+    </head>
+    <body class="toc">
+        <header>
+            <h1>{{ book.title }}</h1>
+            <h2>by {{ book.author }}</h2>
+            <time datetime="{{ book.pubdate|rfc3339_utc }}">{{ book.pubdate|human_date }}</time>
+        </header>
+        <article>
+            {{ book.description|safe }}
+        </article>
+        <nav>
+            <h1>Table of Contents</h1>
+            <ol>
+                {% for chapter in chapters %}
+                <li><a href="{{ chapter.url|safe }}">{{ chapter.title }}</a></li>
+                {% endfor %}
+            </ol>
+        </nav>
+        <footer><p>&copy; {{ book.pubdate|year }} {{ book.author }}</p></footer>
+    </body>
+</html>

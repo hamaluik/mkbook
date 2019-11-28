@@ -3,26 +3,41 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Structure</title>
+        <title>The mkbook Book | Structure</title>
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//04-structure.html" />
+        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
+&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
+" />
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-28T18:22:59.188707583+00:00" />
     </head>
     <body>
         <nav class="big">
-            
-            <a href="01-introduction.html">Introduction</a>
-            
-            <a href="02-markdown.html">Markdown</a>
-            
-            <a href="03-frontmatter.html">Front Matter</a>
-            
-            <a href="04-structure.html" class = "current">Structure</a>
-            
+            <header>
+                <h1><a href="index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li><a href="01-introduction.html">Introduction</a></li>
+                
+                <li><a href="02-markdown.html">Markdown</a></li>
+                
+                <li><a href="03-frontmatter.html">Front Matter</a></li>
+                
+                <li><a href="04-structure.html" class = "current">Structure</a></li>
+                
+            </ol>
         </nav>
         <nav class="small">
             
                 
-                <a href="03-frontmatter.html">
+                <a href="03-frontmatter.html" alt="Front Matter">
                     <span class="icon">
                         <svg class="icon-arrow-left">
                             <use xlink:href="icons.svg#icon-arrow-left">
@@ -36,7 +51,8 @@
                 <span class="placeholder"></span>
             
         </nav>
-        <article><p><em>mkbook</em> currently only supports two types of assets to use in rendering: assets (images, etc), and documents (markdown files).</p>
+        <article>
+            <p><em>mkbook</em> currently only supports two types of assets to use in rendering: assets (images, etc), and documents (markdown files).</p>
 <h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#d3d0c8;">unimplemented!()
@@ -51,6 +67,11 @@
 </span><span style="color:#d3d0c8;">└── etc...
 </span></pre>
 <p>An index and navigation will be automatically generated from these files, taking the information for each file from it’s front-matter.</p>
-</article>
+
+            
+            
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
     </body>
 </html>

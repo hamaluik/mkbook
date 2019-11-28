@@ -2,6 +2,12 @@
   body {
     background: #ffffff;
     color: #000000;
+
+    &:not(.toc) {
+      nav {
+        display: none;
+      }
+    }
   }
 
   a {
@@ -25,10 +31,6 @@
 
   * {
       overflow: hidden;
-  }
-
-  nav {
-    display: none;
   }
 
   body {

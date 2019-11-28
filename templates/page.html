@@ -3,20 +3,33 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ title }}</title>
+        <title>{{ book.title }} | {{ title }}</title>
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="{{ book.title }}" />
+        <meta property="og:site_name" content="{{ book.title }}" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="{{ book.url|safe }}/{{ url|safe }}" />
+        <meta property="og:description" content="{{ book.description }}" />
+        <meta property="book:author" content="{{ book.author }}" />
+        <meta property="book:release_date" content="{{ book.pubdate|rfc3339_utc }}" />
     </head>
     <body>
         <nav class="big">
-            {% for chapter in chapters %}
-            <a href="{{ chapter.url|safe }}"{% if url == chapter.url %} class = "current"{% endif %}>{{ chapter.title }}</a>
-            {% endfor %}
+            <header>
+                <h1><a href="index.html">{{ book.title }}</a></h1>
+                <h2>by {{ book.author }}</h2>
+            </header>
+            <ol>
+                {% for chapter in chapters %}
+                <li><a href="{{ chapter.url|safe }}"{% if url == chapter.url %} class = "current"{% endif %}>{{ chapter.title }}</a></li>
+                {% endfor %}
+            </ol>
         </nav>
         <nav class="small">
             {% match prev_chapter %}
                 {% when Some with (chapter) %}
-                <a href="{{ chapter.url }}">
+                <a href="{{ chapter.url }}" alt="{{ chapter.title }}">
                     <span class="icon">
                         <svg class="icon-arrow-left">
                             <use xlink:href="icons.svg#icon-arrow-left">
@@ -24,12 +37,18 @@
                     </span>
                 </a>
                 {% when None %}
-                <span class="placeholder"></span>
+                <a href="index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-arrow-up">
+                            <use xlink:href="icons.svg#icon-arrow-up">
+                        </svg>
+                    </span>
+                </a>
             {% endmatch %}
             <span class="title">{{ title }}</span>
             {% match next_chapter %}
                 {% when Some with (chapter) %}
-                <a href="{{ chapter.url }}">
+                <a href="{{ chapter.url }}" alt="{{ chapter.title }}">
                     <span class="icon">
                         <svg class="icon-arrow-right">
                             <use xlink:href="icons.svg#icon-arrow-right">
@@ -40,6 +59,23 @@
                 <span class="placeholder"></span>
             {% endmatch %}
         </nav>
-        <article>{{ content|safe }}</article>
+        <article>
+            {{ content|safe }}
+            {% match next_chapter %}
+            {% when Some with (chapter) %}
+            <div class="next-chapter">
+                <a href="{{ chapter.url }}">
+                    <span>Next chapter: “{{ chapter.title }}”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            {% when None %}
+        {% endmatch %}
+        <footer><p>&copy; {{ book.pubdate|year }} {{ book.author }}</p></footer>
+        </article>
     </body>
 </html>

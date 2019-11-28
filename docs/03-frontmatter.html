@@ -3,26 +3,41 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Front Matter</title>
+        <title>The mkbook Book | Front Matter</title>
         <link rel="stylesheet" href="style.css" type="text/css" media="all" />
         <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//03-frontmatter.html" />
+        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
+&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
+" />
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-28T18:22:59.188707583+00:00" />
     </head>
     <body>
         <nav class="big">
-            
-            <a href="01-introduction.html">Introduction</a>
-            
-            <a href="02-markdown.html">Markdown</a>
-            
-            <a href="03-frontmatter.html" class = "current">Front Matter</a>
-            
-            <a href="04-structure.html">Structure</a>
-            
+            <header>
+                <h1><a href="index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li><a href="01-introduction.html">Introduction</a></li>
+                
+                <li><a href="02-markdown.html">Markdown</a></li>
+                
+                <li><a href="03-frontmatter.html" class = "current">Front Matter</a></li>
+                
+                <li><a href="04-structure.html">Structure</a></li>
+                
+            </ol>
         </nav>
         <nav class="small">
             
                 
-                <a href="02-markdown.html">
+                <a href="02-markdown.html" alt="Markdown">
                     <span class="icon">
                         <svg class="icon-arrow-left">
                             <use xlink:href="icons.svg#icon-arrow-left">
@@ -33,7 +48,7 @@
             <span class="title">Front Matter</span>
             
                 
-                <a href="04-structure.html">
+                <a href="04-structure.html" alt="Structure">
                     <span class="icon">
                         <svg class="icon-arrow-right">
                             <use xlink:href="icons.svg#icon-arrow-right">
@@ -42,7 +57,8 @@
                 </a>
             
         </nav>
-        <article><p>Each <code>.md</code> file can optionally contain a header with metadata describing the document. If the header isn’t present, default values will be used which may look ugly.</p>
+        <article>
+            <p>Each <code>.md</code> file can optionally contain a header with metadata describing the document. If the header isn’t present, default values will be used which may look ugly.</p>
 <p>To insert a header into a <code>.md</code> file, insert three dashes (<code>---</code>), followed by a new-line, followed by the front matter contents, followed by a newline, then another three dashes and a new-line. The metadata is in the <a href="https://github.com/toml-lang/toml">TOML</a> format, so for example the front-matter (and first line) for this file looks like:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="background-color:#515151;color:#d3d0c8;">---
@@ -60,6 +76,21 @@
 <p>A human-readable title for the document</p>
 </dd>
 </dl>
-</article>
+
+            
+            
+            <div class="next-chapter">
+                <a href="04-structure.html">
+                    <span>Next chapter: “Structure”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
     </body>
 </html>
