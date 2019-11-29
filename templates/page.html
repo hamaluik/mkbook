@@ -9,8 +9,8 @@
         <meta property="og:title" content="{{ book.title }}" />
         <meta property="og:site_name" content="{{ book.title }}" />
         <meta property="og:type" content="book" />
-        <meta property="og:url" content="{{ book.url|safe }}/{{ url|safe }}" />
-        <meta property="og:description" content="{{ book.description }}" />
+        <meta property="og:url" content="{{ book.url|safe }}/{{ chapter.front.url|safe }}" />
+        {#<meta property="og:description" content="{{ book.description }}" />#}
         <meta property="book:author" content="{{ book.author }}" />
         <meta property="book:release_date" content="{{ book.pubdate|rfc3339_utc }}" />
     </head>
@@ -21,13 +21,13 @@
                 <h2>by {{ book.author }}</h2>
             </header>
             <ol>
-                {% for chapter in chapters %}
+                {% for chap in chapters %}
                 <li>
-                    <a href="../{{ chapter.url|safe }}"{% if url == chapter.url %} class = "current"{% endif %}>{{ chapter.front.title }}</a>
-                    {% if chapter.sections.len() > 0 %}
+                    <a href="../{{ chap.front.url|safe }}"{% if chapter.front.url == chap.front.url %} class = "current"{% endif %}>{{ chap.front.title }}</a>
+                    {% if chap.sections.len() > 0 %}
                     <ol>
-                        {% for section in chapter.sections %}
-                        <li><a href="../{{ section.url|safe }}"{% if url == section.url %} class = "current"{% endif %}>{{ section.front.title }}</a></li>
+                        {% for section in chap.sections %}
+                        <li><a href="../{{ section.front.url|safe }}"{% if chapter.front.url == section.front.url %} class = "current"{% endif %}>{{ section.front.title }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}
@@ -46,9 +46,9 @@
                 </a>
                 {% match prev_chapter %}
                     {% when Some with (chap) %}
-                    <a href="../{{ chap.url }}" alt="{{ chap.front.title }}">
+                    <a href="../{{ chap.front.url }}" alt="{{ chap.front.title }}">
                         <span class="icon">
-                            {% if chapter.sections.len() > 0 && chapter.url.ends_with("index.html") %}
+                            {% if chapter.sections.len() > 0 && chapter.front.url.ends_with("index.html") %}
                             <svg class="icon-arrow-up">
                                 <use xlink:href="../icons.svg#icon-arrow-up">
                             </svg>
@@ -68,7 +68,7 @@
                 <span class="placeholder"></span>
                 {% match next_chapter %}
                     {% when Some with (chapter) %}
-                    <a href="../{{ chapter.url }}" alt="{{ chapter.front.title }}">
+                    <a href="../{{ chapter.front.url }}" alt="{{ chapter.front.title }}">
                         <span class="icon">
                             <svg class="icon-arrow-right">
                                 <use xlink:href="../icons.svg#icon-arrow-right">
@@ -85,7 +85,7 @@
             {% match next_chapter %}
             {% when Some with (chapter) %}
             <div class="next-chapter">
-                <a href="../{{ chapter.url }}">
+                <a href="../{{ chapter.front.url }}">
                     <span>Next chapter: “{{ chapter.front.title }}”</span>
                     <span class="icon">
                         <svg class="icon-arrow-right">

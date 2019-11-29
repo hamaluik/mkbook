@@ -10,11 +10,9 @@
         <meta property="og:site_name" content="The mkbook Book" />
         <meta property="og:type" content="book" />
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//01-introduction/index.html" />
-        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
-&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
-" />
+        
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-29T21:43:28.060984725+00:00" />
+        <meta property="book:release_date" content="2019-11-29T22:36:42.202445325+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -34,7 +32,7 @@
                     
                     <ol>
                         
-                        <li><a href="../02-markdown/01-commonmark.html">Commonmark</a></li>
+                        <li><a href="../02-markdown/01-commonmark.html">CommonMark</a></li>
                         
                         <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
                         
@@ -94,48 +92,68 @@
             </span>
         </nav>
         <article>
-            <p><em>mkbook</em> is my simpler alternative to <a href="https://crates.io/crates/mdbook"><em>mdbook</em></a> which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.</p>
+            <h1><a href="#introduction" aria-hidden="true" class="anchor" id="headerintroduction"></a>Introduction</h1>
+<p><em>mkbook</em> is my simpler alternative to <a href="https://crates.io/crates/mdbook"><em>mdbook</em></a> which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.</p>
 <p>This tool aims to work somewhat similarly to <em>mdbook</em>, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.</p>
 <p>If you’re not familiar with <em>mdbook</em>, <em>mkbook</em> is a tool to convert a collection of <a href="https://commonmark.org/">Markdown</a> files into a static website / book which can be published online. It was created to help me write documentation with minimum fuss while presenting it in an easy-to-consume manner.</p>
+<h2><a href="#command-line-interface" aria-hidden="true" class="anchor" id="headercommand-line-interface"></a>Command-line Interface</h2>
 <p><em>mkbook</em> may be installed using <em>Cargo</em> (<code>cargo install --force --path .</code> in the <em>mkbook</em> repo directory), and after that it presents a command-line interface:</p>
 <pre style="background-color:#2d2d2d;">
-<span style="color:#d3d0c8;">$ mkbook
-</span><span style="color:#d3d0c8;">mkbook 0.1.0
-</span><span style="color:#d3d0c8;">Kenton Hamaluik &lt;kenton@hamaluik.ca&gt;
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook
+</span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> 0.2.0
+</span><span style="color:#6699cc;">Kenton</span><span style="color:#d3d0c8;"> Hamaluik &lt;kenton@hamaluik.ca&gt;
 </span><span style="color:#d3d0c8;">
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">USAGE:
-</span><span style="color:#d3d0c8;">    mkbook [SUBCOMMAND]
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">SUBCOMMAND</span><span style="color:#cc99cc;">]
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">FLAGS:
-</span><span style="color:#d3d0c8;">    -h, --help       
-</span><span style="color:#d3d0c8;">            Prints help information
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help       
+</span><span style="color:#d3d0c8;">            </span><span style="color:#6699cc;">Prints</span><span style="color:#d3d0c8;"> help information
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">    -V, --version    
-</span><span style="color:#d3d0c8;">            Prints version information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version    
+</span><span style="color:#d3d0c8;">            </span><span style="color:#6699cc;">Prints</span><span style="color:#d3d0c8;"> version information
 </span><span style="color:#d3d0c8;">
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">SUBCOMMANDS:
-</span><span style="color:#d3d0c8;">    build    build the book
-</span><span style="color:#d3d0c8;">    help     Prints this message or the help of the given subcommand(s)
-</span><span style="color:#d3d0c8;">    init     initialize a mkbook directory tree
+</span><span style="color:#6699cc;">SUBCOMMANDS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;">    build the book
+</span><span style="color:#d3d0c8;">    </span><span style="color:#66cccc;">help</span><span style="color:#d3d0c8;">     Prints this message or the help of the given subcommand(s)
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">init</span><span style="color:#d3d0c8;">     initialize a mkbook directory tree
 </span></pre>
-<p>Currently, only the <code>build</code> subcommand does anything (it builds your book!), but this functionality is still WIP:</p>
+<h3><a href="#the-init-command" aria-hidden="true" class="anchor" id="headerthe-init-command"></a>The Init Command</h3>
+<p>The init command is a tool to help you get started, and will create an initial <code>README.md</code> file and a stub of your first chapter.</p>
 <pre style="background-color:#2d2d2d;">
-<span style="color:#d3d0c8;">$ mkbook build --help
-</span><span style="color:#d3d0c8;">mkbook-build 
-</span><span style="color:#d3d0c8;">build the book
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook init</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-init 
+</span><span style="color:#6699cc;">initialize</span><span style="color:#d3d0c8;"> a mkbook directory tree
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">USAGE:
-</span><span style="color:#d3d0c8;">    mkbook build [OPTIONS]
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> init </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">FLAGS:
-</span><span style="color:#d3d0c8;">    -h, --help       Prints help information
-</span><span style="color:#d3d0c8;">    -V, --version    Prints version information
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">OPTIONS:
-</span><span style="color:#d3d0c8;">    -i, --in &lt;in&gt;      an optional directory to take the book sources from [default: src]
-</span><span style="color:#d3d0c8;">    -o, --out &lt;out&gt;    an optional directory to render the contents into [default: book]
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-d,</span><span style="color:#f2777a;"> --directory </span><span style="color:#d3d0c8;">&lt;directory&gt;    an optional directory to initialize into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span></pre>
+<h3><a href="#the-build-command" aria-hidden="true" class="anchor" id="headerthe-build-command"></a>The Build Command</h3>
+<p>The build command is the primary command for <em>mkbook</em>, and is responsible for taking the <code>.md</code> files and building the resulting website.</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook build</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-build 
+</span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;"> the book
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> build </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-i,</span><span style="color:#f2777a;"> --in </span><span style="color:#d3d0c8;">&lt;in&gt;      an optional directory to take the book sources from </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-o,</span><span style="color:#f2777a;"> --out </span><span style="color:#d3d0c8;">&lt;out&gt;    an optional directory to render the contents into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: book</span><span style="color:#cc99cc;">]
 </span></pre>
 
             

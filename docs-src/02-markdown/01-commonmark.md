@@ -1,6 +1,8 @@
 ---
-title = "Commonmark"
+title = "CommonMark"
 ---
+
+# CommonMark
 
 _mkbook_ nominally utilizes [CommonMark](https://commonmark.org/) with some [GFM](https://github.github.com/gfm/) extensions through the use of the [comrak](https://crates.io/crates/comrak) crate. In using _comrak_, a specific set of options are used, which are listed here:
 

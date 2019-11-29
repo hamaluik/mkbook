@@ -2,31 +2,39 @@
 title = "Structure"
 ---
 
-_mkbook_ follows a fairly simple directory structure for now, with a `mkbook.toml` file declaring the book's metadata, and `.md` files defining each chapter of the book.
+# Structure
 
-## `mkbook.toml`
+_mkbook_ follows a fairly simple directory structure for now, with a `README.md` file declaring the book's metadata, and `.md` files defining each chapter of the book.
 
-_mkbook_ generally requires a `mkbook.toml` file to reside in your source directory. This file is responsible for defining the metadata associated with your book:
+## `README.md`
+
+_mkbook_ generally requires a `README.md` file to reside in your source directory. This file is responsible for defining the metadata associated with your book:
 
 * The book's title (`title`)
 * The book's author (`author`)
 * The publication date (`pubdate`)
 * The canonical URL for the book (`url`)
-* A markdown-formatted description of the book (`description`)
+* A markdown-formatted description of the book
 
-If the `mkbook.toml` file or any of the entries are missing, default values will be used.
+If the `README.md` file or any of the entries are missing, default values will be used. The `README.md` file should be formatted as any other page, with the `title`, `author`, `pubdate`, and `url` specified in the frontmatter, and the book description the _Markdown_ contents of the `README.md` file.
 
 ### Sample
 
-```toml
+```md
+---
 title = "The mkbook Book"
 author = "Kenton Hamaluik"
 url = "https://hamaluik.github.io/mkbook/"
-description = """
-_mkbook_ is my simpler alternative to [mdbook](https://crates.io/crates/mdbook) which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.
+---
 
-This tool aims to work somewhat similarly to _mdbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
-"""
+_mkbook_ is my simpler alternative to [mdbook](https://crates.io/crates/mdbook)
+which is a great tool, but for which I really dislike some of the decisions they
+took, such as relying on javascript for highlighting and navigation, and
+including a lot of bells and whistles such as javascript-based search.
+
+This tool aims to work somewhat similarly to _mdbook_, but is generally intended
+to be a more minimal alternative that is customized more towards my needs and
+desires than anything else.
 ```
 
 ### Default Values
@@ -53,9 +61,7 @@ This tool aims to work somewhat similarly to _mdbook_, but is generally intended
 
 ## Assets
 
-```rust
-unimplemented!()
-```
+The current version of _mkbook_ doesn't copy any assets into your book—it only parses `.md` files and generates `.html` files. So if you want to include images or other assets, you're on your own. Support for assets is planned for the next minor release.
 
 ## Documents
 

@@ -10,7 +10,7 @@
         <meta property="og:site_name" content="{{ book.title }}" />
         <meta property="og:type" content="book" />
         <meta property="og:url" content="{{ book.url|safe }}" />
-        <meta property="og:description" content="{{ book.description }}" />
+        <meta property="og:description" content="{{ book_description }}" />
         <meta property="book:author" content="{{ book.author }}" />
         <meta property="book:release_date" content="{{ book.pubdate|rfc3339_utc }}" />
     </head>
@@ -21,18 +21,18 @@
             <time datetime="{{ book.pubdate|rfc3339_utc }}">{{ book.pubdate|human_date }}</time>
         </header>
         <article>
-            {{ book.description|safe }}
+            {{ book_description|safe }}
         </article>
         <nav>
             <h1>Table of Contents</h1>
             <ol>
                 {% for chapter in chapters %}
                 <li>
-                    <a href="{{ chapter.url|safe }}">{{ chapter.front.title }}</a>
+                    <a href="{{ chapter.front.url|safe }}">{{ chapter.front.title }}</a>
                     {% if chapter.sections.len() > 0 %}
                     <ol>
                         {% for section in chapter.sections %}
-                        <li><a href="{{ section.url|safe }}">{{ section.front.title }}</a></li>
+                        <li><a href="{{ section.front.url|safe }}">{{ section.front.title }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}

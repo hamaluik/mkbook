@@ -2,6 +2,8 @@
 title = "How it Works"
 ---
 
+# How it Works
+
 _mkbook_ generates a completely static, javascript-free website from a series of Markdown files. All of the layout and styling is controlled purely by hand-crafted CSS specific to this book's purpose.
 
 ## Assets

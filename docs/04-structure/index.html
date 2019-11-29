@@ -10,11 +10,9 @@
         <meta property="og:site_name" content="The mkbook Book" />
         <meta property="og:type" content="book" />
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//04-structure/index.html" />
-        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
-&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
-" />
+        
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-29T21:43:28.060984725+00:00" />
+        <meta property="book:release_date" content="2019-11-29T22:36:42.202445325+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -34,7 +32,7 @@
                     
                     <ol>
                         
-                        <li><a href="../02-markdown/01-commonmark.html">Commonmark</a></li>
+                        <li><a href="../02-markdown/01-commonmark.html">CommonMark</a></li>
                         
                         <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
                         
@@ -102,27 +100,34 @@
             </span>
         </nav>
         <article>
-            <p><em>mkbook</em> follows a fairly simple directory structure for now, with a <code>mkbook.toml</code> file declaring the book’s metadata, and <code>.md</code> files defining each chapter of the book.</p>
-<h2><a href="#mkbooktoml" aria-hidden="true" class="anchor" id="headermkbooktoml"></a><code>mkbook.toml</code></h2>
-<p><em>mkbook</em> generally requires a <code>mkbook.toml</code> file to reside in your source directory. This file is responsible for defining the metadata associated with your book:</p>
+            <h1><a href="#structure" aria-hidden="true" class="anchor" id="headerstructure"></a>Structure</h1>
+<p><em>mkbook</em> follows a fairly simple directory structure for now, with a <code>README.md</code> file declaring the book’s metadata, and <code>.md</code> files defining each chapter of the book.</p>
+<h2><a href="#readmemd" aria-hidden="true" class="anchor" id="headerreadmemd"></a><code>README.md</code></h2>
+<p><em>mkbook</em> generally requires a <code>README.md</code> file to reside in your source directory. This file is responsible for defining the metadata associated with your book:</p>
 <ul>
 <li>The book’s title (<code>title</code>)</li>
 <li>The book’s author (<code>author</code>)</li>
 <li>The publication date (<code>pubdate</code>)</li>
 <li>The canonical URL for the book (<code>url</code>)</li>
-<li>A markdown-formatted description of the book (<code>description</code>)</li>
+<li>A markdown-formatted description of the book</li>
 </ul>
-<p>If the <code>mkbook.toml</code> file or any of the entries are missing, default values will be used.</p>
+<p>If the <code>README.md</code> file or any of the entries are missing, default values will be used. The <code>README.md</code> file should be formatted as any other page, with the <code>title</code>, <code>author</code>, <code>pubdate</code>, and <code>url</code> specified in the frontmatter, and the book description the <em>Markdown</em> contents of the <code>README.md</code> file.</p>
 <h3><a href="#sample" aria-hidden="true" class="anchor" id="headersample"></a>Sample</h3>
 <pre style="background-color:#2d2d2d;">
-<span style="color:#f2777a;">title </span><span style="color:#d3d0c8;">= &quot;</span><span style="color:#99cc99;">The mkbook Book</span><span style="color:#d3d0c8;">&quot;
-</span><span style="color:#f2777a;">author </span><span style="color:#d3d0c8;">= &quot;</span><span style="color:#99cc99;">Kenton Hamaluik</span><span style="color:#d3d0c8;">&quot;
-</span><span style="color:#f2777a;">url </span><span style="color:#d3d0c8;">= &quot;</span><span style="color:#99cc99;">https://hamaluik.github.io/mkbook/</span><span style="color:#d3d0c8;">&quot;
-</span><span style="color:#f2777a;">description </span><span style="color:#d3d0c8;">= &quot;&quot;&quot;
-</span><span style="color:#99cc99;">_mkbook_ is my simpler alternative to [mdbook](https://crates.io/crates/mdbook) which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.
-</span><span style="color:#99cc99;">
-</span><span style="color:#99cc99;">This tool aims to work somewhat similarly to _mdbook_, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.
-</span><span style="color:#d3d0c8;">&quot;&quot;&quot;
+<span style="background-color:#515151;color:#d3d0c8;">---
+</span><span style="color:#d3d0c8;">title = &quot;The mkbook Book&quot;
+</span><span style="color:#d3d0c8;">author = &quot;Kenton Hamaluik&quot;
+</span><span style="color:#d3d0c8;">url = &quot;https://hamaluik.github.io/mkbook/&quot;
+</span><span style="color:#6699cc;">---
+</span><span style="color:#d3d0c8;">
+</span><span style="font-style:italic;color:#cc99cc;">_mkbook_</span><span style="color:#d3d0c8;"> is my simpler alternative to </span><span style="color:#f99157;">[mdbook](https://crates.io/crates/mdbook)
+</span><span style="color:#d3d0c8;">which is a great tool, but for which I really dislike some of the decisions they
+</span><span style="color:#d3d0c8;">took, such as relying on javascript for highlighting and navigation, and
+</span><span style="color:#d3d0c8;">including a lot of bells and whistles such as javascript-based search.
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">This tool aims to work somewhat similarly to </span><span style="font-style:italic;color:#cc99cc;">_mdbook_</span><span style="color:#d3d0c8;">, but is generally intended
+</span><span style="color:#d3d0c8;">to be a more minimal alternative that is customized more towards my needs and
+</span><span style="color:#d3d0c8;">desires than anything else.
 </span></pre>
 <h3><a href="#default-values" aria-hidden="true" class="anchor" id="headerdefault-values"></a>Default Values</h3>
 <dl><dt>
@@ -157,9 +162,7 @@
 </dd>
 </dl>
 <h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
-<pre style="background-color:#2d2d2d;">
-<span style="color:#d3d0c8;">unimplemented!()
-</span></pre>
+<p>The current version of <em>mkbook</em> doesn’t copy any assets into your book—it only parses <code>.md</code> files and generates <code>.html</code> files. So if you want to include images or other assets, you’re on your own. Support for assets is planned for the next minor release.</p>
 <h2><a href="#documents" aria-hidden="true" class="anchor" id="headerdocuments"></a>Documents</h2>
 <p><em>mkbook</em> works on mostly a flat directory structure, however one level of sub-directories are supported in order to create sections within chapters. Files that don’t end in a <code>.md</code> extension are completely ignored. Each <code>.md</code> file in the root source directly is it’s own chapter. To create chapters with sub-sections, create a sub-directory in the root directory and then create a <code>README.md</code> file, which will become the root of the chapter, with all <code>.md</code> files in the sub-directory becoming sections in the chapter. The <code>title</code> in the <code>README.md</code> file’s frontmatter will be used as the name of the chapter.</p>
 <p>The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>

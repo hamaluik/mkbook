@@ -10,11 +10,9 @@
         <meta property="og:site_name" content="The mkbook Book" />
         <meta property="og:type" content="book" />
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//03-frontmatter/index.html" />
-        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
-&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
-" />
+        
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-29T21:43:28.060984725+00:00" />
+        <meta property="book:release_date" content="2019-11-29T22:36:42.202445325+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -34,7 +32,7 @@
                     
                     <ol>
                         
-                        <li><a href="../02-markdown/01-commonmark.html">Commonmark</a></li>
+                        <li><a href="../02-markdown/01-commonmark.html">CommonMark</a></li>
                         
                         <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
                         
@@ -102,14 +100,19 @@
             </span>
         </nav>
         <article>
-            <p>Each <code>.md</code> file can optionally contain a header with metadata describing the document. If the header isn’t present, default values will be used which may look ugly.</p>
-<p>To insert a header into a <code>.md</code> file, insert three dashes (<code>---</code>), followed by a new-line, followed by the front matter contents, followed by a newline, then another three dashes and a new-line. The metadata is in the <a href="https://github.com/toml-lang/toml">TOML</a> format, so for example the front-matter (and first line) for this file looks like:</p>
+            <h1><a href="#front-matter" aria-hidden="true" class="anchor" id="headerfront-matter"></a>Front Matter</h1>
+<p>Each <code>.md</code> file can optionally contain a header with metadata describing the document. If the header isn’t present, or if any keys are missing, default values will be used.</p>
+<p>To insert a header into a <code>.md</code> file, insert three dashes (<code>---</code>), followed by a new-line, followed by the front matter contents, followed by a newline, then another three dashes and a new-line. The metadata is in the <a href="https://github.com/toml-lang/toml">TOML</a> format, so for example the front-matter (and first line) for a file could look like this:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="background-color:#515151;color:#d3d0c8;">---
 </span><span style="color:#d3d0c8;">title = &quot;Front Matter&quot;
+</span><span style="color:#d3d0c8;">author = &quot;Kenton Hamaluik&quot;
+</span><span style="color:#d3d0c8;">pubdate = 2019-11-29T15:22:00-07:00
 </span><span style="color:#6699cc;">---
 </span><span style="color:#d3d0c8;">
-</span><span style="color:#d3d0c8;">Each </span><span style="color:#99cc99;">`.md`</span><span style="color:#d3d0c8;"> file can optionally contain a header with metadata describing the document. If the header isn&#39;t present, default values will be used which may look ugly.
+</span><span style="color:#6699cc;"># Front Matter
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">Each </span><span style="color:#99cc99;">`.md`</span><span style="color:#d3d0c8;"> file can optionally contain a header with metadata describing the document. If the header isn&#39;t present, or if any keys are missing, default values will be used.
 </span></pre>
 <h2><a href="#supported-keys" aria-hidden="true" class="anchor" id="headersupported-keys"></a>Supported Keys</h2>
 <p>The list of supported keys is subject to change, but for now it is as follows:</p>
@@ -117,7 +120,25 @@
 <p>title</p>
 </dt>
 <dd>
-<p>A human-readable title for the document</p>
+<p>A human-readable title for the document (defaults to the filename)</p>
+</dd>
+<dt>
+<p>author</p>
+</dt>
+<dd>
+<p>The author (or authors) who wrote the chapter (defaults to “Anonymous”)</p>
+</dd>
+<dt>
+<p>pubdate</p>
+</dt>
+<dd>
+<p>The <a href="http://tools.ietf.org/html/rfc3339">RFC 3339</a> timestamp of when the chapter was published (defaults to the time at build)</p>
+</dd>
+<dt>
+<p>url</p>
+</dt>
+<dd>
+<p>The relative URL of the file, defaults to the generated route (you probably shouldn’t set this one)</p>
 </dd>
 </dl>
 
