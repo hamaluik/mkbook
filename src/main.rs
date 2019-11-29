@@ -72,9 +72,46 @@ mod filters;
 use models::frontmatter::{ParsedFrontMatter, FrontMatter};
 use models::chapter::{Chapter};
 
+fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> {
+    use std::process::{Command, Stdio};
+    use io::Write;
+
+    let mut child = Command::new("plantuml")
+        .arg("-tsvg")
+        .arg("-nometadata")
+        .arg("-pipe")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()?;
+
+    let stdin = child.stdin.as_mut().expect("valid plantuml stdin");
+    stdin.write_all(src.as_ref())?;
+
+    let output = child.wait_with_output()?;
+    if !output.status.success() {
+        eprintln!("failed to generate plantuml, exit code: {:?}", output.status.code());
+        eprintln!("plantuml STDOUT:");
+        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        eprintln!("plantuml STDERR:");
+        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        eprintln!("/plantuml output");
+        return format_code("", src);
+    }
+    let svg: String = String::from_utf8(output.stdout)?;
+    let svg = svg.replace(r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#, "");
+
+    Ok(format!("<figure>{}</figure>", svg))
+}
+
 fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Error>> {
     use syntect::parsing::SyntaxReference;
     use syntect::html::highlighted_html_for_string;
+
+    // render plantuml code blocks into an inline svg
+    if lang == "plantuml" {
+        return create_plantuml_svg(src);
+    }
 
     let syntax: Option<&SyntaxReference> = if lang.len() > 0 {
         let syntax = HIGHLIGHT_SYNTAX_SETS.find_syntax_by_token(lang);

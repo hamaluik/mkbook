@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | PlantUML Diagrams</title>
+        <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="../favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/03-plantuml-diagrams.html" />
+        
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-29T23:22:44.521902918+00:00" />
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="../index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li>
+                    <a href="../01-introduction/index.html">Introduction</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../02-markdown/index.html">Markdown</a>
+                    
+                    <ol>
+                        
+                        <li><a href="../02-markdown/01-commonmark.html">CommonMark</a></li>
+                        
+                        <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
+                        
+                        <li><a href="../02-markdown/03-plantuml-diagrams.html" class = "current">PlantUML Diagrams</a></li>
+                        
+                    </ol>
+                    
+                </li>
+                
+                <li>
+                    <a href="../03-frontmatter/index.html">Front Matter</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../04-structure/index.html">Structure</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../05-customization/index.html">Customization</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../06-how-it-works/index.html">How it Works</a>
+                    
+                </li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            <span>
+                <a href="../index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-list-ol">
+                            <use xlink:href="../icons.svg#icon-list-ol">
+                        </svg>
+                    </span>
+                </a>
+                
+                    
+                    <a href="../02-markdown&#x2f;02-syntax-highlighting.html" alt="Syntax Highlighting">
+                        <span class="icon">
+                            
+                            <svg class="icon-arrow-left">
+                                <use xlink:href="../icons.svg#icon-arrow-left">
+                            </svg>
+                            
+                        </span>
+                    </a>
+                
+            </span>
+            <span class="title">PlantUML Diagrams</span>
+            <span>
+                <span class="placeholder"></span>
+                
+                    
+                    <a href="../03-frontmatter&#x2f;index.html" alt="Front Matter">
+                        <span class="icon">
+                            <svg class="icon-arrow-right">
+                                <use xlink:href="../icons.svg#icon-arrow-right">
+                            </svg>
+                        </span>
+                    </a>
+                
+            </span>
+        </nav>
+        <article>
+            <p>If you have <a href="http://plantuml.com/">PlantUML</a> installed and available on your path, <em>mkbook</em> will try to render any code blocks with a language tag of <code>plantuml</code> as inline SVG images.</p>
+<p>For example:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">```plantuml
+</span><span style="color:#d3d0c8;">@startuml
+</span><span style="color:#d3d0c8;">Alice -&gt; Bob: Authentication Request
+</span><span style="color:#d3d0c8;">Bob --&gt; Alice: Authentication Response
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">Alice -&gt; Bob: Another authentication Request
+</span><span style="color:#d3d0c8;">Alice &lt;-- Bob: Another authentication Response
+</span><span style="color:#d3d0c8;">@enduml
+</span><span style="color:#d3d0c8;">```
+</span></pre>
+<p>is rendered as:</p>
+<figure><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="215px" preserveAspectRatio="none" style="width:300px;height:215px;" version="1.1" viewBox="0 0 300 215" width="300px" zoomAndPan="magnify"><defs><filter height="300%" id="fn3yvorrca0j1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="33" x2="33" y1="38.2969" y2="174.8281"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="270" x2="270" y1="38.2969" y2="174.8281"/><rect fill="#FEFECE" filter="url(#fn3yvorrca0j1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="46" x="8" y="3"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="32" x="15" y="22.9951">Alice</text><rect fill="#FEFECE" filter="url(#fn3yvorrca0j1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="46" x="8" y="173.8281"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="32" x="15" y="193.8232">Alice</text><rect fill="#FEFECE" filter="url(#fn3yvorrca0j1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="42" x="247" y="3"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="254" y="22.9951">Bob</text><rect fill="#FEFECE" filter="url(#fn3yvorrca0j1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="42" x="247" y="173.8281"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="28" x="254" y="193.8232">Bob</text><polygon fill="#A80036" points="258,65.4297,268,69.4297,258,73.4297,262,69.4297" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="33" x2="264" y1="69.4297" y2="69.4297"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="149" x="40" y="64.3638">Authentication Request</text><polygon fill="#A80036" points="44,94.5625,34,98.5625,44,102.5625,40,98.5625" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="38" x2="269" y1="98.5625" y2="98.5625"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="159" x="50" y="93.4966">Authentication Response</text><polygon fill="#A80036" points="258,123.6953,268,127.6953,258,131.6953,262,127.6953" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="33" x2="264" y1="127.6953" y2="127.6953"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="203" x="40" y="122.6294">Another authentication Request</text><polygon fill="#A80036" points="44,152.8281,34,156.8281,44,160.8281,40,156.8281" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="38" x2="269" y1="156.8281" y2="156.8281"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="213" x="50" y="151.7622">Another authentication Response</text></g></svg></figure>
+<p>This feature is still experimental, but I find it handy for my books.</p>
+
+            
+            
+            <div class="next-chapter">
+                <a href="../03-frontmatter&#x2f;index.html">
+                    <span>Next chapter: “Front Matter”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="../icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+    </body>
+</html>
