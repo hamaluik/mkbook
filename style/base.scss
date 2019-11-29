@@ -38,7 +38,7 @@ figure {
 
   figcaption {
     display: block;
-    font-size: 0.75em;
+    font-size: 0.75rem;
     text-align: center;
   }
 }
@@ -50,7 +50,7 @@ code, kbd {
   border-radius: 3px;
   word-break: break-all;
   font-family: $font-mono;
-  font-size: 0.75em;
+  font-size: 0.75rem;
 }
 
 kbd {
@@ -62,24 +62,24 @@ kbd {
 pre {
   overflow-x: auto;
   font-family: $font-mono;
-  padding: 0.5em;
+  padding: 0.5rem;
 }
 
 dl {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto;
 
   dt {
     font-weight: 700;
     margin: 0;
-    padding: 0 0.5em 0.25em;
+    padding: 0 0.5em 0.25rem;
     border-right: 1px solid #dddddd;
     text-align: right;
   }
 
   dd {
     margin: 0;
-    padding: 0 0.5em 0.25em;
+    padding: 0 0.5em 0.25rem;
   }
 
   dt, dd {
@@ -96,14 +96,14 @@ p {
 footer {
   color: #444444;
   p {
-    margin-right: 0.5em;
+    margin-right: 0.5rem;
   }
 }
 
 table {
   margin: 0 auto;
   border-collapse: collapse;
-  border-spacing: 0.5em;
+  border-spacing: 0.5rem;
 
   th {
     border-bottom: 1px solid #eee;
@@ -112,4 +112,33 @@ table {
   th, td {
     vertical-align: top;
   }
+}
+
+// sub-list numbering
+// taken from: https://stackoverflow.com/a/26245056
+ol {
+  list-style-type: none;
+  counter-reset: item;
+  margin: 0;
+  padding: 0;
+}
+
+ol > li {
+  display: table;
+  counter-increment: item;
+  margin-bottom: 0.6rem;
+}
+
+ol > li:before {
+  content: counters(item, ".") ". ";
+  display: table-cell;
+  padding-right: 0.6rem;
+}
+
+li ol > li {
+  margin: 0;
+}
+
+li ol > li:before {
+  content: counters(item, ".") " ";
 }

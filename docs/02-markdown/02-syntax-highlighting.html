@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | Syntax Highlighting</title>
+        <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="../favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/02-syntax-highlighting.html" />
+        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
+&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
+" />
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-29T21:20:04.527238643+00:00" />
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="../index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li>
+                    <a href="../01-introduction/index.html">Introduction</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../02-markdown/index.html">Markdown</a>
+                    
+                    <ol>
+                        
+                        <li><a href="../02-markdown/01-commonmark.html">Commonmark</a></li>
+                        
+                        <li><a href="../02-markdown/02-syntax-highlighting.html" class = "current">Syntax Highlighting</a></li>
+                        
+                    </ol>
+                    
+                </li>
+                
+                <li>
+                    <a href="../03-frontmatter/index.html">Front Matter</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../04-structure/index.html">Structure</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../05-customization/index.html">Customization</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../06-how-it-works/index.html">How it Works</a>
+                    
+                </li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            <span>
+                <a href="../index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-list-ol">
+                            <use xlink:href="../icons.svg#icon-list-ol">
+                        </svg>
+                    </span>
+                </a>
+                
+                    
+                    <a href="../02-markdown&#x2f;01-commonmark.html" alt="Commonmark">
+                        <span class="icon">
+                            
+                            <svg class="icon-arrow-left">
+                                <use xlink:href="../icons.svg#icon-arrow-left">
+                            </svg>
+                            
+                        </span>
+                    </a>
+                
+            </span>
+            <span class="title">Syntax Highlighting</span>
+            <span>
+                <span class="placeholder"></span>
+                
+                    
+                    <a href="../03-frontmatter&#x2f;index.html" alt="Front Matter">
+                        <span class="icon">
+                            <svg class="icon-arrow-right">
+                                <use xlink:href="../icons.svg#icon-arrow-right">
+                            </svg>
+                        </span>
+                    </a>
+                
+            </span>
+        </nav>
+        <article>
+            <h1><a href="#syntax-highlighting" aria-hidden="true" class="anchor" id="headersyntax-highlighting"></a>Syntax Highlighting</h1>
+<p>GFM syntax highlighting is also available by using fenced code tags with a label denoting the language, as such:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">```</span><span style="color:#f99157;">c</span><span style="color:#d3d0c8;">++
+</span><span style="color:#d3d0c8;">#include &lt;stdio&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">int main() {
+</span><span style="color:#d3d0c8;">    std::cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; std::endl;
+</span><span style="color:#d3d0c8;">    return 0;
+</span><span style="color:#d3d0c8;">}
+</span><span style="color:#d3d0c8;">```
+</span></pre>
+<p>which results in:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#cc99cc;">#include </span><span style="color:#d3d0c8;">&lt;</span><span style="color:#99cc99;">stdio</span><span style="color:#d3d0c8;">&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#cc99cc;">int </span><span style="color:#6699cc;">main</span><span style="color:#d3d0c8;">() {
+</span><span style="color:#d3d0c8;">    std::cout &lt;&lt; &quot;</span><span style="color:#99cc99;">Hello, world!</span><span style="color:#d3d0c8;">&quot; &lt;&lt; std::endl;
+</span><span style="color:#d3d0c8;">    </span><span style="color:#cc99cc;">return </span><span style="color:#f99157;">0</span><span style="color:#d3d0c8;">;
+</span><span style="color:#d3d0c8;">}
+</span></pre>
+<p>To denote the language you can either use one the language’s extensions as the label, or the full name of the language (which is <strong>not</strong> case-sensitive).</p>
+<p>The list of supported languages is currently as follows:</p>
+<dl><dt>
+<p>ASP</p>
+</dt>
+<dd>
+<p><code>asa</code></p>
+</dd>
+<dt>
+<p>ActionScript</p>
+</dt>
+<dd>
+<p><code>as</code></p>
+</dd>
+<dt>
+<p>AppleScript</p>
+</dt>
+<dd>
+<p><code>applescript</code>, <code>script editor</code></p>
+</dd>
+<dt>
+<p>Batch File</p>
+</dt>
+<dd>
+<p><code>bat</code>, <code>cmd</code></p>
+</dd>
+<dt>
+<p>BibTeX</p>
+</dt>
+<dd>
+<p><code>bib</code></p>
+</dd>
+<dt>
+<p>Bourne Again Shell (bash)</p>
+</dt>
+<dd>
+<p><code>sh</code>, <code>bash</code>, <code>zsh</code>, <code>fish</code>, <code>.bash_aliases</code>, <code>.bash_completions</code>, <code>.bash_functions</code>, <code>.bash_login</code>, <code>.bash_logout</code>, <code>.bash_profile</code>, <code>.bash_variables</code>, <code>.bashrc</code>, <code>.profile</code>, <code>.textmate_init</code></p>
+</dd>
+<dt>
+<p>C</p>
+</dt>
+<dd>
+<p><code>c</code>, <code>h</code></p>
+</dd>
+<dt>
+<p>C#</p>
+</dt>
+<dd>
+<p><code>cs</code>, <code>csx</code></p>
+</dd>
+<dt>
+<p>C++</p>
+</dt>
+<dd>
+<p><code>cpp</code>, <code>cc</code>, <code>cp</code>, <code>cxx</code>, <code>c++</code>, <code>C</code>, <code>h</code>, <code>hh</code>, <code>hpp</code>, <code>hxx</code>, <code>h++</code>, <code>inl</code>, <code>ipp</code></p>
+</dd>
+<dt>
+<p>CSS</p>
+</dt>
+<dd>
+<p><code>css</code>, <code>css.erb</code>, <code>css.liquid</code></p>
+</dd>
+<dt>
+<p>Cargo Build Results</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Clojure</p>
+</dt>
+<dd>
+<p><code>clj</code></p>
+</dd>
+<dt>
+<p>D</p>
+</dt>
+<dd>
+<p><code>d</code>, <code>di</code></p>
+</dd>
+<dt>
+<p>Diff</p>
+</dt>
+<dd>
+<p><code>diff</code>, <code>patch</code></p>
+</dd>
+<dt>
+<p>Erlang</p>
+</dt>
+<dd>
+<p><code>erl</code>, <code>hrl</code>, <code>Emakefile</code>, <code>emakefile</code></p>
+</dd>
+<dt>
+<p>Go</p>
+</dt>
+<dd>
+<p><code>go</code></p>
+</dd>
+<dt>
+<p>Graphviz (DOT)</p>
+</dt>
+<dd>
+<p><code>dot</code>, <code>DOT</code>, <code>gv</code></p>
+</dd>
+<dt>
+<p>Groovy</p>
+</dt>
+<dd>
+<p><code>groovy</code>, <code>gvy</code>, <code>gradle</code></p>
+</dd>
+<dt>
+<p>HTML</p>
+</dt>
+<dd>
+<p><code>html</code>, <code>htm</code>, <code>shtml</code>, <code>xhtml</code>, <code>inc</code>, <code>tmpl</code>, <code>tpl</code></p>
+</dd>
+<dt>
+<p>HTML (ASP)</p>
+</dt>
+<dd>
+<p><code>asp</code></p>
+</dd>
+<dt>
+<p>HTML (Erlang)</p>
+</dt>
+<dd>
+<p><code>yaws</code></p>
+</dd>
+<dt>
+<p>HTML (Rails)</p>
+</dt>
+<dd>
+<p><code>rails</code>, <code>rhtml</code>, <code>erb</code>, <code>html.erb</code></p>
+</dd>
+<dt>
+<p>HTML (Tcl)</p>
+</dt>
+<dd>
+<p><code>adp</code></p>
+</dd>
+<dt>
+<p>Haskell</p>
+</dt>
+<dd>
+<p><code>hs</code></p>
+</dd>
+<dt>
+<p>Haxe</p>
+</dt>
+<dd>
+<p><code>hx</code>, <code>hxsl</code>, <code>hscript</code></p>
+</dd>
+<dt>
+<p>Hxml</p>
+</dt>
+<dd>
+<p><code>hxml</code></p>
+</dd>
+<dt>
+<p>JSON</p>
+</dt>
+<dd>
+<p><code>json</code>, <code>sublime-settings</code>, <code>sublime-menu</code>, <code>sublime-keymap</code>, <code>sublime-mousemap</code>, <code>sublime-theme</code>, <code>sublime-build</code>, <code>sublime-project</code>, <code>sublime-completions</code>, <code>sublime-commands</code>, <code>sublime-macro</code>, <code>sublime-color-scheme</code></p>
+</dd>
+<dt>
+<p>Java</p>
+</dt>
+<dd>
+<p><code>java</code>, <code>bsh</code></p>
+</dd>
+<dt>
+<p>Java Properties</p>
+</dt>
+<dd>
+<p><code>properties</code></p>
+</dd>
+<dt>
+<p>Java Server Page (JSP)</p>
+</dt>
+<dd>
+<p><code>jsp</code></p>
+</dd>
+<dt>
+<p>JavaDoc</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>JavaScript</p>
+</dt>
+<dd>
+<p><code>js</code>, <code>htc</code></p>
+</dd>
+<dt>
+<p>JavaScript (Rails)</p>
+</dt>
+<dd>
+<p><code>js.erb</code></p>
+</dd>
+<dt>
+<p>LaTeX</p>
+</dt>
+<dd>
+<p><code>tex</code>, <code>ltx</code></p>
+</dd>
+<dt>
+<p>LaTeX Log</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Lisp</p>
+</dt>
+<dd>
+<p><code>lisp</code>, <code>cl</code>, <code>clisp</code>, <code>l</code>, <code>mud</code>, <code>el</code>, <code>scm</code>, <code>ss</code>, <code>lsp</code>, <code>fasl</code></p>
+</dd>
+<dt>
+<p>Literate Haskell</p>
+</dt>
+<dd>
+<p><code>lhs</code></p>
+</dd>
+<dt>
+<p>Lua</p>
+</dt>
+<dd>
+<p><code>lua</code></p>
+</dd>
+<dt>
+<p>MATLAB</p>
+</dt>
+<dd>
+<p><code>matlab</code></p>
+</dd>
+<dt>
+<p>Make Output</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Makefile</p>
+</dt>
+<dd>
+<p><code>make</code>, <code>GNUmakefile</code>, <code>makefile</code>, <code>Makefile</code>, <code>OCamlMakefile</code>, <code>mak</code>, <code>mk</code></p>
+</dd>
+<dt>
+<p>Markdown</p>
+</dt>
+<dd>
+<p><code>md</code>, <code>mdown</code>, <code>markdown</code>, <code>markdn</code></p>
+</dd>
+<dt>
+<p>MultiMarkdown</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>NAnt Build File</p>
+</dt>
+<dd>
+<p><code>build</code></p>
+</dd>
+<dt>
+<p>OCaml</p>
+</dt>
+<dd>
+<p><code>ml</code>, <code>mli</code></p>
+</dd>
+<dt>
+<p>OCamllex</p>
+</dt>
+<dd>
+<p><code>mll</code></p>
+</dd>
+<dt>
+<p>OCamlyacc</p>
+</dt>
+<dd>
+<p><code>mly</code></p>
+</dd>
+<dt>
+<p>Objective-C</p>
+</dt>
+<dd>
+<p><code>m</code>, <code>h</code></p>
+</dd>
+<dt>
+<p>Objective-C++</p>
+</dt>
+<dd>
+<p><code>mm</code>, <code>M</code>, <code>h</code></p>
+</dd>
+<dt>
+<p>PHP</p>
+</dt>
+<dd>
+<p><code>php</code>, <code>php3</code>, <code>php4</code>, <code>php5</code>, <code>php7</code>, <code>phps</code>, <code>phpt</code>, <code>phtml</code></p>
+</dd>
+<dt>
+<p>PHP Source</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Pascal</p>
+</dt>
+<dd>
+<p><code>pas</code>, <code>p</code>, <code>dpr</code></p>
+</dd>
+<dt>
+<p>Perl</p>
+</dt>
+<dd>
+<p><code>pl</code>, <code>pm</code>, <code>pod</code>, <code>t</code>, <code>PL</code></p>
+</dd>
+<dt>
+<p>Plain Text</p>
+</dt>
+<dd>
+<p><code>txt</code></p>
+</dd>
+<dt>
+<p>Python</p>
+</dt>
+<dd>
+<p><code>py</code>, <code>py3</code>, <code>pyw</code>, <code>pyi</code>, <code>pyx</code>, <code>pyx.in</code>, <code>pxd</code>, <code>pxd.in</code>, <code>pxi</code>, <code>pxi.in</code>, <code>rpy</code>, <code>cpy</code>, <code>SConstruct</code>, <code>Sconstruct</code>, <code>sconstruct</code>, <code>SConscript</code>, <code>gyp</code>, <code>gypi</code>, <code>Snakefile</code>, <code>wscript</code></p>
+</dd>
+<dt>
+<p>R</p>
+</dt>
+<dd>
+<p><code>R</code>, <code>r</code>, <code>s</code>, <code>S</code>, <code>Rprofile</code></p>
+</dd>
+<dt>
+<p>R Console</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Rd (R Documentation)</p>
+</dt>
+<dd>
+<p><code>rd</code></p>
+</dd>
+<dt>
+<p>Regular Expression</p>
+</dt>
+<dd>
+<p><code>re</code></p>
+</dd>
+<dt>
+<p>Regular Expressions (Javascript)</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Regular Expressions (Python)</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>Ruby</p>
+</dt>
+<dd>
+<p><code>rb</code>, <code>Appfile</code>, <code>Appraisals</code>, <code>Berksfile</code>, <code>Brewfile</code>, <code>capfile</code>, <code>cgi</code>, <code>Cheffile</code>, <code>config.ru</code>, <code>Deliverfile</code>, <code>Fastfile</code>, <code>fcgi</code>, <code>Gemfile</code>, <code>gemspec</code>, <code>Guardfile</code>, <code>irbrc</code>, <code>jbuilder</code>, <code>podspec</code>, <code>prawn</code>, <code>rabl</code>, <code>rake</code>, <code>Rakefile</code>, <code>Rantfile</code>, <code>rbx</code>, <code>rjs</code>, <code>ruby.rail</code>, <code>Scanfile</code>, <code>simplecov</code>, <code>Snapfile</code>, <code>thor</code>, <code>Thorfile</code>, <code>Vagrantfile</code></p>
+</dd>
+<dt>
+<p>Ruby Haml</p>
+</dt>
+<dd>
+<p><code>haml</code>, <code>sass</code></p>
+</dd>
+<dt>
+<p>Ruby on Rails</p>
+</dt>
+<dd>
+<p><code>rxml</code>, <code>builder</code></p>
+</dd>
+<dt>
+<p>Rust</p>
+</dt>
+<dd>
+<p><code>rs</code></p>
+</dd>
+<dt>
+<p>SCSS</p>
+</dt>
+<dd>
+<p><code>scss</code></p>
+</dd>
+<dt>
+<p>SQL</p>
+</dt>
+<dd>
+<p><code>sql</code>, <code>ddl</code>, <code>dml</code></p>
+</dd>
+<dt>
+<p>SQL (Rails)</p>
+</dt>
+<dd>
+<p><code>erbsql</code>, <code>sql.erb</code></p>
+</dd>
+<dt>
+<p>Sass</p>
+</dt>
+<dd>
+<p><code>sass</code></p>
+</dd>
+<dt>
+<p>Scala</p>
+</dt>
+<dd>
+<p><code>scala</code>, <code>sbt</code></p>
+</dd>
+<dt>
+<p>Shell-Unix-Generic</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>TOML</p>
+</dt>
+<dd>
+<p><code>toml</code>, <code>tml</code>, <code>Cargo.lock</code>, <code>Gopkg.lock</code>, <code>Pipfile</code></p>
+</dd>
+<dt>
+<p>Tcl</p>
+</dt>
+<dd>
+<p><code>tcl</code></p>
+</dd>
+<dt>
+<p>TeX</p>
+</dt>
+<dd>
+<p><code>sty</code>, <code>cls</code></p>
+</dd>
+<dt>
+<p>Textile</p>
+</dt>
+<dd>
+<p><code>textile</code></p>
+</dd>
+<dt>
+<p>XML</p>
+</dt>
+<dd>
+<p><code>xml</code>, <code>xsd</code>, <code>xslt</code>, <code>tld</code>, <code>dtml</code>, <code>rss</code>, <code>opml</code>, <code>svg</code></p>
+</dd>
+<dt>
+<p>YAML</p>
+</dt>
+<dd>
+<p><code>yaml</code>, <code>yml</code>, <code>sublime-syntax</code></p>
+</dd>
+<dt>
+<p>camlp4</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>commands-builtin-shell-bash</p>
+</dt>
+<dd>
+<p>``</p>
+</dd>
+<dt>
+<p>reStructuredText</p>
+</dt>
+<dd>
+<p><code>rst</code>, <code>rest</code></p>
+</dd>
+</dl>
+
+            
+            
+            <div class="next-chapter">
+                <a href="../03-frontmatter&#x2f;index.html">
+                    <span>Next chapter: “Front Matter”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="../icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+    </body>
+</html>

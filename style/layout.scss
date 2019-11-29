@@ -12,20 +12,20 @@ body {
 
     nav.big {
         background: #2c2c38;
-        padding: 0.5em 1em 1em;
+        padding: 0.5em 1em 1rem;
     
         display: flex;
         flex-direction: column;
 
         header {
-            margin: 0 0 1em;
+            margin: 0 0 1rem;
             display: flex;
             flex-direction: column;
             align-items: stretch;
             border-bottom: 2px solid #888888;
     
             h1 {
-                font-size: 1.5em;
+                font-size: 1.5rem;
                 font-weight: 700;
                 font-family: $font-sansserif;
                 margin-bottom: 0;
@@ -44,7 +44,7 @@ body {
             }
             
             h2 {
-                font-size: 1em;
+                font-size: 1rem;
                 font-weight: 600;
                 font-family: $font-sansserif;
                 margin-bottom: 0;
@@ -53,11 +53,11 @@ body {
         }
 
         ol {
-            margin: 0 2em;
+            margin: 0 2rem;
             padding: 0;
             li {
                 width: 100%;
-                font-size: 1.25em;
+                font-size: 1.25rem;
                 font-family: $font-sansserif;
                 color: #eeeeee;
                 a {
@@ -77,8 +77,16 @@ body {
                         }
                     }
                 }
+
+                ol {
+                    margin: 0 0 0 1rem;
+                }
             }
         }
+
+        /*ol { counter-reset: item }
+        li{ display: block }
+        li:before { content: counters(item, ".") " "; counter-increment: item }*/
     }
 
     nav.small {
@@ -90,7 +98,7 @@ body {
         padding: 0;
 
         >* {
-            margin: 0.5em;
+            margin: 0.5rem;
         }
         
         a {
@@ -103,10 +111,24 @@ body {
             }
         }
 
+        span {
+            display: inline-flex;
+            align-items: center;
+
+            >* {
+                margin-right: 0.5rem;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
         span.title {
             text-decoration: none;
             font-family: $font-sansserif;
             color: #fefefe;
+            justify-self: center;
         }
 
         span.placeholder {
@@ -121,8 +143,8 @@ body {
     }
     
     article {
-        max-width: 38em;
-        padding: 0.5em 2em 0 2em;
+        max-width: 38rem;
+        padding: 0.5em 2em 0 2rem;
     
         >* {
             max-width: 100%;
@@ -136,9 +158,9 @@ body {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            margin-right: 0.5em;
+            margin-right: 0.5rem;
             
-            font-size: 1.2em;
+            font-size: 1.2rem;
             text-decoration: none;
             font-family: $font-sansserif;
             color: #5babd1;
@@ -148,7 +170,7 @@ body {
             }
 
             span:first-child {
-                margin-right: 0.5em;
+                margin-right: 0.5rem;
             }
         }
     }
@@ -177,7 +199,7 @@ body {
         }
 
         article {
-            padding: 1em 0.5em 0 0.5em;
+            padding: 1em 0.5em 0 0.5rem;
         }
     }
 }

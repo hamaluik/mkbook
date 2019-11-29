@@ -16,6 +16,8 @@ pub const ASSET_DEFAULT_INTRODUCTION: &'static [u8] = include_bytes!(concat!(env
 pub const SYNTAX_TOML: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/TOML.sublime-syntax"));
 pub const SYNTAX_HAXE: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/haxe.sublime-syntax"));
 pub const SYNTAX_HXML: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/hxml.sublime-syntax"));
+pub const SYNTAX_SASS: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/Sass.sublime-syntax"));
+pub const SYNTAX_SCSS: &'static str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/syntaxes/SCSS.sublime-syntax"));
 
 lazy_static! {
     static ref HIGHLIGHT_SYNTAX_SETS: SyntaxSet = {
@@ -26,13 +28,17 @@ lazy_static! {
         ssb.add(SyntaxDefinition::load_from_str(SYNTAX_TOML, true, None).expect("valid TOML syntax definition"));
         ssb.add(SyntaxDefinition::load_from_str(SYNTAX_HAXE, true, None).expect("valid haxe syntax definition"));
         ssb.add(SyntaxDefinition::load_from_str(SYNTAX_HXML, true, None).expect("valid hxml syntax definition"));
+        ssb.add(SyntaxDefinition::load_from_str(SYNTAX_SASS, true, None).expect("valid sass syntax definition"));
+        ssb.add(SyntaxDefinition::load_from_str(SYNTAX_SCSS, true, None).expect("valid scss syntax definition"));
         let ss = ssb.build();
     
         //if cfg!(debug_assertions) {
-        //    println!("| Language Name | Supported Tags / Extensions |");
-        //    println!("|:-|:-|");
-        //    for s in ss.syntaxes().iter() {
-        //        println!("| {} | `{}` |", s.name, s.file_extensions.iter().map(|s| &**s).collect::<Vec<&str>>().join("`, `"));
+        //    let mut syntaxes: Vec<(String, String)> = ss.syntaxes().iter()
+        //        .map(|s| (s.name.clone(), s.file_extensions.iter().map(|s| &**s).collect::<Vec<&str>>().join("`, `")))
+        //        .collect();
+        //    syntaxes.sort_by(|a, b| a.0.cmp(&b.0));
+        //    for syntax in syntaxes {
+        //        println!("{}\n\n: `{}`\n\n", syntax.0, syntax.1);
         //    }
         //}
 
@@ -65,6 +71,7 @@ mod filters;
 
 use models::frontmatter::{ParsedFrontMatter, FrontMatter};
 use models::book::{ParsedBook, Book};
+use models::chapter::{Chapter};
 
 fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Error>> {
     use syntect::parsing::SyntaxReference;
@@ -165,10 +172,10 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
 #[template(path = "index.html")]
 struct IndexTemplate<'a, 'b> {
     book: &'a Book,
-    chapters: &'b Vec<models::chapter::Chapter>,
+    chapters: &'b Vec<Chapter>,
 }
 
-fn generate_index<W: io::Write>(book: &Book, chapters: &Vec<models::chapter::Chapter>, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+fn generate_index<W: io::Write>(book: &Book, chapters: &Vec<Chapter>, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = IndexTemplate {
         book,
@@ -185,33 +192,19 @@ fn generate_index<W: io::Write>(book: &Book, chapters: &Vec<models::chapter::Cha
 #[derive(Template)]
 #[template(path = "page.html")]
 struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
-    title: &'a str,
+    chapter: &'a Chapter,
     content: &'b str,
     url: &'f str,
-    chapters: &'c Vec<models::chapter::Chapter>,
-    prev_chapter: Option<&'d models::chapter::Chapter>,
-    next_chapter: Option<&'e models::chapter::Chapter>,
+    chapters: &'c Vec<Chapter>,
+    prev_chapter: Option<&'d Chapter>,
+    next_chapter: Option<&'e Chapter>,
     book: &'g Book,
 }
 
-fn format_page<W: io::Write>(book: &Book, frontmatter: FrontMatter, chapters: &Vec<models::chapter::Chapter>, url: &str, content: &str, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
-    let this_index = chapters.iter().enumerate().find(|(_, chap)| chap.url == url).map(|(i, _)| i).expect("chapter exists");
-    let prev_chapter = if this_index > 0 {
-        Some(chapters.iter().nth(this_index - 1).expect("chapter n-1 exists"))
-    }
-    else {
-        None
-    };
-    let next_chapter = if this_index < chapters.len() - 1 {
-        Some(chapters.iter().nth(this_index + 1).expect("chapter n+1 exists"))
-    }
-    else {
-        None
-    };
-
+fn format_page<W: io::Write>(book: &Book, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, url: &str, content: &str, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = PageTemplate {
-        title: &frontmatter.title,
+        chapter,
         content,
         url,
         chapters,
@@ -274,25 +267,84 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let book: Book = parsed_book.into();
 
         // load all our chapters
-        let mut chapters: Vec<models::chapter::Chapter> = Vec::default();
+        let mut chapters: Vec<Chapter> = Vec::default();
         for entry in src.read_dir()? {
             let entry = entry?;
             let path = entry.path();
-            if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+            if entry.file_type()?.is_dir() {
+                // try to find a `chapter.toml` file and parse it to get the chapter's title, fall back to the directory
+                // name if we can't do that
+                let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
+                let index_path = path.join("index.md");
+                let (front, contents) = if index_path.exists() {
+                    let contents = fs::read_to_string(&index_path)?;
+                    let (front, contents) = extract_frontmatter(&contents)?;
+                    let front = front.unwrap_or_default().into_front(chapter_name);
+                    (front, contents)
+                }
+                else {
+                    (FrontMatter {
+                        title: chapter_name.to_owned(),
+                    }, String::new())
+                };
+
+                let mut chapter: Chapter = Chapter {
+                    url: format!("{}/index.html", chapter_name),
+                    front,
+                    sections: Vec::default(),
+                    source: path.clone(),
+                    contents,
+                };
+
+                for entry in path.read_dir()? {
+                    let entry = entry?;
+                    let path = entry.path();
+                    if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+                        let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+                        if name.is_none() { continue; }
+                        let name = name.unwrap();
+                        if name == "index" {
+                            continue;
+                        }
+        
+                        let contents = fs::read_to_string(&path)?;
+                        let (front, contents) = extract_frontmatter(&contents)?;
+                        let front = front.unwrap_or_default().into_front(name);
+                        chapter.sections.push(Chapter {
+                            url: format!("{}/{}.html", chapter_name, name),
+                            front,
+                            sections: Vec::new(),
+                            source: path,
+                            contents,
+                        });
+                    }
+                }
+
+                chapters.push(chapter);
+            }
+            else if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
                 let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
                 if name.is_none() { continue; }
                 let name = name.unwrap();
 
                 let contents = fs::read_to_string(&path)?;
-                let (front, _) = extract_frontmatter(&contents)?;
+                let (front, contents) = extract_frontmatter(&contents)?;
                 let front = front.unwrap_or_default().into_front(name);
-                chapters.push(models::chapter::Chapter {
-                    url: format!("{}.html", name),
-                    title: front.title,
+                chapters.push(Chapter {
+                    url: format!("{}/index.html", name),
+                    front,
+                    sections: Vec::new(),
+                    source: path,
+                    contents,
                 });
             }
         }
+
+        // sort all the chapters
         chapters.sort_by(|a, b| a.url.cmp(&b.url));
+        for chapter in chapters.iter_mut() {
+            chapter.sections.sort_by(|a, b| a.url.cmp(&b.url));
+        }
 
         // generate our index
         let index_out_path = dest.join("index.html");
@@ -301,26 +353,61 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         generate_index(&book, &chapters, index_out)?;
         println!("Rendered index into `{}`", index_out_path.display());
 
-        // compile markdown
-        for entry in src.read_dir()? {
-            let entry = entry?;
-            let path = entry.path();
-            if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
-                let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
-                if name.is_none() { continue; }
-                let name = name.unwrap();
-                let out = dest.join(format!("{}.html", name));
-                
+        // compile markdown and write the actual pages
+        let mut prev_chapter = None;
+        for (chapter_index, chapter) in chapters.iter().enumerate() {
+            // render the index
+            let chapter_root = dest.join(chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap());
+            let out = chapter_root.join("index.html");
+            print!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
+            fs::create_dir_all(&chapter_root)?;
+
+            let outfile = fs::File::create(&out)?;
+            let outfile = io::BufWriter::new(outfile);
+
+            let contents = format_markdown(&chapter.contents)?;
+
+            let next_chapter = 
+                if chapter.sections.len() > 0 {
+                    Some(chapter.sections.iter().nth(0).expect("section 0 exists"))
+                }
+                else if chapter_index < chapters.len() - 1 {
+                    Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+                }
+                else {
+                    None
+                };
+
+            format_page(&book, &chapter, &chapters, prev_chapter, next_chapter, &chapter.url, &contents, outfile)?;
+            prev_chapter = Some(chapter);
+
+            println!(" done!");
+
+            // now the sections
+            for (section_index, section) in chapter.sections.iter().enumerate() {
+                let name = section.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap();
+                let out = chapter_root.join(&format!("{}.html", name));
+                print!("Rendering `{}` into `{}`...", section.source.display(), out.display());
+    
                 let outfile = fs::File::create(&out)?;
                 let outfile = io::BufWriter::new(outfile);
+    
+                let contents = format_markdown(&section.contents)?;
 
-                let contents = fs::read_to_string(&path)?;
-                let (front, contents) = extract_frontmatter(&contents)?;
-                let front = front.unwrap_or_default().into_front(name);
-                let contents = format_markdown(&contents)?;
-                format_page(&book, front, &chapters, &format!("{}.html", name), &contents, outfile)?;
+                let next_chapter = if section_index < chapter.sections.len() - 1 {
+                    Some(chapter.sections.iter().nth(section_index + 1).expect("chapter n+1 exists"))
+                }
+                else if chapter_index < chapters.len() - 1 {
+                    Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+                }
+                else {
+                    None
+                };
 
-                println!("Rendered `{}` into `{}`", path.display(), out.display());
+                format_page(&book, &section, &chapters, prev_chapter, next_chapter, &section.url, &contents, outfile)?;
+                prev_chapter = Some(section);
+    
+                println!(" done!");
             }
         }
 

@@ -27,7 +27,16 @@
             <h1>Table of Contents</h1>
             <ol>
                 {% for chapter in chapters %}
-                <li><a href="{{ chapter.url|safe }}">{{ chapter.title }}</a></li>
+                <li>
+                    <a href="{{ chapter.url|safe }}">{{ chapter.front.title }}</a>
+                    {% if chapter.sections.len() > 0 %}
+                    <ol>
+                        {% for section in chapter.sections %}
+                        <li><a href="{{ section.url|safe }}">{{ section.front.title }}</a></li>
+                        {% endfor %}
+                    </ol>
+                    {% endif %}
+                </li>
                 {% endfor %}
             </ol>
         </nav>

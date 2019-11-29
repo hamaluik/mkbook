@@ -1,10 +1,11 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Default)]
+#[derive(Deserialize, Default, Debug)]
 pub struct ParsedFrontMatter {
     pub title: Option<String>,
 }
 
+#[derive(Debug)]
 pub struct FrontMatter {
     pub title: String,
 }

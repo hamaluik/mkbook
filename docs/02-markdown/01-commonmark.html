@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | Commonmark</title>
+        <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="../favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/01-commonmark.html" />
+        <meta property="og:description" content="&lt;p&gt;&lt;em&gt;mkbook&lt;&#x2f;em&gt; is my simpler alternative to &lt;a href=&quot;https:&#x2f;&#x2f;crates.io&#x2f;crates&#x2f;mdbook&quot;&gt;mdbook&lt;&#x2f;a&gt; which is a great tool, but for which I really dislike some of the decisions they took, such as relying on javascript for highlighting and navigation, and including a lot of bells and whistles such as javascript-based search.&lt;&#x2f;p&gt;
+&lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
+" />
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-11-29T21:20:04.527238643+00:00" />
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="../index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li>
+                    <a href="../01-introduction/index.html">Introduction</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../02-markdown/index.html">Markdown</a>
+                    
+                    <ol>
+                        
+                        <li><a href="../02-markdown/01-commonmark.html" class = "current">Commonmark</a></li>
+                        
+                        <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
+                        
+                    </ol>
+                    
+                </li>
+                
+                <li>
+                    <a href="../03-frontmatter/index.html">Front Matter</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../04-structure/index.html">Structure</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../05-customization/index.html">Customization</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../06-how-it-works/index.html">How it Works</a>
+                    
+                </li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            <span>
+                <a href="../index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-list-ol">
+                            <use xlink:href="../icons.svg#icon-list-ol">
+                        </svg>
+                    </span>
+                </a>
+                
+                    
+                    <a href="../02-markdown&#x2f;index.html" alt="Markdown">
+                        <span class="icon">
+                            
+                            <svg class="icon-arrow-left">
+                                <use xlink:href="../icons.svg#icon-arrow-left">
+                            </svg>
+                            
+                        </span>
+                    </a>
+                
+            </span>
+            <span class="title">Commonmark</span>
+            <span>
+                <span class="placeholder"></span>
+                
+                    
+                    <a href="../02-markdown&#x2f;02-syntax-highlighting.html" alt="Syntax Highlighting">
+                        <span class="icon">
+                            <svg class="icon-arrow-right">
+                                <use xlink:href="../icons.svg#icon-arrow-right">
+                            </svg>
+                        </span>
+                    </a>
+                
+            </span>
+        </nav>
+        <article>
+            <p><em>mkbook</em> nominally utilizes <a href="https://commonmark.org/">CommonMark</a> with some <a href="https://github.github.com/gfm/">GFM</a> extensions through the use of the <a href="https://crates.io/crates/comrak">comrak</a> crate. In using <em>comrak</em>, a specific set of options are used, which are listed here:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#cc99cc;">let</span><span style="color:#d3d0c8;"> options: ComrakOptions = ComrakOptions {
+</span><span style="color:#d3d0c8;">    hardbreaks: </span><span style="color:#f99157;">false</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    smart: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    github_pre_lang: </span><span style="color:#f99157;">false</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    default_info_string: None,
+</span><span style="color:#d3d0c8;">    unsafe_: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_strikethrough: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_tagfilter: </span><span style="color:#f99157;">false</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_table: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_autolink: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_tasklist: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_superscript: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_header_ids: Some(&quot;</span><span style="color:#99cc99;">header</span><span style="color:#d3d0c8;">&quot;.</span><span style="color:#66cccc;">to_owned</span><span style="color:#d3d0c8;">()),
+</span><span style="color:#d3d0c8;">    ext_footnotes: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ext_description_lists: </span><span style="color:#f99157;">true</span><span style="color:#d3d0c8;">,
+</span><span style="color:#d3d0c8;">    ..ComrakOptions::default()
+</span><span style="color:#d3d0c8;">};
+</span></pre>
+<p>Mostly, know that the following extensions are enabled:</p>
+<ul>
+<li><a href="https://github.github.com/gfm/#strikethrough-extension-">Strikethrough</a></li>
+<li><a href="https://github.github.com/gfm/#tables-extension-">Tables</a></li>
+<li><a href="https://github.github.com/gfm/#autolinks-extension-">Autolinks</a></li>
+<li><a href="https://github.github.com/gfm/#task-list-items-extension-">Task Lists</a></li>
+<li>Superscripts (<code>e = mc^2^.</code> → <code>e = mc&lt;sup&gt;2&lt;/sup&gt;.</code>)</li>
+<li><a href="https://kramdown.gettalong.org/syntax.html#footnotes">Footnotes</a></li>
+<li>Description Lists:
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">First term
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">: Details for the </span><span style="font-weight:bold;color:#ffcc66;">**first term**
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">Second term
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">: Details for the </span><span style="font-weight:bold;color:#ffcc66;">**second term**
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">    More details in second paragraph.
+</span></pre>
+</li>
+</ul>
+
+            
+            
+            <div class="next-chapter">
+                <a href="../02-markdown&#x2f;02-syntax-highlighting.html">
+                    <span>Next chapter: “Syntax Highlighting”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="../icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+    </body>
+</html>
