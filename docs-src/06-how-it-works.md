@@ -22,4 +22,11 @@ Markdown is formatted usiing [comrak](https://crates.io/crates/comrak) with some
 
 ## Syntax Highlighting
 
-Code is syntax-highlighted using [syntect](https://crates.io/crates/syntect) with the default langauges and the `base16-eighties` colour scheme.
+Code is syntax-highlighted using [syntect](https://crates.io/crates/syntect) with the default langauges and the `base16-eighties` colour scheme. Some additional languages above the base list supported by _syntect_ have been aded:
+
+* `haxe`
+* `hxml`
+* `sass`
+* `scss`
+* `toml`
+

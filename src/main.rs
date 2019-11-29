@@ -275,7 +275,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 // try to find a `chapter.toml` file and parse it to get the chapter's title, fall back to the directory
                 // name if we can't do that
                 let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
-                let index_path = path.join("index.md");
+                let index_path = path.join("README.md");
                 let (front, contents) = if index_path.exists() {
                     let contents = fs::read_to_string(&index_path)?;
                     let (front, contents) = extract_frontmatter(&contents)?;
@@ -303,7 +303,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
                         if name.is_none() { continue; }
                         let name = name.unwrap();
-                        if name == "index" {
+                        if name == "README" {
                             continue;
                         }
         

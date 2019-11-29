@@ -12,7 +12,8 @@ body {
 
     nav.big {
         background: #2c2c38;
-        padding: 0.5em 1em 1rem;
+        padding: 0.5rem 1rem 1rem;
+        max-width: 15rem;
     
         display: flex;
         flex-direction: column;
@@ -62,7 +63,7 @@ body {
                 color: #eeeeee;
                 a {
                     text-decoration: none;
-                    margin: 0 0 0.25em 0;
+                    margin: 0 0 0.25rem 0;
                     color: #5babd1;
             
                     &:hover {
@@ -83,10 +84,6 @@ body {
                 }
             }
         }
-
-        /*ol { counter-reset: item }
-        li{ display: block }
-        li:before { content: counters(item, ".") " "; counter-increment: item }*/
     }
 
     nav.small {
@@ -144,7 +141,7 @@ body {
     
     article {
         max-width: 38rem;
-        padding: 0.5em 2em 0 2rem;
+        padding: 0.5rem 2rem 0 2rem;
     
         >* {
             max-width: 100%;
@@ -199,7 +196,7 @@ body {
         }
 
         article {
-            padding: 1em 0.5em 0 0.5rem;
+            padding: 1rem 0.5rem 0 0.5rem;
         }
     }
 }

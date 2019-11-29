@@ -14,7 +14,7 @@
 &lt;p&gt;This tool aims to work somewhat similarly to &lt;em&gt;mdbook&lt;&#x2f;em&gt;, but is generally intended to be a more minimal alternative that is customized more towards my needs and desires than anything else.&lt;&#x2f;p&gt;
 " />
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-11-29T21:20:04.527238643+00:00" />
+        <meta property="book:release_date" content="2019-11-29T21:43:28.060984725+00:00" />
     </head>
     <body>
         <nav class="big">
@@ -161,14 +161,18 @@
 <span style="color:#d3d0c8;">unimplemented!()
 </span></pre>
 <h2><a href="#documents" aria-hidden="true" class="anchor" id="headerdocuments"></a>Documents</h2>
-<p>For now, <em>mkbook</em> only works on a flat list of markdown files, with the intent of each markdown file being its own chapter. Subdirectories and files that don’t end in a <code>.md</code> extension are completely ignored. The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>
+<p><em>mkbook</em> works on mostly a flat directory structure, however one level of sub-directories are supported in order to create sections within chapters. Files that don’t end in a <code>.md</code> extension are completely ignored. Each <code>.md</code> file in the root source directly is it’s own chapter. To create chapters with sub-sections, create a sub-directory in the root directory and then create a <code>README.md</code> file, which will become the root of the chapter, with all <code>.md</code> files in the sub-directory becoming sections in the chapter. The <code>title</code> in the <code>README.md</code> file’s frontmatter will be used as the name of the chapter.</p>
+<p>The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#d3d0c8;">src/
 </span><span style="color:#d3d0c8;">├── mkbook.toml
 </span><span style="color:#d3d0c8;">├── 00-foreword.md
 </span><span style="color:#d3d0c8;">├── 01-introduction.md
-</span><span style="color:#d3d0c8;">├── 02-my-first-chapter.md
-</span><span style="color:#d3d0c8;">└── etc...
+</span><span style="color:#d3d0c8;">└── 02-my-first-chapter
+</span><span style="color:#d3d0c8;">    ├── index.md
+</span><span style="color:#d3d0c8;">    ├── 01-my-first-section.md
+</span><span style="color:#d3d0c8;">    ├── 02-my-second-section.md
+</span><span style="color:#d3d0c8;">    └── etc...
 </span></pre>
 <p>An index and navigation will be automatically generated from these files, taking the information for each file from it’s front-matter.</p>
 

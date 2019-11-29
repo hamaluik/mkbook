@@ -6,7 +6,7 @@ title = "Syntax Highlighting"
 
 GFM syntax highlighting is also available by using fenced code tags with a label denoting the language, as such:
 
-~~~md
+~~~
 ```c++
 #include <stdio>
 

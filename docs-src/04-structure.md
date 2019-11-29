@@ -59,15 +59,20 @@ unimplemented!()
 
 ## Documents
 
-For now, _mkbook_ only works on a flat list of markdown files, with the intent of each markdown file being its own chapter. Subdirectories and files that don't end in a `.md` extension are completely ignored. The order of the book is based on the alphabetical order of the file names (actually it's based on Rust's [implementation of `PartialOrd` for str](https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E)). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:
+_mkbook_ works on mostly a flat directory structure, however one level of sub-directories are supported in order to create sections within chapters. Files that don't end in a `.md` extension are completely ignored. Each `.md` file in the root source directly is it's own chapter. To create chapters with sub-sections, create a sub-directory in the root directory and then create a `README.md` file, which will become the root of the chapter, with all `.md` files in the sub-directory becoming sections in the chapter. The `title` in the `README.md` file's frontmatter will be used as the name of the chapter.
+
+The order of the book is based on the alphabetical order of the file names (actually it's based on Rust's [implementation of `PartialOrd` for str](https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E)). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:
 
 ```
 src/
 ├── mkbook.toml
 ├── 00-foreword.md
 ├── 01-introduction.md
-├── 02-my-first-chapter.md
-└── etc...
+└── 02-my-first-chapter
+    ├── index.md
+    ├── 01-my-first-section.md
+    ├── 02-my-second-section.md
+    └── etc...
 ```
 
 An index and navigation will be automatically generated from these files, taking the information for each file from it's front-matter.
