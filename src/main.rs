@@ -72,18 +72,60 @@ mod filters;
 use models::frontmatter::{ParsedFrontMatter, FrontMatter};
 use models::chapter::{Chapter};
 
+fn create_katex_inline(src: &str) -> Result<String, Box<dyn std::error::Error>> {
+    use std::process::{Command, Stdio};
+    use io::Write;
+
+    let mut child = match Command::new("katex")
+        .arg("-d")
+        .arg("-t")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn() {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("[WARNING] failed to launch katex, not rendering math block: {:?}", e);
+                return Ok(format_code("", src)?.output);
+            }
+        };
+
+    let stdin = child.stdin.as_mut().expect("valid katex stdin");
+    stdin.write_all(src.as_ref())?;
+
+    let output = child.wait_with_output()?;
+    if !output.status.success() {
+        eprintln!("failed to generate katex, exit code: {:?}", output.status.code());
+        eprintln!("katex STDOUT:");
+        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        eprintln!("katex STDERR:");
+        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        eprintln!("/katex output");
+        return Ok(format_code("", src)?.output);
+    }
+    let rendered: String = String::from_utf8(output.stdout)?;
+
+    Ok(format!(r#"<figure class="math">{}</figure>"#, rendered))
+}
+
 fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> {
     use std::process::{Command, Stdio};
     use io::Write;
 
-    let mut child = Command::new("plantuml")
+    let mut child = match Command::new("plantuml")
         .arg("-tsvg")
         .arg("-nometadata")
         .arg("-pipe")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
-        .spawn()?;
+        .spawn() {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("[WARNING] failed to launch plantuml, not rendering plantuml block: {:?}", e);
+                return Ok(format_code("", src)?.output);
+            }
+        };
 
     let stdin = child.stdin.as_mut().expect("valid plantuml stdin");
     stdin.write_all(src.as_ref())?;
@@ -96,7 +138,7 @@ fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> 
         eprintln!("plantuml STDERR:");
         eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
         eprintln!("/plantuml output");
-        return format_code("", src);
+        return Ok(format_code("", src)?.output);
     }
     let svg: String = String::from_utf8(output.stdout)?;
     let svg = svg.replace(r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#, "");
@@ -104,13 +146,28 @@ fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> 
     Ok(format!("<figure>{}</figure>", svg))
 }
 
-fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Error>> {
+struct FormatResponse {
+    output: String,
+    include_katex_css: bool,
+}
+
+fn format_code(lang: &str, src: &str) -> Result<FormatResponse, Box<dyn std::error::Error>> {
     use syntect::parsing::SyntaxReference;
     use syntect::html::highlighted_html_for_string;
 
     // render plantuml code blocks into an inline svg
     if lang == "plantuml" {
-        return create_plantuml_svg(src);
+        return Ok(FormatResponse {
+            output: create_plantuml_svg(src)?,
+            include_katex_css: false,
+        });
+    }
+    // render katex code blocks into an inline math
+    if lang == "katex" {
+        return Ok(FormatResponse {
+            output: create_katex_inline(src)?,
+            include_katex_css: true,
+        });
     }
 
     let syntax: Option<&SyntaxReference> = if lang.len() > 0 {
@@ -127,7 +184,10 @@ fn format_code(lang: &str, src: &str) -> Result<String, Box<dyn std::error::Erro
 
     let html = highlighted_html_for_string(src, &HIGHLIGHT_SYNTAX_SETS, &syntax, &HIGHLIGHT_THEME);
 
-    Ok(html)
+    Ok(FormatResponse {
+        output: html,
+        include_katex_css: false,
+    })
 }
 
 fn extract_frontmatter(src: &str) -> Result<(Option<ParsedFrontMatter>, String), Box<dyn std::error::Error>> {
@@ -162,7 +222,7 @@ fn extract_frontmatter(src: &str) -> Result<(Option<ParsedFrontMatter>, String),
     }
 }
 
-fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
+fn format_markdown(src: &str) -> Result<FormatResponse, Box<dyn std::error::Error>> {
     use comrak::{Arena, parse_document, format_html};
     use comrak::nodes::{AstNode, NodeValue};
 
@@ -173,8 +233,8 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
         src,
         &COMRAK_OPTIONS);
 
-    fn iter_nodes<'a, F>(node: &'a AstNode<'a>, f: &F) -> Result<(), Box<dyn std::error::Error>>
-        where F : Fn(&'a AstNode<'a>) -> Result<(), Box<dyn std::error::Error>> {
+    fn iter_nodes<'a, F>(node: &'a AstNode<'a>, f: &mut F) -> Result<(), Box<dyn std::error::Error>>
+        where F : FnMut(&'a AstNode<'a>) -> Result<(), Box<dyn std::error::Error>> {
         f(node)?;
         for c in node.children() {
             iter_nodes(c, f)?;
@@ -182,13 +242,17 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
         Ok(())
     }
 
-    iter_nodes(root, &|node| {
+    let mut use_katex_css = false;
+    iter_nodes(root, &mut |node| {
         let value = &mut node.data.borrow_mut().value;
         if let NodeValue::CodeBlock(ref block) = value {
             let lang = String::from_utf8(block.info.clone()).expect("code lang is utf-8");
             let source = String::from_utf8(block.literal.clone()).expect("source code is utf-8");
-            let highlighted: String = format_code(&lang, &source)?;
-            let highlighted: Vec<u8> = Vec::from(highlighted.into_bytes());
+            let FormatResponse { output, include_katex_css } = format_code(&lang, &source)?;
+            if include_katex_css {
+                use_katex_css = true;
+            }
+            let highlighted: Vec<u8> = Vec::from(output.into_bytes());
 
             *value = NodeValue::HtmlBlock(comrak::nodes::NodeHtmlBlock {
                 literal: highlighted,
@@ -201,7 +265,10 @@ fn format_markdown(src: &str) -> Result<String, Box<dyn std::error::Error>> {
     let mut output: Vec<u8> = Vec::with_capacity((src.len() as f64 * 1.2) as usize);
     format_html(root, &COMRAK_OPTIONS, &mut output).expect("can format HTML");
     let output = String::from_utf8(output).expect("valid utf-8 generated HTML");
-    Ok(output)
+    Ok(FormatResponse {
+        output,
+        include_katex_css: use_katex_css,
+    })
 }
 
 #[derive(Template)]
@@ -210,14 +277,16 @@ struct IndexTemplate<'a, 'b, 'c> {
     book: &'a FrontMatter,
     chapters: &'b Vec<Chapter>,
     book_description: &'c str,
+    include_katex_css: bool,
 }
 
-fn generate_index<W: io::Write>(book: &FrontMatter, content: String, chapters: &Vec<Chapter>, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+fn generate_index<W: io::Write>(book: &FrontMatter, content: String, include_katex_css: bool, chapters: &Vec<Chapter>, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = IndexTemplate {
         book,
         chapters,
         book_description: &content,
+        include_katex_css,
     };
 
     // and render!
@@ -236,9 +305,10 @@ struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'g> {
     prev_chapter: Option<&'d Chapter>,
     next_chapter: Option<&'e Chapter>,
     book: &'g FrontMatter,
+    include_katex_css: bool,
 }
 
-fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, include_katex_css: bool, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = PageTemplate {
         chapter,
@@ -247,6 +317,7 @@ fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &V
         prev_chapter,
         next_chapter,
         book,
+        include_katex_css,
     };
 
     // and render!
@@ -301,7 +372,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             (None, content)
         };
         let book_front = FrontMatter::from_root(book_front.unwrap_or_default());
-        let book_description = format_markdown(&book_description)?;
+        let FormatResponse { output, include_katex_css } = format_markdown(&book_description)?;
+        let book_description = output;
 
         // load all our chapters
         let mut chapters: Vec<Chapter> = Vec::default();
@@ -385,7 +457,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let index_out_path = dest.join("index.html");
         let index_out = fs::File::create(&index_out_path)?;
         let index_out = io::BufWriter::new(index_out);
-        generate_index(&book_front, book_description, &chapters, index_out)?;
+        generate_index(&book_front, book_description, include_katex_css, &chapters, index_out)?;
         println!("Rendered index into `{}`", index_out_path.display());
 
         // compile markdown and write the actual pages
@@ -400,7 +472,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let outfile = fs::File::create(&out)?;
             let outfile = io::BufWriter::new(outfile);
 
-            let contents = format_markdown(&chapter.contents)?;
+            let FormatResponse { output, include_katex_css } = format_markdown(&chapter.contents)?;
 
             let next_chapter = 
                 if chapter.sections.len() > 0 {
@@ -413,7 +485,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     None
                 };
 
-            format_page(&book_front, &chapter, &chapters, prev_chapter, next_chapter, &contents, outfile)?;
+            format_page(&book_front, &chapter, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile)?;
             prev_chapter = Some(chapter);
 
             println!(" done!");
@@ -427,7 +499,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let outfile = fs::File::create(&out)?;
                 let outfile = io::BufWriter::new(outfile);
     
-                let contents = format_markdown(&section.contents)?;
+                let FormatResponse { output, include_katex_css } = format_markdown(&section.contents)?;
 
                 let next_chapter = if section_index < chapter.sections.len() - 1 {
                     Some(chapter.sections.iter().nth(section_index + 1).expect("chapter n+1 exists"))
@@ -439,7 +511,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     None
                 };
 
-                format_page(&book_front, &section, &chapters, prev_chapter, next_chapter, &contents, outfile)?;
+                format_page(&book_front, &section, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile)?;
                 prev_chapter = Some(section);
     
                 println!(" done!");
