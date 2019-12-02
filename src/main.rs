@@ -190,6 +190,17 @@ fn format_code(lang: &str, src: &str) -> Result<FormatResponse, Box<dyn std::err
     })
 }
 
+fn wrap_image_in_figure(link: &comrak::nodes::NodeLink) -> Result<String, Box<dyn std::error::Error>> {
+    let title = String::from_utf8_lossy(link.title.as_ref());
+    let url = String::from_utf8_lossy(link.url.as_ref());
+    if title.len() > 0 {
+        Ok(format!(r#"<figure><img src="{}" alt="{}"><figcaption>{}</figcaption></figure>"#, url, title, title))
+    }
+    else {
+        Ok(format!(r#"<figure><img src="{}"></figure>"#, url))
+    }
+}
+
 fn extract_frontmatter(src: &str) -> Result<(Option<ParsedFrontMatter>, String), Box<dyn std::error::Error>> {
     if src.starts_with("---\n") {
         let slice = &src[4..];
@@ -253,11 +264,12 @@ fn format_markdown(src: &str) -> Result<FormatResponse, Box<dyn std::error::Erro
                 use_katex_css = true;
             }
             let highlighted: Vec<u8> = Vec::from(output.into_bytes());
-
-            *value = NodeValue::HtmlBlock(comrak::nodes::NodeHtmlBlock {
-                literal: highlighted,
-                block_type: 0,
-            });
+            *value = NodeValue::HtmlInline(highlighted);
+        }
+        else if let NodeValue::Image(ref link) = value {
+            let html = wrap_image_in_figure(link)?;
+            let literal: Vec<u8> = Vec::from(html.into_bytes());
+            *value = NodeValue::HtmlInline(literal);
         }
         Ok(())
     })?;
