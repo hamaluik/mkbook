@@ -12,7 +12,7 @@
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//01-introduction/index.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-12-01T18:55:05.215513238+00:00" />
+        <meta property="book:release_date" content="2019-12-02T20:05:16.402897505+00:00" />
         
     </head>
     <body>
@@ -124,6 +124,7 @@
 </span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;">    build the book
 </span><span style="color:#d3d0c8;">    </span><span style="color:#66cccc;">help</span><span style="color:#d3d0c8;">     Prints this message or the help of the given subcommand(s)
 </span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">init</span><span style="color:#d3d0c8;">     initialize a mkbook directory tree
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">watch</span><span style="color:#d3d0c8;">    build the book and continually rebuild whenever the source changes
 </span></pre>
 <h3><a href="#the-init-command" aria-hidden="true" class="anchor" id="headerthe-init-command"></a>The Init Command</h3>
 <p>The init command is a tool to help you get started, and will create an initial <code>README.md</code> file and a stub of your first chapter.</p>
@@ -160,6 +161,24 @@
 </span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-i,</span><span style="color:#f2777a;"> --in </span><span style="color:#d3d0c8;">&lt;in&gt;      an optional directory to take the book sources from </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
 </span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-o,</span><span style="color:#f2777a;"> --out </span><span style="color:#d3d0c8;">&lt;out&gt;    an optional directory to render the contents into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: book</span><span style="color:#cc99cc;">]
 </span></pre>
+<h3><a href="#the-watch-command" aria-hidden="true" class="anchor" id="headerthe-watch-command"></a>The Watch Command</h3>
+<p>The watch command is basically the same as the <code>build</code> command, however after building it continues to monitor the source directory and if <em>any</em> changes are made (a file is saved, renamed, removed, created, etc), the entire book is re-built. In the future, this will hopefully be smarter but for now it just the whole thing at once. Stop watching using <kbd>Ctrl+C</kbd> or sending <code>SIGINT</code>.</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook build</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-watch 
+</span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;"> the book and continually rebuild whenever the source changes
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> watch </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-i,</span><span style="color:#f2777a;"> --in </span><span style="color:#d3d0c8;">&lt;in&gt;      an optional directory to take the book sources from </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-o,</span><span style="color:#f2777a;"> --out </span><span style="color:#d3d0c8;">&lt;out&gt;    an optional directory to render the contents into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: book</span><span style="color:#cc99cc;">]
+</span></pre>
 
             
             
@@ -176,5 +195,6 @@
         
         <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
         </article>
+        
     </body>
 </html>

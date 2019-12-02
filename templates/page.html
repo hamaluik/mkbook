@@ -99,5 +99,8 @@
         {% endmatch %}
         <footer><p>&copy; {{ book.pubdate|year }} {{ book.author }}</p></footer>
         </article>
+        {% if include_reload_script %}
+        {% include "reload.html" %}
+        {% endif %}
     </body>
 </html>

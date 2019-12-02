@@ -35,6 +35,7 @@ SUBCOMMANDS:
     build    build the book
     help     Prints this message or the help of the given subcommand(s)
     init     initialize a mkbook directory tree
+    watch    build the book and continually rebuild whenever the source changes
 ```
 
 ### The Init Command
@@ -68,6 +69,27 @@ build the book
 
 USAGE:
     mkbook build [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -i, --in <in>      an optional directory to take the book sources from [default: src]
+    -o, --out <out>    an optional directory to render the contents into [default: book]
+```
+
+### The Watch Command
+
+The watch command is basically the same as the `build` command, however after building it continues to monitor the source directory and if _any_ changes are made (a file is saved, renamed, removed, created, etc), the entire book is re-built. In the future, this will hopefully be smarter but for now it just the whole thing at once. Stop watching using <kbd>Ctrl+C</kbd> or sending `SIGINT`.
+
+```sh
+$ mkbook build --help
+mkbook-watch 
+build the book and continually rebuild whenever the source changes
+
+USAGE:
+    mkbook watch [OPTIONS]
 
 FLAGS:
     -h, --help       Prints help information

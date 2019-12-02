@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate lazy_static;
 
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use std::{fs, io};
 use comrak::ComrakOptions;
 use syntect::{parsing::SyntaxSet, highlighting::{ThemeSet, Theme}};
@@ -85,7 +85,7 @@ fn create_katex_inline(src: &str) -> Result<String, Box<dyn std::error::Error>> 
         .spawn() {
             Ok(c) => c,
             Err(e) => {
-                eprintln!("[WARNING] failed to launch katex, not rendering math block: {:?}", e);
+                log::warn!("failed to launch katex, not rendering math block: {:?}", e);
                 return Ok(format_code("", src)?.output);
             }
         };
@@ -95,12 +95,12 @@ fn create_katex_inline(src: &str) -> Result<String, Box<dyn std::error::Error>> 
 
     let output = child.wait_with_output()?;
     if !output.status.success() {
-        eprintln!("failed to generate katex, exit code: {:?}", output.status.code());
-        eprintln!("katex STDOUT:");
-        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
-        eprintln!("katex STDERR:");
-        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
-        eprintln!("/katex output");
+        log::error!("failed to generate katex, exit code: {:?}", output.status.code());
+        log::error!("katex STDOUT:");
+        log::error!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        log::error!("katex STDERR:");
+        log::error!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        log::error!("/katex output");
         return Ok(format_code("", src)?.output);
     }
     let rendered: String = String::from_utf8(output.stdout)?;
@@ -122,7 +122,7 @@ fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> 
         .spawn() {
             Ok(c) => c,
             Err(e) => {
-                eprintln!("[WARNING] failed to launch plantuml, not rendering plantuml block: {:?}", e);
+                log::warn!("failed to launch plantuml, not rendering plantuml block: {:?}", e);
                 return Ok(format_code("", src)?.output);
             }
         };
@@ -132,12 +132,12 @@ fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Error>> 
 
     let output = child.wait_with_output()?;
     if !output.status.success() {
-        eprintln!("failed to generate plantuml, exit code: {:?}", output.status.code());
-        eprintln!("plantuml STDOUT:");
-        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
-        eprintln!("plantuml STDERR:");
-        eprintln!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
-        eprintln!("/plantuml output");
+        log::error!("failed to generate plantuml, exit code: {:?}", output.status.code());
+        log::error!("plantuml STDOUT:");
+        log::error!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        log::error!("plantuml STDERR:");
+        log::error!("{}", String::from_utf8_lossy(output.stdout.as_ref()));
+        log::error!("/plantuml output");
         return Ok(format_code("", src)?.output);
     }
     let svg: String = String::from_utf8(output.stdout)?;
@@ -278,15 +278,17 @@ struct IndexTemplate<'a, 'b, 'c> {
     chapters: &'b Vec<Chapter>,
     book_description: &'c str,
     include_katex_css: bool,
+    include_reload_script: bool,
 }
 
-fn generate_index<W: io::Write>(book: &FrontMatter, content: String, include_katex_css: bool, chapters: &Vec<Chapter>, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+fn generate_index<W: io::Write>(book: &FrontMatter, content: String, include_katex_css: bool, chapters: &Vec<Chapter>, mut output: W, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = IndexTemplate {
         book,
         chapters,
         book_description: &content,
         include_katex_css,
+        include_reload_script,
     };
 
     // and render!
@@ -306,9 +308,10 @@ struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'g> {
     next_chapter: Option<&'e Chapter>,
     book: &'g FrontMatter,
     include_katex_css: bool,
+    include_reload_script: bool,
 }
 
-fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, include_katex_css: bool, mut output: W) -> Result<(), Box<dyn std::error::Error>> {
+fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, include_katex_css: bool, mut output: W, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = PageTemplate {
         chapter,
@@ -318,6 +321,7 @@ fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &V
         next_chapter,
         book,
         include_katex_css,
+        include_reload_script,
     };
 
     // and render!
@@ -327,27 +331,278 @@ fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &V
     Ok(())
 }
 
+fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
+    let src = PathBuf::from(src.as_ref());
+    let dest = PathBuf::from(dest.as_ref());
+    std::fs::create_dir_all(&dest)?;
+
+    // load our book
+    let book_readme_path = src.join("README.md");
+    let (book_front, book_description) = if book_readme_path.exists() {
+        let contents = fs::read_to_string(&book_readme_path)?;
+        let (front, contents) = extract_frontmatter(&contents)?;
+        (front, contents)
+    }
+    else {
+        let content = String::new();
+        (None, content)
+    };
+    let book_front = FrontMatter::from_root(book_front.unwrap_or_default());
+    let FormatResponse { output, include_katex_css } = format_markdown(&book_description)?;
+    let book_description = output;
+
+    // load all our chapters
+    let mut chapters: Vec<Chapter> = Vec::default();
+    for entry in src.read_dir()? {
+        let entry = entry?;
+        let path = entry.path();
+        if entry.file_type()?.is_dir() {
+            // try to find a `README.md` file and parse it to get the chapter's title, fall back to the directory
+            // name if we can't do that
+            let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
+            let index_path = path.join("README.md");
+            let (front, contents) = if index_path.exists() {
+                let contents = fs::read_to_string(&index_path)?;
+                let (front, contents) = extract_frontmatter(&contents)?;
+                let front = front.unwrap_or_default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name));
+                (front, contents)
+            }
+            else {
+                (ParsedFrontMatter::default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name)), String::new())
+            };
+
+            let mut chapter: Chapter = Chapter {
+                front,
+                sections: Vec::default(),
+                source: path.clone(),
+                contents,
+            };
+
+            for entry in path.read_dir()? {
+                let entry = entry?;
+                let path = entry.path();
+                if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+                    let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+                    if name.is_none() { continue; }
+                    let name = name.unwrap();
+                    if name == "README" {
+                        continue;
+                    }
+    
+                    let contents = fs::read_to_string(&path)?;
+                    let (front, contents) = extract_frontmatter(&contents)?;
+                    let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/{}.html", chapter_name, name));
+                    chapter.sections.push(Chapter {
+                        front,
+                        sections: Vec::new(),
+                        source: path,
+                        contents,
+                    });
+                }
+            }
+
+            chapters.push(chapter);
+        }
+        else if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+            let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+            if name.is_none() { continue; }
+            let name = name.unwrap();
+            if name == "README" {
+                continue;
+            }
+
+            let contents = fs::read_to_string(&path)?;
+            let (front, contents) = extract_frontmatter(&contents)?;
+            let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/index.html", name));
+            chapters.push(Chapter {
+                front,
+                sections: Vec::new(),
+                source: path,
+                contents,
+            });
+        }
+    }
+
+    // sort all the chapters
+    chapters.sort_by(|a, b| a.front.url.cmp(&b.front.url));
+    for chapter in chapters.iter_mut() {
+        chapter.sections.sort_by(|a, b| a.front.url.cmp(&b.front.url));
+    }
+
+    // generate our index
+    let index_out_path = dest.join("index.html");
+    let index_out = fs::File::create(&index_out_path)?;
+    let index_out = io::BufWriter::new(index_out);
+    generate_index(&book_front, book_description, include_katex_css, &chapters, index_out, include_reload_script)?;
+    log::info!("Rendered index into `{}`", index_out_path.display());
+
+    // compile markdown and write the actual pages
+    let mut prev_chapter = None;
+    for (chapter_index, chapter) in chapters.iter().enumerate() {
+        // render the index
+        let chapter_root = dest.join(chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap());
+        let out = chapter_root.join("index.html");
+        log::info!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
+        fs::create_dir_all(&chapter_root)?;
+
+        let outfile = fs::File::create(&out)?;
+        let outfile = io::BufWriter::new(outfile);
+
+        let FormatResponse { output, include_katex_css } = format_markdown(&chapter.contents)?;
+
+        let next_chapter = 
+            if chapter.sections.len() > 0 {
+                Some(chapter.sections.iter().nth(0).expect("section 0 exists"))
+            }
+            else if chapter_index < chapters.len() - 1 {
+                Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+            }
+            else {
+                None
+            };
+
+        format_page(&book_front, &chapter, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+        prev_chapter = Some(chapter);
+
+        // now the sections
+        for (section_index, section) in chapter.sections.iter().enumerate() {
+            let name = section.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap();
+            let out = chapter_root.join(&format!("{}.html", name));
+            log::info!("Rendering `{}` into `{}`...", section.source.display(), out.display());
+
+            let outfile = fs::File::create(&out)?;
+            let outfile = io::BufWriter::new(outfile);
+
+            let FormatResponse { output, include_katex_css } = format_markdown(&section.contents)?;
+
+            let next_chapter = if section_index < chapter.sections.len() - 1 {
+                Some(chapter.sections.iter().nth(section_index + 1).expect("chapter n+1 exists"))
+            }
+            else if chapter_index < chapters.len() - 1 {
+                Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+            }
+            else {
+                None
+            };
+
+            format_page(&book_front, &section, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+            prev_chapter = Some(section);
+
+        }
+    }
+
+    // save the assets
+    fs::write(dest.join("style.css"), STYLESHEET)?;
+    log::info!("Wrote {}", dest.join("style.css").display());
+    fs::write(dest.join("favicon.ico"), ASSET_FAVICON)?;
+    log::info!("Wrote {}", dest.join("favicon.ico").display());
+    fs::write(dest.join("icons.svg"), ASSET_ICONS)?;
+    log::info!("Wrote {}", dest.join("icons.svg").display());
+
+    log::info!("Done!");
+    Ok(())
+}
+
+struct ReloadClient {
+    sender: std::sync::Arc<ws::Sender>,
+    reload: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    quitloop: std::sync::Arc<std::sync::atomic::AtomicBool>,
+}
+
+impl ReloadClient {
+    pub fn new(sender: ws::Sender, reload: std::sync::Arc<std::sync::atomic::AtomicBool>) -> ReloadClient {
+        ReloadClient {
+            sender: std::sync::Arc::new(sender),
+            reload,
+            quitloop: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
+        }
+    }
+}
+
+impl ws::Handler for ReloadClient {
+    fn on_open(&mut self, _: ws::Handshake) -> ws::Result<()> {
+        log::info!("reload client connected");
+        let out = self.sender.clone();
+        let reload = self.reload.clone();
+        let quitloop = self.quitloop.clone();
+        std::thread::spawn(move || {
+            'sendloop: loop {
+                let send_reload = reload.load(std::sync::atomic::Ordering::SeqCst);
+                if send_reload {
+                    log::debug!("sending reload signal...");
+                    out.send("reload").expect("can send reload signal");
+                    log::debug!(" ok!");
+                }
+
+                let quit = quitloop.load(std::sync::atomic::Ordering::SeqCst);
+                if quit {
+                    break 'sendloop;
+                }
+                
+                // check at 10 Hz
+                std::thread::sleep(std::time::Duration::from_millis(100));
+            }
+            log::warn!("shutting down reload connection");
+            if let Err(e) = out.shutdown() {
+                log::error!("failed to shut down reload connection: {:?}", e);
+            }
+        });
+        Ok(())
+    }
+
+    fn on_close(&mut self, code: ws::CloseCode, reason: &str) {
+        log::debug!("reload connection closed: {:?}: {}", code, reason);
+        //self.quitloop.store(true, std::sync::atomic::Ordering::SeqCst);
+    }
+
+    fn on_shutdown(&mut self) {
+        log::debug!("reload connection shutdown");
+        self.quitloop.store(true, std::sync::atomic::Ordering::SeqCst);
+    }
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let matches = cli::build_cli().get_matches();
+
+    use fern::colors::{Color, ColoredLevelConfig};
+    let colors_level = ColoredLevelConfig::new()
+        .error(Color::Red)
+        .warn(Color::Yellow)
+        .info(Color::Cyan)
+        .debug(Color::Magenta)
+        .trace(Color::BrightBlack);
+    fern::Dispatch::new()
+        .format(move |out, message, record| {
+            out.finish(format_args!(
+                "[{date}][\x1B[96m{target}\x1B[0m][{level}\x1B[0m] {message}",
+                date = chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
+                target = record.target(),
+                level = colors_level.color(record.level()),
+                message = message,
+            ));
+        })
+        .level_for("ws", log::LevelFilter::Info)
+        .chain(std::io::stdout())
+        .apply()?;
 
     if let Some(submatches) = matches.subcommand_matches("init") {
         let dest = submatches.value_of("directory").expect("directory value");
         let dest = PathBuf::from(dest);
 
-        println!("Initializing a book into {}...", dest.display());
+        log::info!("Initializing a book into {}...", dest.display());
         fs::create_dir_all(&dest)?;
         let book_readme_path = dest.join("README.md");
         fs::write(&book_readme_path, ASSET_DEFAULT_README)?;
         let intro_path = dest.join("01-introduction.md");
         fs::write(&intro_path, ASSET_DEFAULT_INTRODUCTION)?;
-        println!("Done!");
+        log::info!("Done!");
 
-        println!("You can now build your book by running:");
+        log::info!("You can now build your book by running:");
         if dest.display().to_string() != "src" {
-            println!("mkbook build -i {}", dest.display());
+            log::info!("mkbook build -i {}", dest.display());
         }
         else {
-            println!("mkbook build");
+            log::info!("mkbook build");
         }
 
         Ok(())
@@ -355,179 +610,45 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     else if let Some(submatches) = matches.subcommand_matches("build") {
         let src = submatches.value_of("in").expect("in value");
         let dest = submatches.value_of("out").expect("out value");
-
-        let src = PathBuf::from(src);
-        let dest = PathBuf::from(dest);
-        std::fs::create_dir_all(&dest)?;
-
-        // load our book
-        let book_readme_path = src.join("README.md");
-        let (book_front, book_description) = if book_readme_path.exists() {
-            let contents = fs::read_to_string(&book_readme_path)?;
-            let (front, contents) = extract_frontmatter(&contents)?;
-            (front, contents)
-        }
-        else {
-            let content = String::new();
-            (None, content)
-        };
-        let book_front = FrontMatter::from_root(book_front.unwrap_or_default());
-        let FormatResponse { output, include_katex_css } = format_markdown(&book_description)?;
-        let book_description = output;
-
-        // load all our chapters
-        let mut chapters: Vec<Chapter> = Vec::default();
-        for entry in src.read_dir()? {
-            let entry = entry?;
-            let path = entry.path();
-            if entry.file_type()?.is_dir() {
-                // try to find a `README.md` file and parse it to get the chapter's title, fall back to the directory
-                // name if we can't do that
-                let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
-                let index_path = path.join("README.md");
-                let (front, contents) = if index_path.exists() {
-                    let contents = fs::read_to_string(&index_path)?;
-                    let (front, contents) = extract_frontmatter(&contents)?;
-                    let front = front.unwrap_or_default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name));
-                    (front, contents)
-                }
-                else {
-                    (ParsedFrontMatter::default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name)), String::new())
-                };
-
-                let mut chapter: Chapter = Chapter {
-                    front,
-                    sections: Vec::default(),
-                    source: path.clone(),
-                    contents,
-                };
-
-                for entry in path.read_dir()? {
-                    let entry = entry?;
-                    let path = entry.path();
-                    if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
-                        let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
-                        if name.is_none() { continue; }
-                        let name = name.unwrap();
-                        if name == "README" {
-                            continue;
-                        }
+        build(src, dest, false)
+    }
+    else if let Some(submatches) = matches.subcommand_matches("watch") {
+        let reload_trigger = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let do_reload = submatches.is_present("reload");
         
-                        let contents = fs::read_to_string(&path)?;
-                        let (front, contents) = extract_frontmatter(&contents)?;
-                        let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/{}.html", chapter_name, name));
-                        chapter.sections.push(Chapter {
-                            front,
-                            sections: Vec::new(),
-                            source: path,
-                            contents,
-                        });
-                    }
-                }
-
-                chapters.push(chapter);
-            }
-            else if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
-                let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
-                if name.is_none() { continue; }
-                let name = name.unwrap();
-                if name == "README" {
-                    continue;
-                }
-
-                let contents = fs::read_to_string(&path)?;
-                let (front, contents) = extract_frontmatter(&contents)?;
-                let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/index.html", name));
-                chapters.push(Chapter {
-                    front,
-                    sections: Vec::new(),
-                    source: path,
-                    contents,
-                });
-            }
+        if do_reload {
+            let reload_trigger = reload_trigger.clone();
+            std::thread::spawn(move || {
+                log::info!("starting livereload service");
+                ws::listen("127.0.0.1:3456", |out| ReloadClient::new(out, reload_trigger.clone())).expect("can launch livereload service");
+            });
         }
 
-        // sort all the chapters
-        chapters.sort_by(|a, b| a.front.url.cmp(&b.front.url));
-        for chapter in chapters.iter_mut() {
-            chapter.sections.sort_by(|a, b| a.front.url.cmp(&b.front.url));
-        }
+        use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
-        // generate our index
-        let index_out_path = dest.join("index.html");
-        let index_out = fs::File::create(&index_out_path)?;
-        let index_out = io::BufWriter::new(index_out);
-        generate_index(&book_front, book_description, include_katex_css, &chapters, index_out)?;
-        println!("Rendered index into `{}`", index_out_path.display());
+        let src = submatches.value_of("in").expect("in value");
+        let dest = submatches.value_of("out").expect("out value");
+        build(src, dest, do_reload)?;
 
-        // compile markdown and write the actual pages
-        let mut prev_chapter = None;
-        for (chapter_index, chapter) in chapters.iter().enumerate() {
-            // render the index
-            let chapter_root = dest.join(chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap());
-            let out = chapter_root.join("index.html");
-            print!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
-            fs::create_dir_all(&chapter_root)?;
+        let (tx, rx) = std::sync::mpsc::channel();
+        let mut watcher: RecommendedWatcher = Watcher::new(tx, std::time::Duration::from_secs(1))?;
+        watcher.watch(src, RecursiveMode::Recursive)?;
 
-            let outfile = fs::File::create(&out)?;
-            let outfile = io::BufWriter::new(outfile);
-
-            let FormatResponse { output, include_katex_css } = format_markdown(&chapter.contents)?;
-
-            let next_chapter = 
-                if chapter.sections.len() > 0 {
-                    Some(chapter.sections.iter().nth(0).expect("section 0 exists"))
+        loop {
+            match rx.recv() {
+                Ok(notify::DebouncedEvent::NoticeWrite(_)) | Ok(notify::DebouncedEvent::NoticeRemove(_)) => {},
+                Ok(_) => {
+                    build(src, dest, do_reload)?;
+                    reload_trigger.store(true, std::sync::atomic::Ordering::SeqCst);
+                    std::thread::sleep(std::time::Duration::from_millis(150));
+                    reload_trigger.store(false, std::sync::atomic::Ordering::SeqCst);
+                },
+                Err(e) => {
+                    log::error!("watch error: {:?}", e);
+                    return Err(Box::from(e));
                 }
-                else if chapter_index < chapters.len() - 1 {
-                    Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
-                }
-                else {
-                    None
-                };
-
-            format_page(&book_front, &chapter, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile)?;
-            prev_chapter = Some(chapter);
-
-            println!(" done!");
-
-            // now the sections
-            for (section_index, section) in chapter.sections.iter().enumerate() {
-                let name = section.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap();
-                let out = chapter_root.join(&format!("{}.html", name));
-                print!("Rendering `{}` into `{}`...", section.source.display(), out.display());
-    
-                let outfile = fs::File::create(&out)?;
-                let outfile = io::BufWriter::new(outfile);
-    
-                let FormatResponse { output, include_katex_css } = format_markdown(&section.contents)?;
-
-                let next_chapter = if section_index < chapter.sections.len() - 1 {
-                    Some(chapter.sections.iter().nth(section_index + 1).expect("chapter n+1 exists"))
-                }
-                else if chapter_index < chapters.len() - 1 {
-                    Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
-                }
-                else {
-                    None
-                };
-
-                format_page(&book_front, &section, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile)?;
-                prev_chapter = Some(section);
-    
-                println!(" done!");
             }
         }
-
-        // save the assets
-        fs::write(dest.join("style.css"), STYLESHEET)?;
-        println!("Wrote {}", dest.join("style.css").display());
-        fs::write(dest.join("favicon.ico"), ASSET_FAVICON)?;
-        println!("Wrote {}", dest.join("favicon.ico").display());
-        fs::write(dest.join("icons.svg"), ASSET_ICONS)?;
-        println!("Wrote {}", dest.join("icons.svg").display());
-
-        println!("Done!");
-        Ok(())
     }
     else {
         cli::build_cli().print_long_help()?;

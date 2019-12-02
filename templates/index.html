@@ -42,5 +42,8 @@
             </ol>
         </nav>
         <footer><p>&copy; {{ book.pubdate|year }} {{ book.author }}</p></footer>
+        {% if include_reload_script %}
+        {% include "reload.html" %}
+        {% endif %}
     </body>
 </html>

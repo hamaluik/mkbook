@@ -1,0 +1,17 @@
+<script>
+    console.info("connecting to reload server...");
+    var reloadSocket = new WebSocket("ws://127.0.0.1:3456");
+    reloadSocket.onopen = function(event) {
+        console.info("connected to reload server");
+    };
+    reloadSocket.onclose = function(event) {
+        console.info("reload server hung up!");
+    };
+    reloadSocket.onerror = function(event) {
+        console.error("reload server connection error:", event);
+    };
+    reloadSocket.onmessage = function(event) {
+        console.info("recieved reload command");
+        window.location.reload();
+    };
+</script>
