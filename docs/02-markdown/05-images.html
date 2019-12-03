@@ -3,13 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>The mkbook Book | Markdown</title>
+        <title>The mkbook Book | Images</title>
         <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
         <link rel="shortcut icon" href="../favicon.ico" />
         <meta property="og:title" content="The mkbook Book" />
         <meta property="og:site_name" content="The mkbook Book" />
         <meta property="og:type" content="book" />
-        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/index.html" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/05-images.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
         <meta property="book:release_date" content="2019-12-03T17:46:22.953768196+00:00" />
@@ -29,7 +29,7 @@
                 </li>
                 
                 <li>
-                    <a href="../02-markdown/index.html" class = "current">Markdown</a>
+                    <a href="../02-markdown/index.html">Markdown</a>
                     
                     <ol>
                         
@@ -41,7 +41,7 @@
                         
                         <li><a href="../02-markdown/04-katex-formulas.html">KaTeX (Math) Formulas</a></li>
                         
-                        <li><a href="../02-markdown/05-images.html">Images</a></li>
+                        <li><a href="../02-markdown/05-images.html" class = "current">Images</a></li>
                         
                     </ol>
                     
@@ -80,23 +80,23 @@
                 </a>
                 
                     
-                    <a href="../01-introduction&#x2f;index.html" alt="Introduction">
+                    <a href="../02-markdown&#x2f;04-katex-formulas.html" alt="KaTeX (Math) Formulas">
                         <span class="icon">
                             
-                            <svg class="icon-arrow-up">
-                                <use xlink:href="../icons.svg#icon-arrow-up">
+                            <svg class="icon-arrow-left">
+                                <use xlink:href="../icons.svg#icon-arrow-left">
                             </svg>
                             
                         </span>
                     </a>
                 
             </span>
-            <span class="title">Markdown</span>
+            <span class="title">Images</span>
             <span>
                 <span class="placeholder"></span>
                 
                     
-                    <a href="../02-markdown&#x2f;01-commonmark.html" alt="CommonMark">
+                    <a href="../03-frontmatter&#x2f;index.html" alt="Front Matter">
                         <span class="icon">
                             <svg class="icon-arrow-right">
                                 <use xlink:href="../icons.svg#icon-arrow-right">
@@ -107,23 +107,21 @@
             </span>
         </nav>
         <article>
-            <h1><a href="#markdown" aria-hidden="true" class="anchor" id="headermarkdown"></a>Markdown</h1>
-<p><em>mkbook</em> relies pretty extensively on <a href="https://daringfireball.net/projects/markdown/">Markdown</a> for its ease of use. If you’re not familiar with <em>Markdown</em>, it is a simple markup language that is design to be easy to read and write in plain text, and then (relatively) easy for a computer to convert into other formats such as HTML or LaTeX.</p>
-<p>The above paragraph looks like this:</p>
+            <p>To include an image, use the standard markdown format:</p>
 <pre style="background-color:#2d2d2d;">
-<span style="font-style:italic;color:#cc99cc;">_mkbook_</span><span style="color:#d3d0c8;"> relies pretty extensively on
-</span><span style="color:#f99157;">[Markdown](https://daringfireball.net/projects/markdown/)</span><span style="color:#d3d0c8;"> for its ease of use.
-</span><span style="color:#d3d0c8;">If you&#39;re not familiar with </span><span style="font-style:italic;color:#cc99cc;">_Markdown_</span><span style="color:#d3d0c8;">, it is a simple markup language that is
-</span><span style="color:#d3d0c8;">design to be easy to read and write in plain text, and then (relatively) easy
-</span><span style="color:#d3d0c8;">for a computer to convert into other formats such as HTML or LaTeX.
+<span style="color:#f99157;">![title](url)
 </span></pre>
-<p><em>Markdown</em> by itself isn’t quite enough for most purposes, so <em>mkbook</em> actually uses the <em>CommonMark</em> spec with some additional extensions to make life easier.</p>
-
+<p>This will wrap the image in a <code>figure</code> with an associated <code>figcaption</code> containing the title of the image, as so:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#f99157;">![a bear](https://placebear.com/g/512/256 </span><span style="color:#d3d0c8;">&quot;</span><span style="color:#f2777a;">A majestic bear</span><span style="color:#d3d0c8;">&quot;</span><span style="color:#f99157;">)
+</span></pre>
+<p>will render as:</p>
+<figure><img src="https://placebear.com/g/512/256" alt="a bear" title="A majestic bear"><figcaption>A majestic bear</figcaption></figure>
             
             
             <div class="next-chapter">
-                <a href="../02-markdown&#x2f;01-commonmark.html">
-                    <span>Next chapter: “CommonMark”</span>
+                <a href="../03-frontmatter&#x2f;index.html">
+                    <span>Next chapter: “Front Matter”</span>
                     <span class="icon">
                         <svg class="icon-arrow-right">
                             <use xlink:href="../icons.svg#icon-arrow-right">

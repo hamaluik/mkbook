@@ -190,14 +190,14 @@ fn format_code(lang: &str, src: &str) -> Result<FormatResponse, Box<dyn std::err
     })
 }
 
-fn wrap_image_in_figure(link: &comrak::nodes::NodeLink) -> Result<String, Box<dyn std::error::Error>> {
+fn wrap_image_in_figure(link: &comrak::nodes::NodeLink, alt: &str) -> Result<String, Box<dyn std::error::Error>> {
     let title = String::from_utf8_lossy(link.title.as_ref());
     let url = String::from_utf8_lossy(link.url.as_ref());
     if title.len() > 0 {
-        Ok(format!(r#"<figure><img src="{}" alt="{}"><figcaption>{}</figcaption></figure>"#, url, title, title))
+        Ok(format!(r#"<figure><img src="{}" alt="{}" title="{}"><figcaption>{}</figcaption></figure>"#, url, alt, title, title))
     }
     else {
-        Ok(format!(r#"<figure><img src="{}"></figure>"#, url))
+        Ok(format!(r#"<figure><img src="{}" alt="{}"></figure>"#, url, alt))
     }
 }
 
@@ -256,20 +256,38 @@ fn format_markdown(src: &str) -> Result<FormatResponse, Box<dyn std::error::Erro
     let mut use_katex_css = false;
     iter_nodes(root, &mut |node| {
         let value = &mut node.data.borrow_mut().value;
-        if let NodeValue::CodeBlock(ref block) = value {
-            let lang = String::from_utf8(block.info.clone()).expect("code lang is utf-8");
-            let source = String::from_utf8(block.literal.clone()).expect("source code is utf-8");
-            let FormatResponse { output, include_katex_css } = format_code(&lang, &source)?;
-            if include_katex_css {
-                use_katex_css = true;
-            }
-            let highlighted: Vec<u8> = Vec::from(output.into_bytes());
-            *value = NodeValue::HtmlInline(highlighted);
-        }
-        else if let NodeValue::Image(ref link) = value {
-            let html = wrap_image_in_figure(link)?;
-            let literal: Vec<u8> = Vec::from(html.into_bytes());
-            *value = NodeValue::HtmlInline(literal);
+        match value {
+            NodeValue::CodeBlock(ref block) => {
+                let lang = String::from_utf8_lossy(block.info.as_ref());
+                let source = String::from_utf8_lossy(block.literal.as_ref());
+                let FormatResponse { output, include_katex_css } = format_code(&lang, &source)?;
+                if include_katex_css {
+                    use_katex_css = true;
+                }
+                let highlighted: Vec<u8> = Vec::from(output.into_bytes());
+                *value = NodeValue::HtmlInline(highlighted);
+            },
+            NodeValue::Paragraph => {
+                if node.children().count() == 1 {
+                    let first_child = &node.first_child().unwrap();
+                    let first_value = &first_child.data.borrow().value;
+                    if let NodeValue::Image(link) = first_value {
+                        if first_child.children().count() == 1 {
+                            let second_child = &first_child.first_child().unwrap();
+                            let second_value = &second_child.data.borrow().value;
+                            if let NodeValue::Text(t) = second_value {
+                                let alt = String::from_utf8_lossy(&t);
+                                let figure = wrap_image_in_figure(&link, &alt)?;
+                                let figure: Vec<u8> = Vec::from(figure.into_bytes());
+                                second_child.detach();
+                                first_child.detach();
+                                *value = NodeValue::HtmlInline(figure);
+                            }
+                        }
+                    }
+                }
+            },
+            _ => {}
         }
         Ok(())
     })?;
@@ -281,6 +299,18 @@ fn format_markdown(src: &str) -> Result<FormatResponse, Box<dyn std::error::Erro
         output,
         include_katex_css: use_katex_css,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn can_generate_figures() {
+        let src = r#"![bear](https://placebear.com/g/512/256 "A majestic bear")"#;
+        let result = format_markdown(src).expect("can format");
+        assert_eq!(result.output, r#"<figure><img src="https://placebear.com/g/512/256" alt="bear" title="A majestic bear"><figcaption>A majestic bear</figcaption></figure>"#);
+    }
 }
 
 #[derive(Template)]

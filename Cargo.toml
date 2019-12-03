@@ -32,6 +32,7 @@ notify = "4.0"
 ws = "0.9"
 fern = { version = "0.5", features = ["colored"] }
 log = { version = "0.4", features = ["max_level_debug", "release_max_level_info", "std", "serde"] }
+ignore = "0.4"
 
 [build-dependencies]
 sass-rs = "0.2"
