@@ -9,6 +9,7 @@ body {
     grid-template-rows: 1fr;
     justify-items: stretch;
     align-items: stretch;
+    position: relative;
 
     nav.big {
         background: #2c2c38;
@@ -94,6 +95,10 @@ body {
         justify-content: space-between;
         background: #2c2c38;
         padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
 
         >* {
             margin: 0.5rem;
@@ -197,6 +202,7 @@ body {
         }
 
         article {
+            margin-top: 2rem;
             padding: 1rem 0.5rem 0 0.5rem;
         }
     }

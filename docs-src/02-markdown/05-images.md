@@ -2,10 +2,12 @@
 title = "Images"
 ---
 
+# Images
+
 To include an image, use the standard markdown format:
 
 ```md
-![title](url)
+![alt](url "title")
 ```
 
 This will wrap the image in a `figure` with an associated `figcaption` containing the title of the image, as so:

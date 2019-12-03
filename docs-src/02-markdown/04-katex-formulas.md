@@ -2,6 +2,8 @@
 title = "KaTeX (Math) Formulas"
 ---
 
+# KaTeX (Math) Formulas
+
 If you have [KaTeX](https://github.com/KaTeX/KaTeX) installed and available on your path, _mkbook_ will try to render any code blocks with a language tag of `katex` as inline math blocks.
 
 For example:

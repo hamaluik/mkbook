@@ -16,7 +16,7 @@ _mkbook_ may be installed using _Cargo_ (`cargo install --force --path .` in the
 
 ```sh
 $ mkbook
-mkbook 0.2.0
+mkbook 0.3.0
 Kenton Hamaluik <kenton@hamaluik.ca>
 
 

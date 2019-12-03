@@ -272,17 +272,18 @@ fn format_markdown(src: &str) -> Result<FormatResponse, Box<dyn std::error::Erro
                     let first_child = &node.first_child().unwrap();
                     let first_value = &first_child.data.borrow().value;
                     if let NodeValue::Image(link) = first_value {
-                        if first_child.children().count() == 1 {
-                            let second_child = &first_child.first_child().unwrap();
-                            let second_value = &second_child.data.borrow().value;
-                            if let NodeValue::Text(t) = second_value {
-                                let alt = String::from_utf8_lossy(&t);
-                                let figure = wrap_image_in_figure(&link, &alt)?;
-                                let figure: Vec<u8> = Vec::from(figure.into_bytes());
-                                second_child.detach();
-                                first_child.detach();
-                                *value = NodeValue::HtmlInline(figure);
+                        if first_child.children().count() > 0 {
+                            let mut alt: String = String::default();
+                            for child in first_child.children() {
+                                if let NodeValue::Text(t) = &child.data.borrow().value {
+                                    alt.push_str(&String::from_utf8_lossy(&t));
+                                }
+                                child.detach();
                             }
+                            first_child.detach();
+                            let figure = wrap_image_in_figure(&link, &alt)?;
+                            let figure: Vec<u8> = Vec::from(figure.into_bytes());
+                            *value = NodeValue::HtmlInline(figure);
                         }
                     }
                 }
@@ -376,7 +377,10 @@ fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &V
 fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
     let src = PathBuf::from(src.as_ref());
     let dest = PathBuf::from(dest.as_ref());
-    std::fs::create_dir_all(&dest)?;
+    if !dest.exists() {
+        std::fs::create_dir_all(&dest)?;
+        log::info!("created directory `{}`...", dest.display());
+    }
 
     // load our book
     let book_readme_path = src.join("README.md");
@@ -533,7 +537,31 @@ fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_relo
         }
     }
 
-    // save the assets
+    // copy the assets
+    for entry in ignore::Walk::new(&src) {
+        let entry = entry?;
+        if let Some(t) = entry.file_type() {
+            if t.is_file() {
+                if let Some("md") = entry.path().extension().map(std::ffi::OsStr::to_str).flatten() {
+                    // ignore markdown files
+                }
+                else {
+                    // we found an asset to copy!
+                    let dest_path: PathBuf = dest.join(entry.path().iter().skip(1).map(PathBuf::from).collect::<PathBuf>());
+                    if let Some(parent) = dest_path.parent() {
+                        if !parent.exists() {
+                            fs::create_dir_all(parent)?;
+                            log::info!("created directory `{}`...", parent.display());
+                        }
+                    }
+                    fs::copy(entry.path(), &dest_path)?;
+                    log::info!("Copied `{}` to `{}`...", entry.path().display(), dest_path.display());
+                }
+            }
+        }
+    }
+
+    // save the built-in assets
     fs::write(dest.join("style.css"), STYLESHEET)?;
     log::info!("Wrote {}", dest.join("style.css").display());
     fs::write(dest.join("favicon.ico"), ASSET_FAVICON)?;

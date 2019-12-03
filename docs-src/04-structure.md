@@ -61,7 +61,14 @@ desires than anything else.
 
 ## Assets
 
-The current version of _mkbook_ doesn't copy any assets into your book—it only parses `.md` files and generates `.html` files. So if you want to include images or other assets, you're on your own. Support for assets is planned for the next minor release.
+Any files in the `src` directory which are not included in `.gitignore` and do not end in the extension `.md` will be copied to the output folder. You can use this to include images, files, etc, for example the following image is an asset bundled with the book:
+
+```md
+![chapter-six](book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
+```
+
+![chapter-six](../book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
+
 
 ## Documents
 
@@ -74,6 +81,7 @@ src/
 ├── mkbook.toml
 ├── 00-foreword.md
 ├── 01-introduction.md
+├── my-picture.jpg
 └── 02-my-first-chapter
     ├── index.md
     ├── 01-my-first-section.md
