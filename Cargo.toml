@@ -1,6 +1,6 @@
 [package]
 name = "mkbook"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Kenton Hamaluik <kenton@hamaluik.ca>"]
 edition = "2018"
 build = "build.rs"
@@ -22,7 +22,7 @@ maintenance = { status = "actively-developed" }
 [dependencies]
 syntect = "3.3"
 comrak = "0.6"
-clap = "2.33"
+clap = { version = "2.33", features = ["wrap_help"] }
 askama = "0.8"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.5"
