@@ -78,12 +78,12 @@ The order of the book is based on the alphabetical order of the file names (actu
 
 ```
 src/
-├── mkbook.toml
+├── README.md
 ├── 00-foreword.md
 ├── 01-introduction.md
 ├── my-picture.jpg
 └── 02-my-first-chapter
-    ├── index.md
+    ├── README.md
     ├── 01-my-first-section.md
     ├── 02-my-second-section.md
     └── etc...
