@@ -95,10 +95,9 @@ body {
         justify-content: space-between;
         background: #2c2c38;
         padding: 0;
-        position: fixed;
+        position: sticky;
         top: 0;
-        left: 0;
-        right: 0;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 
         >* {
             margin: 0.5rem;
@@ -202,7 +201,6 @@ body {
         }
 
         article {
-            margin-top: 2rem;
             padding: 1rem 0.5rem 0 0.5rem;
         }
     }
