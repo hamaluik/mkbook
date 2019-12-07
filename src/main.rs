@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate lazy_static;
 
-use std::path::{PathBuf};
+use std::path::{Path, PathBuf};
 use std::{fs};
 
 pub const ASSET_DEFAULT_README: &'static [u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/assets/README.default.md"));
@@ -14,7 +14,9 @@ mod html;
 mod latex;
 mod extensions;
 
-use models::frontmatter::{ParsedFrontMatter};
+use models::book::Book;
+use models::chapter::Chapter;
+use models::frontmatter::{ParsedFrontMatter, FrontMatter};
 
 fn extract_frontmatter(src: &str) -> Result<(Option<ParsedFrontMatter>, String), Box<dyn std::error::Error>> {
     if src.starts_with("---\n") {
@@ -46,6 +48,108 @@ fn extract_frontmatter(src: &str) -> Result<(Option<ParsedFrontMatter>, String),
     else {
         Ok((None, src.to_owned()))
     }
+}
+
+/// load the entire book at once
+/// maybe a bad idea with large books but ¯\_(ツ)_/¯
+fn load_book<P: AsRef<Path>>(src: P) -> Result<Book, Box<dyn std::error::Error>> {
+    // load our book
+    let src = PathBuf::from(src.as_ref());
+    let book_readme_path = src.join("README.md");
+    let (book_front, book_description) = if book_readme_path.exists() {
+        let contents = fs::read_to_string(&book_readme_path)?;
+        let (front, contents) = extract_frontmatter(&contents)?;
+        (front, contents)
+    }
+    else {
+        let content = String::new();
+        (None, content)
+    };
+    let book_front = FrontMatter::from_root(book_front.unwrap_or_default());
+
+    // load all our chapters
+    let mut chapters: Vec<Chapter> = Vec::default();
+    for entry in src.read_dir()? {
+        let entry = entry?;
+        let path = entry.path();
+        if entry.file_type()?.is_dir() {
+            // try to find a `README.md` file and parse it to get the chapter's title, fall back to the directory
+            // name if we can't do that
+            let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
+            let index_path = path.join("README.md");
+            let (front, contents) = if index_path.exists() {
+                let contents = fs::read_to_string(&index_path)?;
+                let (front, contents) = extract_frontmatter(&contents)?;
+                let front = front.unwrap_or_default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name));
+                (front, contents)
+            }
+            else {
+                (ParsedFrontMatter::default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name)), String::new())
+            };
+
+            let mut chapter: Chapter = Chapter {
+                front,
+                sections: Vec::default(),
+                source: path.clone(),
+                contents,
+            };
+
+            for entry in path.read_dir()? {
+                let entry = entry?;
+                let path = entry.path();
+                if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+                    let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+                    if name.is_none() { continue; }
+                    let name = name.unwrap();
+                    if name == "README" {
+                        continue;
+                    }
+    
+                    let contents = fs::read_to_string(&path)?;
+                    let (front, contents) = extract_frontmatter(&contents)?;
+                    let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/{}.html", chapter_name, name));
+                    chapter.sections.push(Chapter {
+                        front,
+                        sections: Vec::new(),
+                        source: path,
+                        contents,
+                    });
+                }
+            }
+
+            chapters.push(chapter);
+        }
+        else if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
+            let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
+            if name.is_none() { continue; }
+            let name = name.unwrap();
+            if name == "README" {
+                continue;
+            }
+
+            let contents = fs::read_to_string(&path)?;
+            let (front, contents) = extract_frontmatter(&contents)?;
+            let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/index.html", name));
+            chapters.push(Chapter {
+                front,
+                sections: Vec::new(),
+                source: path,
+                contents,
+            });
+        }
+    }
+
+    // sort all the chapters
+    chapters.sort_by(|a, b| a.front.url.cmp(&b.front.url));
+    for chapter in chapters.iter_mut() {
+        chapter.sections.sort_by(|a, b| a.front.url.cmp(&b.front.url));
+    }
+
+    Ok(Book {
+        front: book_front,
+        description: book_description,
+        chapters,
+    })
 }
 
 struct ReloadClient {

@@ -4,7 +4,7 @@ use comrak::ComrakOptions;
 use syntect::{parsing::SyntaxSet, highlighting::{ThemeSet, Theme}};
 use askama::Template;
 
-use super::models::frontmatter::{ParsedFrontMatter, FrontMatter};
+use super::models::frontmatter::{FrontMatter};
 use super::models::chapter::{Chapter};
 use super::extensions::{create_plantuml_svg, create_katex_inline};
 
@@ -270,109 +270,20 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
         log::info!("created directory `{}`...", dest.display());
     }
 
-    // load our book
-    let book_readme_path = src.join("README.md");
-    let (book_front, book_description) = if book_readme_path.exists() {
-        let contents = fs::read_to_string(&book_readme_path)?;
-        let (front, contents) = super::extract_frontmatter(&contents)?;
-        (front, contents)
-    }
-    else {
-        let content = String::new();
-        (None, content)
-    };
-    let book_front = FrontMatter::from_root(book_front.unwrap_or_default());
-    let FormatResponse { output, include_katex_css } = format_markdown(&book_description)?;
+    let book = super::load_book(&src)?;
+    let FormatResponse { output, include_katex_css } = format_markdown(&book.description)?;
     let book_description = output;
-
-    // load all our chapters
-    let mut chapters: Vec<Chapter> = Vec::default();
-    for entry in src.read_dir()? {
-        let entry = entry?;
-        let path = entry.path();
-        if entry.file_type()?.is_dir() {
-            // try to find a `README.md` file and parse it to get the chapter's title, fall back to the directory
-            // name if we can't do that
-            let chapter_name = path.file_name().map(std::ffi::OsStr::to_str).flatten().unwrap_or_default();
-            let index_path = path.join("README.md");
-            let (front, contents) = if index_path.exists() {
-                let contents = fs::read_to_string(&index_path)?;
-                let (front, contents) = super::extract_frontmatter(&contents)?;
-                let front = front.unwrap_or_default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name));
-                (front, contents)
-            }
-            else {
-                (ParsedFrontMatter::default().into_front(&book_front, chapter_name, &format!("{}/index.html", chapter_name)), String::new())
-            };
-
-            let mut chapter: Chapter = Chapter {
-                front,
-                sections: Vec::default(),
-                source: path.clone(),
-                contents,
-            };
-
-            for entry in path.read_dir()? {
-                let entry = entry?;
-                let path = entry.path();
-                if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
-                    let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
-                    if name.is_none() { continue; }
-                    let name = name.unwrap();
-                    if name == "README" {
-                        continue;
-                    }
-    
-                    let contents = fs::read_to_string(&path)?;
-                    let (front, contents) = super::extract_frontmatter(&contents)?;
-                    let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/{}.html", chapter_name, name));
-                    chapter.sections.push(Chapter {
-                        front,
-                        sections: Vec::new(),
-                        source: path,
-                        contents,
-                    });
-                }
-            }
-
-            chapters.push(chapter);
-        }
-        else if let Some("md") = path.extension().map(std::ffi::OsStr::to_str).flatten() {
-            let name = path.file_stem().map(std::ffi::OsStr::to_str).flatten();
-            if name.is_none() { continue; }
-            let name = name.unwrap();
-            if name == "README" {
-                continue;
-            }
-
-            let contents = fs::read_to_string(&path)?;
-            let (front, contents) = super::extract_frontmatter(&contents)?;
-            let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/index.html", name));
-            chapters.push(Chapter {
-                front,
-                sections: Vec::new(),
-                source: path,
-                contents,
-            });
-        }
-    }
-
-    // sort all the chapters
-    chapters.sort_by(|a, b| a.front.url.cmp(&b.front.url));
-    for chapter in chapters.iter_mut() {
-        chapter.sections.sort_by(|a, b| a.front.url.cmp(&b.front.url));
-    }
 
     // generate our index
     let index_out_path = dest.join("index.html");
     let index_out = fs::File::create(&index_out_path)?;
     let index_out = io::BufWriter::new(index_out);
-    generate_index(&book_front, book_description, include_katex_css, &chapters, index_out, include_reload_script)?;
+    generate_index(&book.front, book_description, include_katex_css, &book.chapters, index_out, include_reload_script)?;
     log::info!("Rendered index into `{}`", index_out_path.display());
 
     // compile markdown and write the actual pages
     let mut prev_chapter = None;
-    for (chapter_index, chapter) in chapters.iter().enumerate() {
+    for (chapter_index, chapter) in book.chapters.iter().enumerate() {
         // render the index
         let chapter_root = dest.join(chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap());
         let out = chapter_root.join("index.html");
@@ -388,14 +299,14 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
             if chapter.sections.len() > 0 {
                 Some(chapter.sections.iter().nth(0).expect("section 0 exists"))
             }
-            else if chapter_index < chapters.len() - 1 {
-                Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+            else if chapter_index < book.chapters.len() - 1 {
+                Some(book.chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
             }
             else {
                 None
             };
 
-        format_page(&book_front, &chapter, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+        format_page(&book.front, &chapter, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
         prev_chapter = Some(chapter);
 
         // now the sections
@@ -412,14 +323,14 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
             let next_chapter = if section_index < chapter.sections.len() - 1 {
                 Some(chapter.sections.iter().nth(section_index + 1).expect("chapter n+1 exists"))
             }
-            else if chapter_index < chapters.len() - 1 {
-                Some(chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
+            else if chapter_index < book.chapters.len() - 1 {
+                Some(book.chapters.iter().nth(chapter_index + 1).expect("chapter n+1 exists"))
             }
             else {
                 None
             };
 
-            format_page(&book_front, &section, &chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+            format_page(&book.front, &section, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
             prev_chapter = Some(section);
 
         }
