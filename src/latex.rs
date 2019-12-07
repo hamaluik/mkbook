@@ -184,18 +184,53 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         NodeValue::ThematicBreak => {
             output.push_str("\\hline\n");
         },
-        NodeValue::FootnoteDefinition(text) => {
-            
+        NodeValue::FootnoteDefinition(label) => {
+            let label = std::str::from_utf8(&label).expect("valid utf-8");
+            log::debug!("footnote definition: {}", label);
+            output.push_str("\\footnotetext[");
+            output.push_str(&escape_text(label));
+            output.push_str("]{");
+            let mut definition: String = String::default();
+            for child in node.children() { format_node(section_offset, child, &mut definition); }
+            output.push_str(definition.trim());
+            output.push_str("}\n");
         },
         NodeValue::Table(table_alignments) => {
-            
+            use comrak::nodes::TableAlignment;
+            let spec: String = table_alignments.iter().map(|a| match a {
+                TableAlignment::None => "l",
+                TableAlignment::Center => "c",
+                TableAlignment::Left => "l",
+                TableAlignment::Right => "r",
+            }).collect::<Vec<&str>>().join(" ");
+
+            output.push_str("\\begin{tabular}{");
+            output.push_str(&spec);
+            output.push_str("}\n");
+
+            let mut rows: String = String::default();
+            for child in node.children() { format_node(section_offset, child, &mut rows); }
+            output.push_str(rows.trim());
+            output.push_str("\\end{tabular}\n");
         },
-        NodeValue::TableRow(bool) => {
-            
+        NodeValue::TableRow(header) => {
+            let row: String = node.children().map(|child| {
+                let mut column: String = String::default();
+                format_node(section_offset, child, &mut column);
+                column
+            })
+            .collect::<Vec<String>>()
+            .join(" & ");
+            output.push_str(row.trim());
+            output.push_str(r" \\");
+            if *header {
+                output.push_str("\n\\hline\n");
+            }
+            else {
+                output.push_str("\n");
+            }
         },
-        NodeValue::TableCell => {
-            
-        },
+        NodeValue::TableCell => for child in node.children() { format_node(section_offset, child, output); },
         NodeValue::Text(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
                 output.push_str(&escape_text(text));
@@ -221,7 +256,8 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         NodeValue::Code(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
                 output.push_str("\\verb|");
-                output.push_str(&escape_text(text));
+                //output.push_str(&escape_text(text));
+                output.push_str(text);
                 output.push_str("|");
             }
         },
@@ -265,8 +301,12 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         NodeValue::Image(node_link) => {
             
         },
-        NodeValue::FootnoteReference(text) => {
-            
+        NodeValue::FootnoteReference(label) => {
+            let label = std::str::from_utf8(&label).expect("valid utf-8");
+            log::debug!("footnote reference: {}", label);
+            output.push_str("\\footnotemark[");
+            output.push_str(&escape_text(label));
+            output.push_str("]");
         },
     }
 }
