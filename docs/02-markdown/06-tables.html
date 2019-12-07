@@ -3,13 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>The mkbook Book | Customization</title>
+        <title>The mkbook Book | Tables</title>
         <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
         <link rel="shortcut icon" href="../favicon.ico" />
         <meta property="og:title" content="The mkbook Book" />
         <meta property="og:site_name" content="The mkbook Book" />
         <meta property="og:type" content="book" />
-        <meta property="og:url" content="https://hamaluik.github.io/mkbook//05-customization/index.html" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//02-markdown/06-tables.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
         <meta property="book:release_date" content="2019-12-07T07:42:08.637368460+00:00" />
@@ -43,7 +43,7 @@
                         
                         <li><a href="../02-markdown/05-images.html">Images</a></li>
                         
-                        <li><a href="../02-markdown/06-tables.html">Tables</a></li>
+                        <li><a href="../02-markdown/06-tables.html" class = "current">Tables</a></li>
                         
                         <li><a href="../02-markdown/07-task-lists.html">Task Lists</a></li>
                         
@@ -62,7 +62,7 @@
                 </li>
                 
                 <li>
-                    <a href="../05-customization/index.html" class = "current">Customization</a>
+                    <a href="../05-customization/index.html">Customization</a>
                     
                 </li>
                 
@@ -84,7 +84,7 @@
                 </a>
                 
                     
-                    <a href="../04-structure&#x2f;index.html" alt="Structure">
+                    <a href="../02-markdown&#x2f;05-images.html" alt="Images">
                         <span class="icon">
                             
                             <svg class="icon-arrow-left">
@@ -95,12 +95,12 @@
                     </a>
                 
             </span>
-            <span class="title">Customization</span>
+            <span class="title">Tables</span>
             <span>
                 <span class="placeholder"></span>
                 
                     
-                    <a href="../06-how-it-works&#x2f;index.html" alt="How it Works">
+                    <a href="../02-markdown&#x2f;07-task-lists.html" alt="Task Lists">
                         <span class="icon">
                             <svg class="icon-arrow-right">
                                 <use xlink:href="../icons.svg#icon-arrow-right">
@@ -111,14 +111,47 @@
             </span>
         </nav>
         <article>
-            <h1><a href="#customization" aria-hidden="true" class="anchor" id="headercustomization"></a>Customization</h1>
-<p>There isn’t any way to customize the templates nor the CSS yet, though I will investigate this if the need arises. This is because both the templates and CSS are currently compiled at compile-time instead of run-time.</p>
+            <p>Tables are created using the <a href="https://github.github.com/gfm/#tables-extension-">pipe syntax</a>, for example the following:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#d3d0c8;">| Tables        | Are           | Cool  |
+</span><span style="color:#d3d0c8;">| ------------- |:-------------:| -----:|
+</span><span style="color:#d3d0c8;">| col 3 is      | right-aligned | $1600 |
+</span><span style="color:#d3d0c8;">| col 2 is      | centered      |   $12 |
+</span><span style="color:#d3d0c8;">| zebra stripes | are neat      |    $1 |
+</span></pre>
+<p>renders as:</p>
+<table>
+<thead>
+<tr>
+<th>Tables</th>
+<th align="center">Are</th>
+<th align="right">Cool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>col 3 is</td>
+<td align="center">right-aligned</td>
+<td align="right">$1600</td>
+</tr>
+<tr>
+<td>col 2 is</td>
+<td align="center">centered</td>
+<td align="right">$12</td>
+</tr>
+<tr>
+<td>zebra stripes</td>
+<td align="center">are neat</td>
+<td align="right">$1</td>
+</tr>
+</tbody>
+</table>
 
             
             
             <div class="next-chapter">
-                <a href="../06-how-it-works&#x2f;index.html">
-                    <span>Next chapter: “How it Works”</span>
+                <a href="../02-markdown&#x2f;07-task-lists.html">
+                    <span>Next chapter: “Task Lists”</span>
                     <span class="icon">
                         <svg class="icon-arrow-right">
                             <use xlink:href="../icons.svg#icon-arrow-right">

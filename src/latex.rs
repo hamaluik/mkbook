@@ -299,7 +299,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
             output.push_str("}}");
         },
         NodeValue::Image(node_link) => {
-            
+            // TODO: download images?
         },
         NodeValue::FootnoteReference(label) => {
             let label = std::str::from_utf8(&label).expect("valid utf-8");
