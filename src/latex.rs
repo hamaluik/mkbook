@@ -36,18 +36,31 @@ struct BookTemplate<'a, 'b, 'c> {
     chapters: Vec<&'c Chapter>,
 }
 
+fn escape_text(text: &str) -> String {
+    text
+    .replace(r"\", r"\textbackslash{}")
+        .replace(r"#", r"\#")
+        .replace(r"$", r"\$")
+        .replace(r"%", r"\%")
+        .replace(r"&", r"\&")
+        .replace(r"{", r"\{")
+        .replace(r"}", r"\}")
+        .replace(r"^", r"\textasciicircum{}")
+        .replace(r"~", r"\textasciitilde{}")
+}
+
 fn format_text<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
     use comrak::nodes::NodeValue;
     match &node.data.borrow().value {
         NodeValue::Text(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
-                output.push_str(text);
+                output.push_str(&escape_text(text));
             }
         },
         NodeValue::Code(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
                 output.push_str("\\texttt{");
-                output.push_str(text);
+                output.push_str(&escape_text(text));
                 output.push_str("}");
             }
         },
@@ -98,7 +111,26 @@ fn format_node<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
             output.push_str("\n");
         },
         NodeValue::CodeBlock(node_code_block) => {
-            
+            let lang = std::str::from_utf8(&node_code_block.info).expect("valid utf-8");
+            let source = std::str::from_utf8(&node_code_block.literal).expect("valid utf-8");
+
+            if lang.to_lowercase() == "plantuml" {
+                log::debug!("TODO: render plantuml");
+                return;
+            }
+            else if lang.to_lowercase() == "katex" {
+                output.push_str("\\begin{equation}\n");
+                output.push_str(source);
+                output.push_str("\\end{equation}\n");
+                return;
+            }
+
+            let lang = if lang.trim().is_empty() { "text" } else { lang };
+            output.push_str("\\begin{absolutelynopagebreak}\n\\begin{minted}[breaklines]{");
+            output.push_str(&escape_text(lang));
+            output.push_str("}\n");
+            output.push_str(source);
+            output.push_str("\\end{minted}\n\\end{absolutelynopagebreak}\n\n");
         },
         NodeValue::HtmlBlock(node_html_block) => {
             
@@ -139,7 +171,7 @@ fn format_node<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
         },
         NodeValue::Text(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
-                output.push_str(text);
+                output.push_str(&escape_text(text));
             }
         },
         NodeValue::TaskItem(bool) => {
@@ -154,7 +186,7 @@ fn format_node<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
         NodeValue::Code(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
                 output.push_str("\\verb|");
-                output.push_str(text);
+                output.push_str(&escape_text(text));
                 output.push_str("|");
             }
         },
@@ -223,6 +255,9 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut) -> Resul
     book.description = format_markdown(&book.description)?;
     for chapter in book.chapters.iter_mut() {
         chapter.contents = format_markdown(&chapter.contents)?;
+        for section in chapter.sections.iter_mut() {
+            section.contents = format_markdown(&section.contents)?;
+        }
     }
 
     // and render to a template
