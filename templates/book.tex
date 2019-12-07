@@ -29,10 +29,18 @@
   {\par\xdef\tpd{\the\prevdepth}\egroup
    \prevdepth=\tpd}
 
-%\makeatletter
-%\renewcommand{\frontmatter}{\cleardoublepage\@mainmatterfalse}
-%\renewcommand{\mainmatter}{\cleardoublepage\@mainmattertrue}
-%\makeatother
+% urls
+\usepackage[hidelinks]{hyperref}
+
+% extra symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% make the TOC work with our preface
+\makeatletter
+\renewcommand{\frontmatter}{\cleardoublepage\@mainmatterfalse}
+\renewcommand{\mainmatter}{\cleardoublepage\@mainmattertrue}
+\makeatother
 
 \title{ {{ front.title }} }
 \author{ {{ front.author }} }
@@ -40,10 +48,22 @@
 
 \begin{document}
 \frontmatter
-
+\pagestyle{empty}
 \maketitle
+\clearpage
+
+% copyright
+\pagestyle{empty}
+\topskip0pt
+\vspace*{\fill}
+\begin{center}
+\textcopyright{} {{ front.pubdate|year }} {{ front.author }}
+\end{center}
+\vspace*{\fill}
+\clearpage
 
 \tableofcontents
+\cleardoublepage
 
 \chapter{Preface}
 
@@ -57,7 +77,7 @@
 {{ chapter.contents }}
 
 {% for section in chapter.sections %}
-\chapter{ {{ section.front.title }} }
+\section{ {{ section.front.title }} }
 
 {{ section.contents }}
 {% endfor %}
