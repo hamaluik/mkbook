@@ -15,6 +15,7 @@ body {
         background: #2c2c38;
         padding: 0.5rem 1rem 1rem;
         max-width: 15rem;
+        position: sticky;
     
         display: flex;
         flex-direction: column;
@@ -202,6 +203,7 @@ body {
 
         article {
             padding: 1rem 0.5rem 0 0.5rem;
+            max-width: 100%;
         }
     }
 }
