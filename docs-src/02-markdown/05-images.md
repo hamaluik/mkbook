@@ -2,8 +2,6 @@
 title = "Images"
 ---
 
-# Images
-
 To include an image, use the standard markdown format:
 
 ```md

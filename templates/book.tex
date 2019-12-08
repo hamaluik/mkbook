@@ -1,4 +1,4 @@
-\documentclass{book}
+\documentclass[twoside, 10pt]{book}
 
 % booklet-sized pages
 \usepackage[papersize={5.5in, 8.5in}]{geometry}
@@ -18,6 +18,8 @@
 \allsectionsfont{\sffamily}
 
 % syntax highlighting
+\usepackage{xcolor}
+\definecolor{light-grey}{gray}{0.975}
 \usepackage{minted}
 \usemintedstyle{vs}
 
@@ -36,11 +38,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
-% make the TOC work with our preface
-\makeatletter
-\renewcommand{\frontmatter}{\cleardoublepage\@mainmatterfalse}
-\renewcommand{\mainmatter}{\cleardoublepage\@mainmattertrue}
-\makeatother
+% better lists
+\usepackage{enumitem}
 
 \title{ {{ front.title }} }
 \author{ {{ front.author }} }
@@ -60,16 +59,15 @@
 \textcopyright{} {{ front.pubdate|year }} {{ front.author }}
 \end{center}
 \vspace*{\fill}
-\clearpage
 
 \tableofcontents
-\cleardoublepage
 
 \chapter{Preface}
 
 {{ description }}
 
 \mainmatter
+\pagestyle{headings}
 
 {% for chapter in chapters %}
 \chapter{ {{ chapter.front.title }} }

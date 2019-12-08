@@ -2,8 +2,6 @@
 title = "CommonMark"
 ---
 
-# CommonMark
-
 _mkbook_ nominally utilizes [CommonMark](https://commonmark.org/) with some [GFM](https://github.github.com/gfm/) extensions through the use of the [comrak](https://crates.io/crates/comrak) crate. In using _comrak_, a specific set of options are used, which are listed here:
 
 ```rust
@@ -33,7 +31,6 @@ Mostly, know that the following extensions are enabled:
 * [Autolinks](https://github.github.com/gfm/#autolinks-extension-)
 * [Task Lists](https://github.github.com/gfm/#task-list-items-extension-)
 * Superscripts (`e = mc^2^.` → `e = mc<sup>2</sup>.`)
-* [Footnotes](https://kramdown.gettalong.org/syntax.html#footnotes)
 * Description Lists:
   ```md
   First term

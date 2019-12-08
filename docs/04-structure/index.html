@@ -12,7 +12,7 @@
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//04-structure/index.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-12-07T07:42:08.637368460+00:00" />
+        <meta property="book:release_date" content="2019-12-08T18:56:12.588609853+00:00" />
         
     </head>
     <body>
@@ -24,7 +24,7 @@
             <ol>
                 
                 <li>
-                    <a href="../01-introduction/index.html">Introduction</a>
+                    <a href="../01-command-line/index.html">Command-line Interface</a>
                     
                 </li>
                 
@@ -111,9 +111,8 @@
             </span>
         </nav>
         <article>
-            <h1><a href="#structure" aria-hidden="true" class="anchor" id="headerstructure"></a>Structure</h1>
-<p><em>mkbook</em> follows a fairly simple directory structure for now, with a <code>README.md</code> file declaring the book’s metadata, and <code>.md</code> files defining each chapter of the book.</p>
-<h2><a href="#readmemd" aria-hidden="true" class="anchor" id="headerreadmemd"></a><code>README.md</code></h2>
+            <p><em>mkbook</em> follows a fairly simple directory structure for now, with a <code>README.md</code> file declaring the book’s metadata, and <code>.md</code> files defining each chapter of the book.</p>
+<h1><a href="#readmemd" aria-hidden="true" class="anchor" id="headerreadmemd"></a>README.md</h1>
 <p><em>mkbook</em> generally requires a <code>README.md</code> file to reside in your source directory. This file is responsible for defining the metadata associated with your book:</p>
 <ul>
 <li>The book’s title (<code>title</code>)</li>
@@ -123,7 +122,7 @@
 <li>A markdown-formatted description of the book</li>
 </ul>
 <p>If the <code>README.md</code> file or any of the entries are missing, default values will be used. The <code>README.md</code> file should be formatted as any other page, with the <code>title</code>, <code>author</code>, <code>pubdate</code>, and <code>url</code> specified in the frontmatter, and the book description the <em>Markdown</em> contents of the <code>README.md</code> file.</p>
-<h3><a href="#sample" aria-hidden="true" class="anchor" id="headersample"></a>Sample</h3>
+<h2><a href="#sample" aria-hidden="true" class="anchor" id="headersample"></a>Sample</h2>
 <pre style="background-color:#2d2d2d;">
 <span style="background-color:#515151;color:#d3d0c8;">---
 </span><span style="color:#d3d0c8;">title = &quot;The mkbook Book&quot;
@@ -140,7 +139,7 @@
 </span><span style="color:#d3d0c8;">to be a more minimal alternative that is customized more towards my needs and
 </span><span style="color:#d3d0c8;">desires than anything else.
 </span></pre>
-<h3><a href="#default-values" aria-hidden="true" class="anchor" id="headerdefault-values"></a>Default Values</h3>
+<h2><a href="#default-values" aria-hidden="true" class="anchor" id="headerdefault-values"></a>Default Values</h2>
 <dl><dt>
 <p><code>title</code></p>
 </dt>
@@ -172,13 +171,13 @@
 <p>“”</p>
 </dd>
 </dl>
-<h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
+<h1><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h1>
 <p>Any files in the <code>src</code> directory which are not included in <code>.gitignore</code> and do not end in the extension <code>.md</code> will be copied to the output folder. You can use this to include images, files, etc, for example the following image is an asset bundled with the book:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#f99157;">![chapter-six](book-chapter-six-5834.jpg </span><span style="color:#d3d0c8;">&quot;</span><span style="color:#f2777a;">Photo by Kaboompics.com from Pexels</span><span style="color:#d3d0c8;">&quot;</span><span style="color:#f99157;">)
 </span></pre>
 <figure><img src="../book-chapter-six-5834.jpg" alt="chapter-six" title="Photo by Kaboompics.com from Pexels"><figcaption>Photo by Kaboompics.com from Pexels</figcaption></figure>
-<h2><a href="#documents" aria-hidden="true" class="anchor" id="headerdocuments"></a>Documents</h2>
+<h1><a href="#documents" aria-hidden="true" class="anchor" id="headerdocuments"></a>Documents</h1>
 <p><em>mkbook</em> works on mostly a flat directory structure, however one level of sub-directories are supported in order to create sections within chapters. Files that don’t end in a <code>.md</code> extension are completely ignored. Each <code>.md</code> file in the root source directly is it’s own chapter. To create chapters with sub-sections, create a sub-directory in the root directory and then create a <code>README.md</code> file, which will become the root of the chapter, with all <code>.md</code> files in the sub-directory becoming sections in the chapter. The <code>title</code> in the <code>README.md</code> file’s frontmatter will be used as the name of the chapter.</p>
 <p>The order of the book is based on the alphabetical order of the file names (actually it’s based on Rust’s <a href="https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#impl-PartialOrd%3Cstr%3E">implementation of <code>PartialOrd</code> for str</a>). Thus, it is recommended to lay out your book chapters with manual numbering of the file names, as such:</p>
 <pre style="background-color:#2d2d2d;">

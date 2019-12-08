@@ -64,26 +64,26 @@ fn format_text<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
         //        output.push_str("}");
         //    }
         //},
-        //NodeValue::Emph => {
-        //    output.push_str("\\emph{");
-        //    for child in node.children() { format_text(child, output); }
-        //    output.push_str("}");
-        //},
-        //NodeValue::Strong => {
-        //    output.push_str("\\textbf{");
-        //    for child in node.children() { format_text(child, output); }
-        //    output.push_str("}");
-        //},
-        //NodeValue::Strikethrough => {
-        //    output.push_str("\\sout{");
-        //    for child in node.children() { format_text(child, output); }
-        //    output.push_str("}");
-        //},
-        //NodeValue::Superscript => {
-        //    output.push_str("\\textsuperscript{");
-        //    for child in node.children() { format_text(child, output); }
-        //    output.push_str("}");
-        //},
+        NodeValue::Emph => {
+            output.push_str("\\emph{");
+            for child in node.children() { format_text(child, output); }
+            output.push_str("}");
+        },
+        NodeValue::Strong => {
+            output.push_str("\\textbf{");
+            for child in node.children() { format_text(child, output); }
+            output.push_str("}");
+        },
+        NodeValue::Strikethrough => {
+            output.push_str("\\sout{");
+            for child in node.children() { format_text(child, output); }
+            output.push_str("}");
+        },
+        NodeValue::Superscript => {
+            output.push_str("\\textsuperscript{");
+            for child in node.children() { format_text(child, output); }
+            output.push_str("}");
+        },
         _ => for child in node.children() { format_text(child, output); },
     }
 }
@@ -148,9 +148,8 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
                 output.push_str("\\end{equation}\n");
                 return;
             }
-
             let lang = if lang.trim().is_empty() { "text" } else { lang };
-            output.push_str("\\begin{absolutelynopagebreak}\n\\begin{minted}[breaklines]{");
+            output.push_str("\\begin{absolutelynopagebreak}\n\\begin{minted}[breaklines,baselinestretch=1.2,bgcolor=light-grey,fontsize=\\footnotesize,]{");
             output.push_str(&escape_text(lang));
             output.push_str("}\n");
             output.push_str(source);
@@ -179,7 +178,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
                 _ => output.push_str("\\textbf{"),
             }
             for child in node.children() { format_text(child, output); }
-            output.push_str("}");
+            output.push_str("}\n\n");
         },
         NodeValue::ThematicBreak => {
             output.push_str("\\hline\n");
@@ -204,14 +203,14 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
                 TableAlignment::Right => "r",
             }).collect::<Vec<&str>>().join(" ");
 
-            output.push_str("\\begin{tabular}{");
+            output.push_str("\\begin{center}\n\\begin{tabular}{");
             output.push_str(&spec);
             output.push_str("}\n");
 
             let mut rows: String = String::default();
             for child in node.children() { format_node(section_offset, child, &mut rows); }
             output.push_str(rows.trim());
-            output.push_str("\\end{tabular}\n");
+            output.push_str("\\end{tabular}\n\\end{center}\n\n");
         },
         NodeValue::TableRow(header) => {
             let row: String = node.children().map(|child| {

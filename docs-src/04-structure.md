@@ -2,11 +2,9 @@
 title = "Structure"
 ---
 
-# Structure
-
 _mkbook_ follows a fairly simple directory structure for now, with a `README.md` file declaring the book's metadata, and `.md` files defining each chapter of the book.
 
-## `README.md`
+# README.md
 
 _mkbook_ generally requires a `README.md` file to reside in your source directory. This file is responsible for defining the metadata associated with your book:
 
@@ -18,7 +16,7 @@ _mkbook_ generally requires a `README.md` file to reside in your source director
 
 If the `README.md` file or any of the entries are missing, default values will be used. The `README.md` file should be formatted as any other page, with the `title`, `author`, `pubdate`, and `url` specified in the frontmatter, and the book description the _Markdown_ contents of the `README.md` file.
 
-### Sample
+## Sample
 
 ```md
 ---
@@ -37,7 +35,7 @@ to be a more minimal alternative that is customized more towards my needs and
 desires than anything else.
 ```
 
-### Default Values
+## Default Values
 
 `title`
 
@@ -59,7 +57,7 @@ desires than anything else.
 
 : ""
 
-## Assets
+# Assets
 
 Any files in the `src` directory which are not included in `.gitignore` and do not end in the extension `.md` will be copied to the output folder. You can use this to include images, files, etc, for example the following image is an asset bundled with the book:
 
@@ -70,7 +68,7 @@ Any files in the `src` directory which are not included in `.gitignore` and do n
 ![chapter-six](../book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
 
 
-## Documents
+# Documents
 
 _mkbook_ works on mostly a flat directory structure, however one level of sub-directories are supported in order to create sections within chapters. Files that don't end in a `.md` extension are completely ignored. Each `.md` file in the root source directly is it's own chapter. To create chapters with sub-sections, create a sub-directory in the root directory and then create a `README.md` file, which will become the root of the chapter, with all `.md` files in the sub-directory becoming sections in the chapter. The `title` in the `README.md` file's frontmatter will be used as the name of the chapter.
 

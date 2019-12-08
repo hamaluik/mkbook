@@ -12,7 +12,7 @@
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//06-how-it-works/index.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-12-07T07:42:08.637368460+00:00" />
+        <meta property="book:release_date" content="2019-12-08T18:56:12.588609853+00:00" />
         
     </head>
     <body>
@@ -24,7 +24,7 @@
             <ol>
                 
                 <li>
-                    <a href="../01-introduction/index.html">Introduction</a>
+                    <a href="../01-command-line/index.html">Command-line Interface</a>
                     
                 </li>
                 
@@ -105,24 +105,23 @@
             </span>
         </nav>
         <article>
-            <h1><a href="#how-it-works" aria-hidden="true" class="anchor" id="headerhow-it-works"></a>How it Works</h1>
-<p><em>mkbook</em> generates a completely static, javascript-free website from a series of Markdown files. All of the layout and styling is controlled purely by hand-crafted CSS specific to this book’s purpose.</p>
-<h2><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h2>
+            <p><em>mkbook</em> generates a completely static, javascript-free website from a series of Markdown files. All of the layout and styling is controlled purely by hand-crafted CSS specific to this book’s purpose.</p>
+<h1><a href="#assets" aria-hidden="true" class="anchor" id="headerassets"></a>Assets</h1>
 <p><em>mkbook</em> currently bundles two assets which get written into the book directory: <code>favicon.ico</code>, and <code>icons.svg</code>. <code>favicon.ico</code> is the <a href="https://fontawesome.com/icons/book?style=solid">Font Awesome 5 book icon</a>, and <code>icons.svg</code> contains 3 <a href="https://fontawesome.com/">Font Awesome 5</a> arrow icons: <a href="https://fontawesome.com/icons/arrow-left?style=solid">arrow-left</a>, <a href="https://fontawesome.com/icons/arrow-right?style=solid">arrow-right</a>, and <a href="https://fontawesome.com/icons/arrow-up?style=solid">arrow-up</a> which are used for navigation. These files are compiled into the <em>mkbook</em> binary using the <a href="https://doc.rust-lang.org/std/macro.include_bytes.html"><code>include_bytes!</code> macro</a>, and written to the output folder on each build.</p>
-<h2><a href="#styling" aria-hidden="true" class="anchor" id="headerstyling"></a>Styling</h2>
+<h1><a href="#styling" aria-hidden="true" class="anchor" id="headerstyling"></a>Styling</h1>
 <p><em>mkbook</em> utilizes <a href="https://sass-lang.com/">Sass</a> to define it’s styles; you can view the sources <a href="https://github.com/hamaluik/mkbook/tree/master/style">on github</a>. In <em>mkbook</em>’s build script, the styles are compiled from their native <code>.scss</code> format into a single, compressed <code>.css</code> file using <a href="https://crates.io/crates/sass-rs">sass-rs</a>. The resulting <code>.css</code> file is then bundled into the binary using the <a href="https://doc.rust-lang.org/std/macro.include_str.html"><code>include_str!</code> macro</a>. When a book is generated, this <code>.css</code> is written to the output folder as <code>style.css</code>, where it is included by each generated <code>.html</code> file.</p>
-<h2><a href="#templates" aria-hidden="true" class="anchor" id="headertemplates"></a>Templates</h2>
+<h1><a href="#templates" aria-hidden="true" class="anchor" id="headertemplates"></a>Templates</h1>
 <p><em>mkbook</em> contains two template files: one for the index, and one for each page / chapter, and uses <a href="https://crates.io/crates/askama">Askama</a> to render the templates. Since the <em>Askama</em> templates are compiled when <em>mkbook</em> is compiled, it is not currently possible to change the templates at run time. You can view the sources for these templates <a href="https://github.com/hamaluik/mkbook/tree/master/templates">on github</a>.</p>
-<h2><a href="#markdown-formatting" aria-hidden="true" class="anchor" id="headermarkdown-formatting"></a>Markdown Formatting</h2>
+<h1><a href="#markdown-formatting" aria-hidden="true" class="anchor" id="headermarkdown-formatting"></a>Markdown Formatting</h1>
 <p>Markdown is formatted usiing <a href="https://crates.io/crates/comrak">comrak</a> with some specific options, see the <a href="02-markdown.html">Markdown chapter</a> for more information.</p>
-<h2><a href="#syntax-highlighting" aria-hidden="true" class="anchor" id="headersyntax-highlighting"></a>Syntax Highlighting</h2>
+<h1><a href="#syntax-highlighting" aria-hidden="true" class="anchor" id="headersyntax-highlighting"></a>Syntax Highlighting</h1>
 <p>Code is syntax-highlighted using <a href="https://crates.io/crates/syntect">syntect</a> with the default langauges and the <code>base16-eighties</code> colour scheme. Some additional languages above the base list supported by <em>syntect</em> have been aded:</p>
 <ul>
-<li><code>haxe</code></li>
-<li><code>hxml</code></li>
-<li><code>sass</code></li>
-<li><code>scss</code></li>
-<li><code>toml</code></li>
+<li><a href="https://haxe.org/"><code>haxe</code></a></li>
+<li><a href="https://haxe.org/manual/compiler-usage-hxml.html"><code>hxml</code></a></li>
+<li><a href="https://sass-lang.com/documentation/syntax#the-indented-syntax"><code>sass</code></a></li>
+<li><a href="https://sass-lang.com/documentation/syntax"><code>scss</code></a></li>
+<li><a href="https://github.com/toml-lang/toml"><code>toml</code></a></li>
 </ul>
 
             

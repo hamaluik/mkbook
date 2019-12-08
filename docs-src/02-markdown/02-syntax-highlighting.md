@@ -2,8 +2,6 @@
 title = "Syntax Highlighting"
 ---
 
-# Syntax Highlighting
-
 GFM syntax highlighting is also available by using fenced code tags with a label denoting the language, as such:
 
 ~~~
@@ -164,7 +162,7 @@ Hxml
 
 JSON
 
-: `json`, `sublime-settings`, `sublime-menu`, `sublime-keymap`, `sublime-mousemap`, `sublime-theme`, `sublime-build`, `sublime-project`, `sublime-completions`, `sublime-commands`, `sublime-macro`, `sublime-color-scheme`
+: `json`
 
 
 Java

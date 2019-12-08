@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | Command-line Interface</title>
+        <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="../favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//01-command-line/index.html" />
+        
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-12-08T18:56:12.588609853+00:00" />
+        
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="../index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li>
+                    <a href="../01-command-line/index.html" class = "current">Command-line Interface</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../02-markdown/index.html">Markdown</a>
+                    
+                    <ol>
+                        
+                        <li><a href="../02-markdown/01-commonmark.html">CommonMark</a></li>
+                        
+                        <li><a href="../02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
+                        
+                        <li><a href="../02-markdown/03-plantuml-diagrams.html">PlantUML Diagrams</a></li>
+                        
+                        <li><a href="../02-markdown/04-katex-formulas.html">KaTeX (Math) Formulas</a></li>
+                        
+                        <li><a href="../02-markdown/05-images.html">Images</a></li>
+                        
+                        <li><a href="../02-markdown/06-tables.html">Tables</a></li>
+                        
+                        <li><a href="../02-markdown/07-task-lists.html">Task Lists</a></li>
+                        
+                    </ol>
+                    
+                </li>
+                
+                <li>
+                    <a href="../03-frontmatter/index.html">Front Matter</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../04-structure/index.html">Structure</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../05-customization/index.html">Customization</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="../06-how-it-works/index.html">How it Works</a>
+                    
+                </li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            <span>
+                <a href="../index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-list-ol">
+                            <use xlink:href="../icons.svg#icon-list-ol">
+                        </svg>
+                    </span>
+                </a>
+                
+                    
+                    <span class="placeholder"></span>
+                
+            </span>
+            <span class="title">Command-line Interface</span>
+            <span>
+                <span class="placeholder"></span>
+                
+                    
+                    <a href="../02-markdown&#x2f;index.html" alt="Markdown">
+                        <span class="icon">
+                            <svg class="icon-arrow-right">
+                                <use xlink:href="../icons.svg#icon-arrow-right">
+                            </svg>
+                        </span>
+                    </a>
+                
+            </span>
+        </nav>
+        <article>
+            <p><em>mkbook</em> may be installed using <em>Cargo</em> (<code>cargo install --force --path .</code> in the <em>mkbook</em> repo directory), and after that it presents a command-line interface:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook
+</span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> 0.3.0
+</span><span style="color:#6699cc;">Kenton</span><span style="color:#d3d0c8;"> Hamaluik &lt;kenton@hamaluik.ca&gt;
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">SUBCOMMAND</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help       
+</span><span style="color:#d3d0c8;">            </span><span style="color:#6699cc;">Prints</span><span style="color:#d3d0c8;"> help information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version    
+</span><span style="color:#d3d0c8;">            </span><span style="color:#6699cc;">Prints</span><span style="color:#d3d0c8;"> version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">SUBCOMMANDS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;">    build the book
+</span><span style="color:#d3d0c8;">    </span><span style="color:#66cccc;">help</span><span style="color:#d3d0c8;">     Prints this message or the help of the given subcommand(s)
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">init</span><span style="color:#d3d0c8;">     initialize a mkbook directory tree
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">watch</span><span style="color:#d3d0c8;">    build the book and continually rebuild whenever the source changes
+</span></pre>
+<h1><a href="#the-init-command" aria-hidden="true" class="anchor" id="headerthe-init-command"></a>The Init Command</h1>
+<p>The init command is a tool to help you get started, and will create an initial <code>README.md</code> file and a stub of your first chapter.</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook init</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-init 
+</span><span style="color:#6699cc;">initialize</span><span style="color:#d3d0c8;"> a mkbook directory tree
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> init </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-d,</span><span style="color:#f2777a;"> --directory </span><span style="color:#d3d0c8;">&lt;directory&gt;    an optional directory to initialize into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span></pre>
+<h1><a href="#the-build-command" aria-hidden="true" class="anchor" id="headerthe-build-command"></a>The Build Command</h1>
+<p>The build command is the primary command for <em>mkbook</em>, and is responsible for taking the <code>.md</code> files and building the resulting website.</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook build</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-build 
+</span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;"> the book
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> build </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-i,</span><span style="color:#f2777a;"> --in </span><span style="color:#d3d0c8;">&lt;in&gt;      an optional directory to take the book sources from </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-o,</span><span style="color:#f2777a;"> --out </span><span style="color:#d3d0c8;">&lt;out&gt;    an optional directory to render the contents into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: book</span><span style="color:#cc99cc;">]
+</span></pre>
+<h1><a href="#the-watch-command" aria-hidden="true" class="anchor" id="headerthe-watch-command"></a>The Watch Command</h1>
+<p>The watch command is basically the same as the <code>build</code> command, however after building it continues to monitor the source directory and if <em>any</em> changes are made (a file is saved, renamed, removed, created, etc), the entire book is re-built. In the future, this will hopefully be smarter but for now it just the whole thing at once. Stop watching using <kbd>Ctrl+C</kbd> or sending <code>SIGINT</code>.</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">$</span><span style="color:#d3d0c8;"> mkbook build</span><span style="color:#f2777a;"> --help
+</span><span style="color:#6699cc;">mkbook-watch 
+</span><span style="color:#6699cc;">build</span><span style="color:#d3d0c8;"> the book and continually rebuild whenever the source changes
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">USAGE:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> watch </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">OPTIONS</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">FLAGS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-h,</span><span style="color:#f2777a;"> --help</span><span style="color:#d3d0c8;">       Prints help information
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-V,</span><span style="color:#f2777a;"> --version</span><span style="color:#d3d0c8;">    Prints version information
+</span><span style="color:#d3d0c8;">
+</span><span style="color:#6699cc;">OPTIONS:
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-i,</span><span style="color:#f2777a;"> --in </span><span style="color:#d3d0c8;">&lt;in&gt;      an optional directory to take the book sources from </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: src</span><span style="color:#cc99cc;">]
+</span><span style="color:#d3d0c8;">    </span><span style="color:#6699cc;">-o,</span><span style="color:#f2777a;"> --out </span><span style="color:#d3d0c8;">&lt;out&gt;    an optional directory to render the contents into </span><span style="color:#cc99cc;">[</span><span style="color:#d3d0c8;">default: book</span><span style="color:#cc99cc;">]
+</span></pre>
+<h1><a href="#sample-usages" aria-hidden="true" class="anchor" id="headersample-usages"></a>Sample Usages</h1>
+<p>Build the <a href="https://pages.github.com/">GitHub Pages</a> document (this book):</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> build</span><span style="color:#f2777a;"> -i</span><span style="color:#d3d0c8;"> docs-src</span><span style="color:#f2777a;"> -o</span><span style="color:#d3d0c8;"> docs
+</span></pre>
+<p>Build the book, continually watching for changes and enabling auto-reloading in the browser so you can see the book update as you write:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> watch</span><span style="color:#f2777a;"> -i</span><span style="color:#d3d0c8;"> docs-src</span><span style="color:#f2777a;"> -o</span><span style="color:#d3d0c8;"> docs</span><span style="color:#f2777a;"> --reload
+</span></pre>
+<p>Build a <a href="https://www.latex-project.org/">LaTeX</a> version of the book, then compile it to a <a href="https://en.wikipedia.org/wiki/PDF">PDF</a> and open it in <a href="https://wiki.gnome.org/Apps/Evince">evince</a>:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">mkdir</span><span style="color:#d3d0c8;"> build
+</span><span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> build</span><span style="color:#f2777a;"> -i</span><span style="color:#d3d0c8;"> docs-src</span><span style="color:#f2777a;"> -o</span><span style="color:#d3d0c8;"> docs</span><span style="color:#f2777a;"> --latex</span><span style="color:#d3d0c8;"> build/book.tex
+</span><span style="color:#66cccc;">cd</span><span style="color:#d3d0c8;"> build
+</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
+</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
+</span><span style="color:#6699cc;">evince</span><span style="color:#d3d0c8;"> book.pdf
+</span></pre>
+
+            
+            
+            <div class="next-chapter">
+                <a href="../02-markdown&#x2f;index.html">
+                    <span>Next chapter: “Markdown”</span>
+                    <span class="icon">
+                        <svg class="icon-arrow-right">
+                            <use xlink:href="../icons.svg#icon-arrow-right">
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+        
+    </body>
+</html>
