@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ book.title }} | {{ chapter.front.title }}</title>
-        <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
-        <link rel="shortcut icon" href="../favicon.ico" />
+        <link rel="stylesheet" href="{{ root_offset|safe }}style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="{{ root_offset|safe }}favicon.ico" />
         <meta property="og:title" content="{{ book.title }}" />
         <meta property="og:site_name" content="{{ book.title }}" />
         <meta property="og:type" content="book" />
@@ -18,17 +18,17 @@
     <body>
         <nav class="big">
             <header>
-                <h1><a href="../index.html">{{ book.title }}</a></h1>
+                <h1><a href="{{ root_offset|safe }}index.html">{{ book.title }}</a></h1>
                 <h2>by {{ book.author }}</h2>
             </header>
             <ol>
                 {% for chap in chapters %}
                 <li>
-                    <a href="../{{ chap.front.url|safe }}"{% if chapter.front.url == chap.front.url %} class = "current"{% endif %}>{{ chap.front.title }}</a>
+                    <a href="{{ root_offset|safe }}{{ chap.front.url|safe }}"{% if chapter.front.url == chap.front.url %} class = "current"{% endif %}>{{ chap.front.title }}</a>
                     {% if chap.sections.len() > 0 %}
                     <ol>
                         {% for section in chap.sections %}
-                        <li><a href="../{{ section.front.url|safe }}"{% if chapter.front.url == section.front.url %} class = "current"{% endif %}>{{ section.front.title }}</a></li>
+                        <li><a href="{{ root_offset|safe }}{{ section.front.url|safe }}"{% if chapter.front.url == section.front.url %} class = "current"{% endif %}>{{ section.front.title }}</a></li>
                         {% endfor %}
                     </ol>
                     {% endif %}
@@ -38,24 +38,24 @@
         </nav>
         <nav class="small">
             <span>
-                <a href="../index.html" alt="Table of Contents">
+                <a href="{{ root_offset|safe }}index.html" alt="Table of Contents">
                     <span class="icon">
                         <svg class="icon-list-ol">
-                            <use xlink:href="../icons.svg#icon-list-ol">
+                            <use xlink:href="{{ root_offset|safe }}icons.svg#icon-list-ol">
                         </svg>
                     </span>
                 </a>
                 {% match prev_chapter %}
                     {% when Some with (chap) %}
-                    <a href="../{{ chap.front.url }}" alt="{{ chap.front.title }}">
+                    <a href="{{ root_offset|safe }}{{ chap.front.url }}" alt="{{ chap.front.title }}">
                         <span class="icon">
                             {% if chapter.sections.len() > 0 && chapter.front.url.ends_with("index.html") %}
                             <svg class="icon-arrow-up">
-                                <use xlink:href="../icons.svg#icon-arrow-up">
+                                <use xlink:href="{{ root_offset|safe }}icons.svg#icon-arrow-up">
                             </svg>
                             {% else %}
                             <svg class="icon-arrow-left">
-                                <use xlink:href="../icons.svg#icon-arrow-left">
+                                <use xlink:href="{{ root_offset|safe }}icons.svg#icon-arrow-left">
                             </svg>
                             {% endif %}
                         </span>
@@ -69,10 +69,10 @@
                 <span class="placeholder"></span>
                 {% match next_chapter %}
                     {% when Some with (chapter) %}
-                    <a href="../{{ chapter.front.url }}" alt="{{ chapter.front.title }}">
+                    <a href="{{ root_offset|safe }}{{ chapter.front.url }}" alt="{{ chapter.front.title }}">
                         <span class="icon">
                             <svg class="icon-arrow-right">
-                                <use xlink:href="../icons.svg#icon-arrow-right">
+                                <use xlink:href="{{ root_offset|safe }}icons.svg#icon-arrow-right">
                             </svg>
                         </span>
                     </a>
@@ -82,15 +82,16 @@
             </span>
         </nav>
         <article>
+            <h1 class="title">{{ chapter.front.title }}</h1>
             {{ content|safe }}
             {% match next_chapter %}
             {% when Some with (chapter) %}
             <div class="next-chapter">
-                <a href="../{{ chapter.front.url }}">
+                <a href="{{ root_offset|safe }}{{ chapter.front.url }}">
                     <span>Next chapter: “{{ chapter.front.title }}”</span>
                     <span class="icon">
                         <svg class="icon-arrow-right">
-                            <use xlink:href="../icons.svg#icon-arrow-right">
+                            <use xlink:href="{{ root_offset|safe }}icons.svg#icon-arrow-right">
                         </svg>
                     </span>
                 </a>

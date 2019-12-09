@@ -298,7 +298,25 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
             output.push_str("}}");
         },
         NodeValue::Image(node_link) => {
-            // TODO: download images?
+            let url = std::str::from_utf8(&node_link.url).expect("valid utf-8");
+            if url.starts_with("http://") || url.starts_with("https://") {
+                // TODO: download images?
+                log::warn!("skipping image `{}` as we can't download images yet!", url);
+            }
+            else {
+                // TODO: make sure the file exists?
+                let title = std::str::from_utf8(&node_link.title).expect("valid utf-8");
+    
+                output.push_str("\\begin{figure}[h]\n");
+                output.push_str("\\centering\n");
+                output.push_str("\\includegraphics[width=\\maxwidth{\\textwidth}]{");
+                output.push_str(url);
+                output.push_str("}\n");
+                output.push_str("\\caption{");
+                output.push_str(title);
+                output.push_str("}\n");
+                output.push_str("\\end{figure}\n");
+            }
         },
         NodeValue::FootnoteReference(label) => {
             let label = std::str::from_utf8(&label).expect("valid utf-8");
@@ -332,6 +350,7 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut) -> Resul
             log::info!("created directory `{}`...", parent.display());
         }
     }
+    let dest_path = dest.parent().unwrap_or(Path::new(".")).to_owned();
 
     // load the book
     let mut book = super::load_book(&src)?;
@@ -353,6 +372,30 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut) -> Resul
     };
     let rendered = latexbook.render()?;
     fs::write(dest, rendered)?;
+
+    // copy the assets
+    for entry in ignore::Walk::new(&src) {
+        let entry = entry?;
+        if let Some(t) = entry.file_type() {
+            if t.is_file() {
+                if let Some("md") = entry.path().extension().map(std::ffi::OsStr::to_str).flatten() {
+                    // ignore markdown files
+                }
+                else {
+                    // we found an asset to copy!
+                    let dest_path: PathBuf = dest_path.join(entry.path().iter().skip(1).map(PathBuf::from).collect::<PathBuf>());
+                    if let Some(parent) = dest_path.parent() {
+                        if !parent.exists() {
+                            fs::create_dir_all(parent)?;
+                            log::info!("created directory `{}`...", parent.display());
+                        }
+                    }
+                    fs::copy(entry.path(), &dest_path)?;
+                    log::info!("Copied `{}` to `{}`...", entry.path().display(), dest_path.display());
+                }
+            }
+        }
+    }
 
     Ok(())
 }

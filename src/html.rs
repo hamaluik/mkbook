@@ -231,7 +231,7 @@ fn generate_index<W: io::Write>(book: &FrontMatter, content: String, include_kat
 
 #[derive(Template)]
 #[template(path = "page.html")]
-struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'g> {
+struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'g, 'f> {
     chapter: &'a Chapter,
     content: &'b str,
     chapters: &'c Vec<Chapter>,
@@ -240,9 +240,10 @@ struct PageTemplate<'a, 'b, 'c, 'd, 'e, 'g> {
     book: &'g FrontMatter,
     include_katex_css: bool,
     include_reload_script: bool,
+    root_offset: &'f str,
 }
 
-fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, include_katex_css: bool, mut output: W, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
+fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, offset_root: bool, chapters: &Vec<Chapter>, prev_chapter: Option<&Chapter>, next_chapter: Option<&Chapter>, content: &str, include_katex_css: bool, mut output: W, include_reload_script: bool) -> Result<(), Box<dyn std::error::Error>> {
     // fill out our template
     let template = PageTemplate {
         chapter,
@@ -253,6 +254,7 @@ fn format_page<W: io::Write>(book: &FrontMatter, chapter: &Chapter, chapters: &V
         book,
         include_katex_css,
         include_reload_script,
+        root_offset: if offset_root { "../" } else { "" },
     };
 
     // and render!
@@ -286,9 +288,17 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
     for (chapter_index, chapter) in book.chapters.iter().enumerate() {
         // render the index
         let chapter_root = dest.join(chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap());
-        let out = chapter_root.join("index.html");
-        log::info!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
-        fs::create_dir_all(&chapter_root)?;
+        let out = if chapter.sections.len() > 0 {
+            let out = chapter_root.join("index.html");
+            log::info!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
+            fs::create_dir_all(&chapter_root)?;
+            out
+        }
+        else {
+            let out = dest.join(format!("{}.html", chapter.source.file_stem().map(std::ffi::OsStr::to_str).flatten().unwrap()));
+            log::info!("Rendering `{}` into `{}`...", chapter.source.display(), out.display());
+            out
+        };
 
         let outfile = fs::File::create(&out)?;
         let outfile = io::BufWriter::new(outfile);
@@ -306,7 +316,7 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
                 None
             };
 
-        format_page(&book.front, &chapter, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+        format_page(&book.front, &chapter, chapter.sections.len() > 0, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
         prev_chapter = Some(chapter);
 
         // now the sections
@@ -330,7 +340,7 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut, include_
                 None
             };
 
-            format_page(&book.front, &section, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
+            format_page(&book.front, &section, true, &book.chapters, prev_chapter, next_chapter, &output, include_katex_css, outfile, include_reload_script)?;
             prev_chapter = Some(section);
 
         }

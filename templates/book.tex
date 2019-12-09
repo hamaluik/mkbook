@@ -41,6 +41,15 @@
 % better lists
 \usepackage{enumitem}
 
+% better copyright symbol
+\usepackage{textcomp}
+
+% images
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth#1{\ifdim\Gin@nat@width>#1 #1\else\Gin@nat@width\fi}
+\makeatother
+
 \title{ {{ front.title }} }
 \author{ {{ front.author }} }
 \date{ {{ front.pubdate|human_date }} }
@@ -56,7 +65,7 @@
 \topskip0pt
 \vspace*{\fill}
 \begin{center}
-\textcopyright{} {{ front.pubdate|year }} {{ front.author }}
+\textcopyright {{ front.pubdate|year }} {{ front.author }}
 \end{center}
 \vspace*{\fill}
 

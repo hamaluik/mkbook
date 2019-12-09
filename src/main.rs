@@ -129,7 +129,7 @@ fn load_book<P: AsRef<Path>>(src: P) -> Result<Book, Box<dyn std::error::Error>>
 
             let contents = fs::read_to_string(&path)?;
             let (front, contents) = extract_frontmatter(&contents)?;
-            let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}/index.html", name));
+            let front = front.unwrap_or_default().into_front(&book_front, name, &format!("{}.html", name));
             chapters.push(Chapter {
                 front,
                 sections: Vec::new(),

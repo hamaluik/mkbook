@@ -152,6 +152,10 @@ body {
         >* {
             max-width: 100%;
         }
+
+        h1.title {
+            font-size: 2rem;
+        }
     }
 
     .next-chapter {
@@ -204,6 +208,10 @@ body {
         article {
             padding: 1rem 0.5rem 0 0.5rem;
             max-width: 100%;
+
+            h1.title {
+                display: none;
+            }
         }
     }
 }

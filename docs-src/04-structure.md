@@ -65,7 +65,7 @@ Any files in the `src` directory which are not included in `.gitignore` and do n
 ![chapter-six](book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
 ```
 
-![chapter-six](../book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
+![chapter-six](book-chapter-six-5834.jpg "Photo by Kaboompics.com from Pexels")
 
 
 # Documents
