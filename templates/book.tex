@@ -50,6 +50,9 @@
 \def\maxwidth#1{\ifdim\Gin@nat@width>#1 #1\else\Gin@nat@width\fi}
 \makeatother
 
+% force floats
+\usepackage{float}
+
 \title{ {{ front.title }} }
 \author{ {{ front.author }} }
 \date{ {{ front.pubdate|human_date }} }
@@ -62,12 +65,14 @@
 
 % copyright
 \pagestyle{empty}
-\topskip0pt
 \vspace*{\fill}
 \begin{center}
-\textcopyright {{ front.pubdate|year }} {{ front.author }}
+\footnotesize
+\textbf{ {{ front.title }} }\\
+\textcopyright {{ front.pubdate|year }} {{ front.author }}{% if front.url.len() > 0 %}\\
+\url{ {{ front.url }} }
+{% endif %}
 \end{center}
-\vspace*{\fill}
 
 \tableofcontents
 

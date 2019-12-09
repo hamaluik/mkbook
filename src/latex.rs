@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 use askama::Template;
-use std::fs;
+use std::{fs, io};
 use comrak::ComrakOptions;
 
 mod filters;
@@ -88,13 +88,13 @@ fn format_text<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
     }
 }
 
-fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
+fn format_node<'a, P: AsRef<Path>>(section_offset: u32, dest_path: P, node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
     use comrak::nodes::NodeValue;
     match &node.data.borrow().value {
-        NodeValue::Document => for child in node.children() { format_node(section_offset, child, output); },
+        NodeValue::Document => for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); },
         NodeValue::BlockQuote => {
             output.push_str("\\begin{quote}\n");
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("\\end{quote}\n");
         },
         NodeValue::List(node_list) => {
@@ -102,7 +102,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
                 comrak::nodes::ListType::Bullet => output.push_str("\\begin{itemize}\n"),
                 comrak::nodes::ListType::Ordered => output.push_str("\\begin{enumerate}\n"),
             }
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             match node_list.list_type {
                 comrak::nodes::ListType::Bullet => output.push_str("\\end{itemize}\n"),
                 comrak::nodes::ListType::Ordered => output.push_str("\\end{enumerate}\n"),
@@ -111,18 +111,18 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         NodeValue::Item(_) => {
             output.push_str("\\item ");
             let mut item: String = String::default();
-            for child in node.children() { format_node(section_offset, child, &mut item); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, &mut item); }
             output.push_str(item.trim());
             output.push_str("\n");
         },
         NodeValue::DescriptionList => {
             output.push_str("\\begin{description}\n");
             let mut items: String = String::default();
-            for child in node.children() { format_node(section_offset, child, &mut items); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, &mut items); }
             output.push_str(&items.replace("\n\n\n", "\n").replace("\n\n", "\n"));
             output.push_str("\\end{description}\n");
         },
-        NodeValue::DescriptionItem(_) => for child in node.children() { format_node(section_offset, child, output); },
+        NodeValue::DescriptionItem(_) => for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); },
         NodeValue::DescriptionTerm => {
             output.push_str("\\item [");
             let mut term: String = String::default();
@@ -131,7 +131,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
             output.push_str("] ");
         },
         NodeValue::DescriptionDetails => {
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("\n");
         },
         NodeValue::CodeBlock(node_code_block) => {
@@ -164,7 +164,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         },
         NodeValue::Paragraph => {
             for child in node.children() {
-                format_node(section_offset, child, output);
+                format_node(section_offset, dest_path.as_ref(), child, output);
             }
             output.push_str("\n\n");
         },
@@ -190,7 +190,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
             output.push_str(&escape_text(label));
             output.push_str("]{");
             let mut definition: String = String::default();
-            for child in node.children() { format_node(section_offset, child, &mut definition); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, &mut definition); }
             output.push_str(definition.trim());
             output.push_str("}\n");
         },
@@ -208,14 +208,14 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
             output.push_str("}\n");
 
             let mut rows: String = String::default();
-            for child in node.children() { format_node(section_offset, child, &mut rows); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, &mut rows); }
             output.push_str(rows.trim());
             output.push_str("\\end{tabular}\n\\end{center}\n\n");
         },
         NodeValue::TableRow(header) => {
             let row: String = node.children().map(|child| {
                 let mut column: String = String::default();
-                format_node(section_offset, child, &mut column);
+                format_node(section_offset, dest_path.as_ref(), child, &mut column);
                 column
             })
             .collect::<Vec<String>>()
@@ -229,7 +229,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
                 output.push_str("\n");
             }
         },
-        NodeValue::TableCell => for child in node.children() { format_node(section_offset, child, output); },
+        NodeValue::TableCell => for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); },
         NodeValue::Text(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
                 output.push_str(&escape_text(text));
@@ -237,7 +237,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         },
         NodeValue::TaskItem(checked) => {
             let mut item: String = String::default();
-            for child in node.children() { format_node(section_offset, child, &mut item); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, &mut item); }
             if *checked {
                 output.push_str(r"$\text{\rlap{$\checkmark$}}\square$ ");
             }
@@ -269,22 +269,22 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         },
         NodeValue::Emph => {
             output.push_str("\\emph{");
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("}");
         },
         NodeValue::Strong => {
             output.push_str("\\textbf{");
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("}");
         },
         NodeValue::Strikethrough => {
             output.push_str("\\sout{");
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("}");
         },
         NodeValue::Superscript => {
             output.push_str("\\textsuperscript{");
-            for child in node.children() { format_node(section_offset, child, output); }
+            for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
             output.push_str("}");
         },
         NodeValue::Link(node_link) => {
@@ -299,14 +299,70 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
         },
         NodeValue::Image(node_link) => {
             let url = std::str::from_utf8(&node_link.url).expect("valid utf-8");
+            let title = std::str::from_utf8(&node_link.title).expect("valid utf-8");
             if url.starts_with("http://") || url.starts_with("https://") {
                 // TODO: download images?
-                log::warn!("skipping image `{}` as we can't download images yet!", url);
+                //log::warn!("skipping image `{}` as we can't download images yet!", url);
+                let client = reqwest::Client::new();
+                let mut res = match client.get(url).send() {
+                    Ok(r) => r,
+                    Err(e) => {
+                        log::error!("failed to download image `{}`, reqwest error: {:?}", url, e);
+                        return;
+                    }
+                };
+                if !res.status().is_success() {
+                    log::warn!("failed to download image at url `{}`: error {}: {:?}", url, res.status().as_u16(), res.text());
+                    return;
+                }
+                
+                let image_type = match res.headers().get("Content-Type").map(reqwest::header::HeaderValue::to_str) {
+                    Some(Ok("image/jpeg")) => Some("jpg"),
+                    Some(Ok("image/png")) => Some("png"),
+                    Some(Ok("application/pdf")) => Some("pdf"),
+                    Some(Ok("application/postscript")) => Some("eps"),
+                    _ => None,
+                };
+                let image_type = match image_type {
+                    Some(t) => t,
+                    None => {
+                        log::warn!("unhandled content-type for url `{}`: {:?}, skipping", url, res.headers().get("Content-Type"));
+                        return;
+                    }
+                };
+
+                // get the md5 of the URL to save as the filename
+                let filename = md5::compute(url.as_bytes());
+                let filename = format!("{:x?}.{}", filename, image_type);
+                let dest = PathBuf::from(dest_path.as_ref()).join(&filename);
+                log::info!("saving `{}` to `{}`...", url, dest.display());
+                
+                let f = match fs::File::create(&dest) {
+                    Ok(f) => f,
+                    Err(e) => {
+                        log::error!("failed to create file `{}`: {:?}", dest.display(), e);
+                        return;
+                    }
+                };
+                let mut wtr = io::BufWriter::new(f);
+                if let Err(e) = res.copy_to(&mut wtr) {
+                    log::error!("failed to download `{}` into `{}`: {:?}", url, dest.display(), e);
+                    return;
+                }
+
+                // and finally, now that we've downloaded the image, emit our code
+                output.push_str("\\begin{figure}[H]\n");
+                output.push_str("\\centering\n");
+                output.push_str("\\includegraphics[width=\\maxwidth{\\textwidth}]{");
+                output.push_str(&filename);
+                output.push_str("}\n");
+                output.push_str("\\caption{");
+                output.push_str(title);
+                output.push_str("}\n");
+                output.push_str("\\end{figure}\n");
             }
             else {
                 // TODO: make sure the file exists?
-                let title = std::str::from_utf8(&node_link.title).expect("valid utf-8");
-    
                 output.push_str("\\begin{figure}[h]\n");
                 output.push_str("\\centering\n");
                 output.push_str("\\includegraphics[width=\\maxwidth{\\textwidth}]{");
@@ -328,7 +384,7 @@ fn format_node<'a>(section_offset: u32, node: &'a comrak::nodes::AstNode<'a>, ou
     }
 }
 
-fn format_markdown(section_offset: u32, src: &str) -> Result<String, Box<dyn std::error::Error>> {
+fn format_markdown<P: AsRef<Path>>(section_offset: u32, dest_path: P, src: &str) -> Result<String, Box<dyn std::error::Error>> {
     let arena = comrak::Arena::new();
     let root = comrak::parse_document(
         &arena,
@@ -336,7 +392,7 @@ fn format_markdown(section_offset: u32, src: &str) -> Result<String, Box<dyn std
         &COMRAK_OPTIONS);
 
     let mut latex: String = String::with_capacity(src.len());
-    format_node(section_offset, &root, &mut latex);
+    format_node(section_offset, dest_path, &root, &mut latex);
 
     Ok(latex)
 }
@@ -356,11 +412,11 @@ pub fn build<PIn: AsRef<Path>, POut: AsRef<Path>>(src: PIn, dest: POut) -> Resul
     let mut book = super::load_book(&src)?;
 
     // then convert all the markdown
-    book.description = format_markdown(0, &book.description)?;
+    book.description = format_markdown(0, &dest_path, &book.description)?;
     for chapter in book.chapters.iter_mut() {
-        chapter.contents = format_markdown(0, &chapter.contents)?;
+        chapter.contents = format_markdown(0, &dest_path, &chapter.contents)?;
         for section in chapter.sections.iter_mut() {
-            section.contents = format_markdown(1, &section.contents)?;
+            section.contents = format_markdown(1, &dest_path, &section.contents)?;
         }
     }
 

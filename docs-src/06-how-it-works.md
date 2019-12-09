@@ -24,9 +24,9 @@ Markdown is formatted usiing [comrak](https://crates.io/crates/comrak) with some
 
 Code is syntax-highlighted using [syntect](https://crates.io/crates/syntect) with the default langauges and the `base16-eighties` colour scheme. Some additional languages above the base list supported by _syntect_ have been aded:
 
-* [`haxe`](https://haxe.org/)
-* [`hxml`](https://haxe.org/manual/compiler-usage-hxml.html)
-* [`sass`](https://sass-lang.com/documentation/syntax#the-indented-syntax)
-* [`scss`](https://sass-lang.com/documentation/syntax)
-* [`toml`](https://github.com/toml-lang/toml)
+* [haxe](https://haxe.org/)
+* [hxml](https://haxe.org/manual/compiler-usage-hxml.html)
+* [sass](https://sass-lang.com/documentation/syntax#the-indented-syntax)
+* [scss](https://sass-lang.com/documentation/syntax)
+* [toml](https://github.com/toml-lang/toml)
 

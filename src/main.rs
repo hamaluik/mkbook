@@ -11,6 +11,7 @@ pub const ASSET_DEFAULT_INTRODUCTION: &'static [u8] = include_bytes!(concat!(env
 mod cli;
 mod models;
 mod html;
+// TODO: put LaTeX behind a feature
 mod latex;
 mod extensions;
 
