@@ -77,8 +77,11 @@ fn format_code(lang: &str, src: &str) -> Result<FormatResponse, Box<dyn std::err
 
     // render plantuml code blocks into an inline svg
     if lang == "plantuml" {
+        let svg = create_plantuml_svg(src)?;
+        let svg = svg.replace(r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#, "");
+
         return Ok(FormatResponse {
-            output: create_plantuml_svg(src)?,
+            output: format!("<figure>{}</figure>", svg),
             include_katex_css: false,
         });
     }

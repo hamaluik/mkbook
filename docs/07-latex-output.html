@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The mkbook Book | LaTeX Output</title>
+        <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+        <link rel="shortcut icon" href="favicon.ico" />
+        <meta property="og:title" content="The mkbook Book" />
+        <meta property="og:site_name" content="The mkbook Book" />
+        <meta property="og:type" content="book" />
+        <meta property="og:url" content="https://hamaluik.github.io/mkbook//07-latex-output.html" />
+        
+        <meta property="book:author" content="Kenton Hamaluik" />
+        <meta property="book:release_date" content="2019-12-12T22:19:33.053441804+00:00" />
+        
+    </head>
+    <body>
+        <nav class="big">
+            <header>
+                <h1><a href="index.html">The mkbook Book</a></h1>
+                <h2>by Kenton Hamaluik</h2>
+            </header>
+            <ol>
+                
+                <li>
+                    <a href="01-command-line.html">Command-line Interface</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="02-markdown/index.html">Markdown</a>
+                    
+                    <ol>
+                        
+                        <li><a href="02-markdown/01-commonmark.html">CommonMark</a></li>
+                        
+                        <li><a href="02-markdown/02-syntax-highlighting.html">Syntax Highlighting</a></li>
+                        
+                        <li><a href="02-markdown/03-plantuml-diagrams.html">PlantUML Diagrams</a></li>
+                        
+                        <li><a href="02-markdown/04-katex-formulas.html">KaTeX (Math) Formulas</a></li>
+                        
+                        <li><a href="02-markdown/05-images.html">Images</a></li>
+                        
+                        <li><a href="02-markdown/06-tables.html">Tables</a></li>
+                        
+                        <li><a href="02-markdown/07-task-lists.html">Task Lists</a></li>
+                        
+                        <li><a href="02-markdown/08-links.html">Links</a></li>
+                        
+                    </ol>
+                    
+                </li>
+                
+                <li>
+                    <a href="03-frontmatter.html">Front Matter</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="04-structure.html">Structure</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="05-customization.html">Customization</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="06-how-it-works.html">How it Works</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="07-latex-output.html" class = "current">LaTeX Output</a>
+                    
+                </li>
+                
+            </ol>
+        </nav>
+        <nav class="small">
+            <span>
+                <a href="index.html" alt="Table of Contents">
+                    <span class="icon">
+                        <svg class="icon-list-ol">
+                            <use xlink:href="icons.svg#icon-list-ol">
+                        </svg>
+                    </span>
+                </a>
+                
+                    
+                    <a href="06-how-it-works.html" alt="How it Works">
+                        <span class="icon">
+                            
+                            <svg class="icon-arrow-left">
+                                <use xlink:href="icons.svg#icon-arrow-left">
+                            </svg>
+                            
+                        </span>
+                    </a>
+                
+            </span>
+            <span class="title">LaTeX Output</span>
+            <span>
+                <span class="placeholder"></span>
+                
+                    
+                    <span class="placeholder"></span>
+                
+            </span>
+        </nav>
+        <article>
+            <h1 class="title">LaTeX Output</h1>
+            <p><em>mkbook</em> can also export a <a href="https://www.latex-project.org/">LaTeX</a> file which can be used to convert your book to a beatiful, ready-to-print <a href="https://en.wikipedia.org/wiki/PDF">PDF</a>. This feature is still under heavy development as it’s not quite as smooth as I would like, and the generated <code>.tex</code> document is perhaps a bit too customized—I’m still exploring this.</p>
+<p>For now, however, you can convert your book into a single <code>.tex</code> file with the following command which will create the file <code>./print/book.tex</code> along with any images needed to render the book:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">mkbook</span><span style="color:#d3d0c8;"> build</span><span style="color:#f2777a;"> -l</span><span style="color:#d3d0c8;"> ./print/book.tex
+</span></pre>
+<p>Note that this command is more about preparing a <code>.tex</code> file that you can then further customize for your own book than having a complete, ready-to-go PDF that is entirely your own—the current LaTeX template that gets generated works for me but it may not work for you.</p>
+<h1><a href="#images" aria-hidden="true" class="anchor" id="headerimages"></a>Images</h1>
+<p>If an image in the document is an external image (i.e. it starts with <code>http://</code> or <code>https://</code>), <em>mkbook</em> will attempt to download the image the same directory that the generated LaTeX document resides in. If it cannot do so, it will tell you. If, on the other hand, the image is in the source tree, it will be copied over the same way that any other asset is and should be available to the LaTeX file.</p>
+<p>Similar to this, <em>mkbook</em> will attempt to render any <code>plantuml</code> code sections into <code>.svg</code> files which also get included in the book.</p>
+<h1><a href="#building-the-book" aria-hidden="true" class="anchor" id="headerbuilding-the-book"></a>Building the Book</h1>
+<p>The current LaTeX template requires the following packages to be installed:</p>
+<ul>
+<li><a href="https://ctan.org/pkg/ulem">ulem</a></li>
+<li><a href="https://ctan.org/pkg/fontspec">fontspec</a></li>
+<li><a href="https://ctan.org/pkg/sectsty">sectsty</a></li>
+<li><a href="https://ctan.org/pkg/xcolor">xcolor</a></li>
+<li><a href="https://ctan.org/pkg/minted">minted</a></li>
+<li><a href="https://ctan.org/pkg/amsmath">amsmath</a></li>
+<li><a href="https://ctan.org/pkg/amssymb">amssymb</a></li>
+<li><a href="https://ctan.org/pkg/enumitem">enumitem</a></li>
+<li><a href="https://ctan.org/pkg/textcomp">textcomp</a></li>
+<li><a href="https://ctan.org/pkg/graphicx">graphicx</a></li>
+<li><a href="https://ctan.org/pkg/float">float</a></li>
+<li><a href="https://ctan.org/pkg/svg">svg</a></li>
+</ul>
+<p>The template also requires <a href="https://www.tug.org/xetex/">XeTeX</a> and the following fonts to be available on your system:</p>
+<ul>
+<li><a href="https://github.com/skosch/Crimson">Crimson</a></li>
+<li><a href="https://www.fontsquirrel.com/fonts/poppins">Poppins</a></li>
+<li><a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a></li>
+</ul>
+<p>Finally, in order to color the source code, you must have <a href="https://pygments.org/">Pygments</a> installed and the <code>pygmentize</code> executable must be available on your path.</p>
+<p>If you meet all these requirements, you can build the book using <code>xelatex</code>. Assuming you built the <code>book.tex</code> file in the <code>print</code> directory as above:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#66cccc;">cd</span><span style="color:#d3d0c8;"> print
+</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
+</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
+</span></pre>
+<p>Note that the <code>-shell-escape</code> argument is required in order to get <em>Pygments</em> to colour your source code, and the <code>xelatex</code> command is run twice in order to properly build the table of contents.</p>
+<p>Note also that in the current template, the pages that are created are 5.5 inches by 8 inches. This is to facilitate booklet printing on North American letter paper. Feel free to change this in the generated <code>book.tex</code> file before compiling if you need to.</p>
+<h2><a href="#compiling-a-booklet" aria-hidden="true" class="anchor" id="headercompiling-a-booklet"></a>Compiling a Booklet</h2>
+<p>If you want to easily print this book as a booklet, you can take one more step to arrange the pages so that a simple duplex print on any printer will produce signatures that you can easily bind yourself (there are many tutorials online for doing this, I recommend <a href="https://mostlymaths.net/2009/04/easy-paperback-book-binding-how-to.html/">Easy paperback book binding how-to</a> by Rubén Berenguel).</p>
+<p>The first step is to create a file alongside your compiled <code>book.pdf</code> file called <code>printbook.tex</code> with the contents as such:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#cc99cc;">\documentclass</span><span style="color:#d3d0c8;">[letterpaper]{</span><span style="color:#ffcc66;">article</span><span style="color:#d3d0c8;">}
+</span><span style="color:#cc99cc;">\usepackage</span><span style="color:#d3d0c8;">[final]{</span><span style="color:#ffcc66;">pdfpages</span><span style="color:#d3d0c8;">}
+</span><span style="color:#cc99cc;">\begin</span><span style="color:#d3d0c8;">{document}
+</span><span style="color:#66cccc;">\includepdf</span><span style="color:#d3d0c8;">[pages=-,nup=1x2,landscape,signature=32]{book.pdf}
+</span><span style="color:#cc99cc;">\end</span><span style="color:#d3d0c8;">{document}
+</span></pre>
+<p>You can change the value of <code>signature</code> as you like, but keep it a multiple of 4. The <a href="https://en.wikipedia.org/wiki/Section_(bookbinding)">signature</a> is the number of pages (<strong>not</strong> sheets of paper) which get combined into a “mini-booklet”, and the final book is a combination of all of the signatures (“mini-booklets”) to make the full book. Essentially, if you divide this number by 4, you’ll get the number of sheets of paper that you’ll have to staple together at a time. For a signature of 32 pages, this will mean stapling together 8 pages at a time.</p>
+<p>Note that if you have a relatively short book, it may be advantageous to just do all of the book’s pages into one signature, in this case make the signature the next multiple-of-four value higher than the total number of sheets in the <code>book.pdf</code> file. For example: if <code>book.pdf</code> contains 45 pages, make <code>signature=48</code> to put everything into a single signature.</p>
+<p>Finally, compile <code>printbook.tex</code> using <code>pdflatex</code>:</p>
+<pre style="background-color:#2d2d2d;">
+<span style="color:#6699cc;">pdflatex</span><span style="color:#d3d0c8;"> printbook.tex
+</span></pre>
+<p>As a sample, you can view the compiled <a href="book.pdf">book</a> and <a href="printbook.pdf">printbook</a> files for this book to see how this can turn out.</p>
+
+            
+            
+        
+        <footer><p>&copy; 2019 Kenton Hamaluik</p></footer>
+        </article>
+        
+    </body>
+</html>

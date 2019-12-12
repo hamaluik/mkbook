@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use askama::Template;
 use std::{fs, io};
 use comrak::ComrakOptions;
+use crate::extensions::create_plantuml_svg;
 
 mod filters;
 
@@ -139,7 +140,27 @@ fn format_node<'a, P: AsRef<Path>>(section_offset: u32, dest_path: P, node: &'a 
             let source = std::str::from_utf8(&node_code_block.literal).expect("valid utf-8");
 
             if lang.to_lowercase() == "plantuml" {
-                log::debug!("TODO: render plantuml");
+                let digest = md5::compute(source.as_bytes());
+                let output_path = dest_path.as_ref().join(format!("{:x?}.svg", digest));
+                let svg = match create_plantuml_svg(&source) {
+                    Ok(svg) => svg,
+                    Err(e) => {
+                        log::error!("failed to create SVG: {:?}", e);
+                        return;
+                    }
+                };
+                if let Err(e) = std::fs::write(&output_path, svg) {
+                    log::error!("failed to write SVG to file `{}`: {:?}", output_path.display(), e);
+                    return;
+                }
+
+                output.push_str("\\begin{figure}[H]\n");
+                output.push_str("\\centering\n");
+                output.push_str("\\includesvg{");
+                output.push_str(&format!("{:x?}.svg", digest));
+                output.push_str("}\n");
+                output.push_str("\\end{figure}\n");
+
                 return;
             }
             else if lang.to_lowercase() == "katex" {

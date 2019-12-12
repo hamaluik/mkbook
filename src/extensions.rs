@@ -67,7 +67,5 @@ pub fn create_plantuml_svg(src: &str) -> Result<String, Box<dyn std::error::Erro
         return Err(Box::from("plantuml failed"));
     }
     let svg: String = String::from_utf8(output.stdout)?;
-    let svg = svg.replace(r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#, "");
-
-    Ok(format!("<figure>{}</figure>", svg))
+    Ok(svg)
 }

@@ -33,6 +33,7 @@ The current LaTeX template requires the following packages to be installed:
 * [textcomp](https://ctan.org/pkg/textcomp)
 * [graphicx](https://ctan.org/pkg/graphicx)
 * [float](https://ctan.org/pkg/float)
+* [svg](https://ctan.org/pkg/svg)
 
 The template also requires [XeTeX](https://www.tug.org/xetex/) and the following fonts to be available on your system:
 
@@ -77,3 +78,5 @@ Finally, compile `printbook.tex` using `pdflatex`:
 ```sh
 pdflatex printbook.tex
 ```
+
+As a sample, you can view the compiled [book](book.pdf) and [printbook](printbook.pdf) files for this book to see how this can turn out.
