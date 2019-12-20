@@ -27,6 +27,8 @@ lazy_static! {
         ext_description_lists: true,
         ..ComrakOptions::default()
     };
+
+    static ref ESCAPE_BACKSLASH_REGEX: regex::Regex = regex::Regex::new(r"\\[^_\#\$%\&\{\}]").expect("valid regex");
 }
 
 #[derive(Template)]
@@ -38,14 +40,18 @@ struct BookTemplate<'a, 'b, 'c> {
 }
 
 fn escape_text(text: &str) -> String {
-    text
-    .replace(r"\", r"\textbackslash{}")
+    let text = text
+        .replace(r"_", r"\_")
         .replace(r"#", r"\#")
         .replace(r"$", r"\$")
         .replace(r"%", r"\%")
         .replace(r"&", r"\&")
         .replace(r"{", r"\{")
-        .replace(r"}", r"\}")
+        .replace(r"}", r"\}");
+    
+    let text = ESCAPE_BACKSLASH_REGEX.replace_all(&text, r"\textbackslash{}");
+
+    text
         .replace(r"^", r"\textasciicircum{}")
         .replace(r"~", r"\textasciitilde{}")
 }
@@ -58,13 +64,13 @@ fn format_text<'a>(node: &'a comrak::nodes::AstNode<'a>, output: &mut String) {
                 output.push_str(&escape_text(text));
             }
         },
-        //NodeValue::Code(text) => {
-        //    if let Ok(text) = std::str::from_utf8(text) {
-        //        output.push_str("\\texttt{");
-        //        output.push_str(&escape_text(text));
-        //        output.push_str("}");
-        //    }
-        //},
+        NodeValue::Code(text) => {
+            if let Ok(text) = std::str::from_utf8(text) {
+                output.push_str("\\texttt{");
+                output.push_str(&escape_text(text));
+                output.push_str("}");
+            }
+        },
         NodeValue::Emph => {
             output.push_str("\\emph{");
             for child in node.children() { format_text(child, output); }
@@ -129,7 +135,7 @@ fn format_node<'a, P: AsRef<Path>>(section_offset: u32, dest_path: P, node: &'a 
             let mut term: String = String::default();
             for child in node.children() { format_text(child, &mut term); }
             output.push_str(term.trim());
-            output.push_str("] ");
+            output.push_str("] \\hfill \\\\ ");
         },
         NodeValue::DescriptionDetails => {
             for child in node.children() { format_node(section_offset, dest_path.as_ref(), child, output); }
@@ -275,18 +281,26 @@ fn format_node<'a, P: AsRef<Path>>(section_offset: u32, dest_path: P, node: &'a 
         },
         NodeValue::Code(text) => {
             if let Ok(text) = std::str::from_utf8(text) {
-                output.push_str("\\verb|");
-                //output.push_str(&escape_text(text));
-                output.push_str(text);
-                output.push_str("|");
+                output.push_str("\\texttt{");
+                output.push_str(&escape_text(text));
+                output.push_str("}");
             }
         },
         NodeValue::HtmlInline(text) => {
             let source = std::str::from_utf8(&text).expect("valid utf-8");
-            log::warn!("can't handle inline html `{}`, rendering it as syntax...", source);
-            output.push_str("\\mintinline{html}{");
-            output.push_str(&escape_text(source));
-            output.push_str("}");
+
+            if source == "<kbd>" {
+                output.push_str(r"\keys{");
+            }
+            else if source == "</kbd>" {
+                output.push_str(r"}");
+            }
+            else {
+                log::warn!("can't handle inline html `{}`, rendering it as syntax...", source);
+                output.push_str("\\mintinline{html}{");
+                output.push_str(&escape_text(source));
+                output.push_str("}");
+            }
         },
         NodeValue::Emph => {
             output.push_str("\\emph{");
