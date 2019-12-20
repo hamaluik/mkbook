@@ -34,6 +34,7 @@ The current LaTeX template requires the following packages to be installed:
 * [graphicx](https://ctan.org/pkg/graphicx)
 * [float](https://ctan.org/pkg/float)
 * [svg](https://ctan.org/pkg/svg)
+* [menukeys](https://ctan.org/pkg/svg)
 
 The template also requires [XeTeX](https://www.tug.org/xetex/) and the following fonts to be available on your system:
 
@@ -43,12 +44,11 @@ The template also requires [XeTeX](https://www.tug.org/xetex/) and the following
 
 Finally, in order to color the source code, you must have [Pygments](https://pygments.org/) installed and the `pygmentize` executable must be available on your path.
 
-If you meet all these requirements, you can build the book using `xelatex`. Assuming you built the `book.tex` file in the `print` directory as above:
+If you meet all these requirements, you can build the book using `xelatex` (better yet, use `latexmk`). Assuming you built the `book.tex` file in the `print` directory as above:
 
 ```sh
 cd print
-xelatex -shell-escape book.tex
-xelatex -shell-escape book.tex
+latexmk -xelatex -shell-escape book.tex
 ```
 
 Note that the `-shell-escape` argument is required in order to get _Pygments_ to colour your source code, and the `xelatex` command is run twice in order to properly build the table of contents.

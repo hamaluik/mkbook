@@ -12,7 +12,7 @@
         <meta property="og:url" content="https://hamaluik.github.io/mkbook//07-latex-output.html" />
         
         <meta property="book:author" content="Kenton Hamaluik" />
-        <meta property="book:release_date" content="2019-12-12T22:19:33.053441804+00:00" />
+        <meta property="book:release_date" content="2019-12-20T03:39:13.420786946+00:00" />
         
     </head>
     <body>
@@ -137,6 +137,7 @@
 <li><a href="https://ctan.org/pkg/graphicx">graphicx</a></li>
 <li><a href="https://ctan.org/pkg/float">float</a></li>
 <li><a href="https://ctan.org/pkg/svg">svg</a></li>
+<li><a href="https://ctan.org/pkg/svg">menukeys</a></li>
 </ul>
 <p>The template also requires <a href="https://www.tug.org/xetex/">XeTeX</a> and the following fonts to be available on your system:</p>
 <ul>
@@ -145,11 +146,10 @@
 <li><a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro</a></li>
 </ul>
 <p>Finally, in order to color the source code, you must have <a href="https://pygments.org/">Pygments</a> installed and the <code>pygmentize</code> executable must be available on your path.</p>
-<p>If you meet all these requirements, you can build the book using <code>xelatex</code>. Assuming you built the <code>book.tex</code> file in the <code>print</code> directory as above:</p>
+<p>If you meet all these requirements, you can build the book using <code>xelatex</code> (better yet, use <code>latexmk</code>). Assuming you built the <code>book.tex</code> file in the <code>print</code> directory as above:</p>
 <pre style="background-color:#2d2d2d;">
 <span style="color:#66cccc;">cd</span><span style="color:#d3d0c8;"> print
-</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
-</span><span style="color:#6699cc;">xelatex</span><span style="color:#f2777a;"> -shell-escape</span><span style="color:#d3d0c8;"> book.tex
+</span><span style="color:#6699cc;">latexmk</span><span style="color:#f2777a;"> -xelatex -shell-escape</span><span style="color:#d3d0c8;"> book.tex
 </span></pre>
 <p>Note that the <code>-shell-escape</code> argument is required in order to get <em>Pygments</em> to colour your source code, and the <code>xelatex</code> command is run twice in order to properly build the table of contents.</p>
 <p>Note also that in the current template, the pages that are created are 5.5 inches by 8 inches. This is to facilitate booklet printing on North American letter paper. Feel free to change this in the generated <code>book.tex</code> file before compiling if you need to.</p>
